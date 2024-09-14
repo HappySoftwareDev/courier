@@ -1,0 +1,98 @@
+<div class="col-lg-9 col-md-12">	
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2><i class="fa fa-file-o red"></i><strong>Order List</strong></h2>
+							
+						</div>
+						<div class="panel-body">
+							<table class="table bootstrap-datatable countries">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Name</th>
+										<th>From</th>
+										<th>TO</th>
+										<th>Action</th>
+									</tr>
+								</thead>   
+								<tbody>
+									<tr>
+										<td></td>
+										<td>Germany</td>
+										<td>2563</td>
+										<td>1025</td>
+										<td><a class="btn btn-info" href="" title="Bootstrap 3 themes generator"><span class="fa fa-file-o"></span> Info</a></td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+	
+					</div>	
+
+				</div><!--/col-->
+				
+				
+				 <div class='panel panel-default'>
+                              <div class='panel-heading'>
+                                  <h4 class='panel-title'>
+                                      <a class='accordion-toggle' data-toggle='collapse' data-parent='#accordion' href='#$ID'>
+                                          Order #$ID (Click here)
+                                      </a>
+                                  </h4>
+                              </div>
+                              <div id='$ID' class='panel-collapse collapse in'>
+                                  <div class='panel-body'>
+								  
+            <ul class='list-group'>
+                   <li class='list-group-item'><h4>From</h4></li>
+			       <li class='list-group-item'><b>Name:</b> $name<br></li>
+                   <li class='list-group-item'><b>Phone:</b> $phone<br/></li>
+                   <li class='list-group-item'><b>Email:</b> $email_fro <br/></li>
+				   
+				   <li class='list-group-item'><h3>Deliver To</h3></li>
+				   <li class='list-group-item'><b>Name:</b> $Drop_name<br></li>
+                   <li class='list-group-item'><b>Phone:</b> $drop_phone<br/></li>
+					 
+				  <li class='list-group-item'> <h3>Pick Up Address</h3></li>
+                   <li class='list-group-item'><b>Address:</b> $address <br/></li>
+                   <li class='list-group-item'><b>Pick Up Date:</b> $pick_up_date <br/></li>
+                   <li class='list-group-item'><b>Pick Up Time:</b> $time <br/><br/></li>
+				   
+				   <li class='list-group-item'><h3>Delivery Address</h3></li>
+                   <li class='list-group-item'><b>Address:</b> $drop_address <br/></li>
+                   <li class='list-group-item'><b>Delivery Date:</b> $drop_date <br/></li>
+                   <li class='list-group-item'><b>Delivery Time:</b> $drop_time <br/><br/></li>
+				   
+				   <li class='list-group-item'><h3>Package Details</h3></li>
+				  <li class='list-group-item'> <b>Weight:</b> $weight_of_package<br></li>
+                   <li class='list-group-item'><b>Quantity:</b> $package_quantity<br/></li>
+                   <li class='list-group-item'><b>Prefered Type Of Transport:</b> $type_of_transport <br/><br/></li>
+                  <li class='list-group-item'> <b>Note:</b> $note <br/></li>
+				  <li class='list-group-item'><a class='btn btn-info' href='' title='Bootstrap 3 themes generator'><span class='fa fa-file-o'></span> Accept</a><a class='btn btn-info' href='' title='Bootstrap 3 themes generator'><span class='fa fa-file-o'></span> reject</a></li>
+				   
+				   </ul>
+								  </div>
+                              </div>
+                          </div>
+						  
+						  
+						  <form>
+				 <input type="text" class="form-control" name="address" value="<?php echo $address; ?>" >
+                <input type="text" class="form-control" name="name" value="<?php echo $name; ?>" >
+                <input type="email" class="form-control" name="email" value="<?php echo $email_fro; ?>">
+                <input type="tel" class="form-control" name="phone" value="<?php echo $phone; ?>">
+				<input type="text" class="form-control" name="time"  value="<?php echo $time; ?>">
+				<input type="text" class="form-control" name="date"  value="<?php echo $pick_up_date; ?>">
+				<input type="text" class="form-control" name="drop_address"  value="<?php echo $drop_address; ?>">
+				<input type="text" class="form-control" name="drop_name"  value="<?php echo $Drop_name; ?>">
+				<input type="text" class="form-control" name="drop_date"  value="<?php echo $drop_date; ?>">
+				<input type="text" class="form-control" name="drop_time"  value="<?php echo $drop_time; ?>">
+				<input type="text" class="form-control" name="drop_phone"  value="<?php echo $drop_phone; ?>">
+				<input type="text" class="form-control" name="weight_of_package"  value="<?php echo $weight_of_package; ?>">
+				<input type="text" class="form-control" name="quantity"  value="<?php echo $package_quantity; ?>">
+				<input type="text" class="form-control" name="insurance"  value="<?php echo $insurance; ?>">
+				<input type="text" class="form-control" name="value_of_package"  value="<?php echo $value_of_package; ?>">
+				<input type="text" class="form-control" name="type_of_transport"  value="<?php echo $type_of_transport; ?>">
+				<input type="text" class="form-control" name="drivers_note"  value="<?php echo $note; ?>">
+							</form>

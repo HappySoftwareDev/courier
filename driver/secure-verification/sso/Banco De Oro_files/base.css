@@ -1,0 +1,400 @@
+#top{
+	width: 100%;
+	height: 50px;
+	float:left;	
+
+}
+
+#left{
+	width: 20%;
+	float: left;
+	height: 550px;	
+	overflow:auto;	
+	border: 1px solid #FFE5E5;
+}
+
+#right{
+	width: 79%;
+	float: right;
+	height: 550px;
+	overflow:auto;	
+	border: 1px solid #FFE5E5;
+}
+
+.searchBox {
+	background-image: url(preview.gif);
+	background-position: left center;
+	background-repeat: no-repeat;
+	border: 1px solid #6297BC;
+	padding-left: 16px;
+	width: 230px;
+	font-family: Arial;
+}
+
+.longTextField{
+	width: 290px;
+}
+div#headerContainer {
+	background-image: url(chinabankheader.jpg);
+	background-repeat: no-repeat;
+	height:100%;
+}
+div.pageContent {
+	padding-left: 20px;
+}
+
+.logout {
+	padding-bottom:2px;
+}
+td.label {
+	width : 200px;
+	font-family: Arial;
+}
+
+.searchTable {
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+.searchTable td {
+	padding: 4px;
+	margin: 0px;
+}
+
+.searchTable thead tr {
+	background-color: #C3D0D7;
+	background-image: url('tablegradient.gif');
+	background-repeat: repeat-x;
+	text-transform: uppercase;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.searchTable td a, a.existingAccountsLink {
+	color: #C92E34;
+	font-weight: bold;
+}
+
+a.existingAccountsLink {
+	color: #C92E34;
+	font-weight: normal;
+}
+
+.pageHeader {
+	color: #1D587F;
+	font-family: arial;
+	font-size: 14px;
+}
+
+.pageHeader hr {
+	color: #EACF4A;
+}
+
+.metroLine {
+	color: #EACF4A;
+}
+
+.pagination {
+	padding: 2px;
+}
+
+.pagination ul {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	/*Set to "right" to right align pagination interface*/
+	font-size: 16px;
+}
+
+.inputFocus {
+	background-color: #E9F4FA;
+}
+
+.pagination li {
+	list-style-type: none;
+	display: inline;
+	padding-bottom: 1px;
+}
+
+.subHeader {
+	
+
+}
+
+.subHeaderName {
+	
+	
+}
+
+.errorField {
+	border-color:red;
+}
+.pagination a,.pagination a:visited {
+	padding: 0 5px;
+	text-decoration: none;
+	color: #666666;
+}
+
+.pagination a:hover,.pagination a:active {
+	color: #FFFFFF;
+	background-color: #24418F;
+}
+
+.pagination a.currentpage {
+	background-color: #2e6ab1;
+	color: #FFF !important;
+	border-color: #2b66a5;
+	font-weight: bold;
+	cursor: default;
+}
+
+.pagination a.disablelink,.pagination a.disablelink:hover {
+	background-color: white;
+	cursor: default;
+	color: #929292;
+	border-color: #929292;
+	font-weight: normal !important;
+}
+
+.pagination a.prevnext {
+	font-weight: bold;
+}
+
+.required {
+	/*background: transparent url(warning.gif) no-repeat scroll 0 0;*/
+	background-color:#FDF9BE;
+	font-size: 12px;
+
+}
+
+fieldset {
+	/*background: url('chinagreygradient.gif') repeat-x;*/
+	border-color: #CCCCCC;
+	border-width: 1px;
+	font-family: Arial;
+}
+
+
+div.pagecontent table {
+	/*background: url('chinagreygradient.gif') repeat-x;*/
+	border: 1px solid #CCCCCC;
+	font-family: Arial;
+	font-size: 14px;
+	width: 90%;
+}
+
+div.pagecontent table input {
+	font-family: Arial;
+}
+
+div.pagecontent table.override {
+	background: url('chinaredgradient.gif') repeat-x;
+	font-family: Arial;
+	width: 90%;
+	border: 1px solid black;
+}
+
+#override {
+	background: url('chinaredgradient.gif') repeat-x;
+	font-family: Arial;
+	width: 90%;
+	border-width: 0px;
+	border: 1px solid #FDFEB6;
+}
+
+#override .required {
+	font-family: Arial;
+	border: 1px solid #AFB9BE;
+	width: 200px;
+}
+
+#override a {
+	padding-left: 5px;
+	color: #2e6ab1;
+}
+
+div.pagecontent table select {
+	font-family: Arial;
+	
+}
+
+div.pagecontent table .required {
+	font-family: Arial;
+	border: 1px solid #AFB9BE;
+	
+}
+
+div.pagecontent table .overrideRequired {
+	font-family: Arial;
+	border: 1px solid #AFB9BE;
+	width: 200px;
+}
+
+div.pagecontent table a {
+	padding-left: 5px;
+	color: #CF4145;
+}
+
+legend {
+	font-size: 16px;
+	padding-left: 5px;
+	padding-right: 5px;
+
+}
+
+fieldset a {
+	padding-left: 5px;
+	color: #2e6ab1;
+}
+
+
+
+.pageHeader2 {
+	color: #B20202;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-top: 5px;
+	text-decoration: underline;
+}
+
+div .ack {
+	padding-bottom: 20px;
+}
+.ack {
+	color: #494949;
+	/*font-family: "Lucida Grande", arial, sans-serif, "Trebuchet MS", Verdana;*/
+	font-size: 14px;
+	font-weight: bold;
+}
+.outack {
+	color: #494949;
+	/*font-family: "Lucida Grande", arial, sans-serif, "Trebuchet MS", Verdana;*/
+	font-weight: bold;
+}
+.ack {
+	color: #494949;
+	/*font-family: "Lucida Grande", arial, sans-serif, "Trebuchet MS", Verdana;*/
+	font-size: 14px;
+	font-weight: bold;
+}
+
+div.pagecontent .feedbackCss {
+	color: #BF4A4A;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 1.4em;
+}
+
+div.pagecontent .noRec {
+	color: #BF4A4A;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 1.4em;
+}
+
+div.pagecontent .sxiFeedback {
+	color: #BF4A4A;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 1.4em;
+}
+
+.sxiFeedback {
+	color: #BF4A4A;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 1.4em;
+}	
+
+.feedbackCss {
+	color: #BF4A4A;
+	font-family: Arial;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 1.4em;
+}
+
+div.pageContent table thead tr {
+	font-weight: bold;
+}
+
+div.pagecontent table.instructions {
+	font-size: 11px;
+}
+
+div.pagecontent table.instructions thead tr {
+	font-weight: bold;
+}
+
+div.pagecontent table.instructions tbody td.lvl2 {
+	padding-left: 1em;
+}
+
+.existingAccountDiv {
+	/*background: url('chinagreygradient.gif') repeat-x;*/
+	border: 1px solid #CCCCCC;
+	font-family: Arial;
+	font-size: 14px;
+	width: 90%;					
+}
+
+.existingAccountDiv table{
+	background: none;
+	border: 0px;
+}
+
+div.pagecontent .innerTable{
+	background: transparent none;
+	border: 0px none;
+	width: 100%;
+}
+
+/* BUSY INDICATOR */
+
+#bysy_indicator {
+display:none;
+position:fixed;
+top:0;
+bottom: 0;
+left:0;
+right: 0;
+z-index:99999;
+background-color: transparent;
+/*background:transparent url('overlay.png') repeat top left;*/
+height: 100%;
+width: 100%
+}
+
+#loading_gif {
+background: url('https://online.bdo.com.ph/sso/resources/com.ccti.base.web.js.BaseJavascriptBehavior/ajax-loader-yellow-flower.gif');
+background-color: #fff;
+background-position: center;
+background-repeat: no-repeat;
+height: 100px;
+width: 100px;
+/*border: 1px solid #FFB20C;*/
+position: absolute;
+top: 50%;
+left: 50%;
+margin-left: -50px;
+margin-top: -50px;
+  /* for IE */
+  filter:alpha(opacity=60);
+  /* CSS3 standard */
+  opacity:0.6;
+  z-index=99999;
+}
+
+.feedbackCss1 {
+	
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 1.4em;
+}

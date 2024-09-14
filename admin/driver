@@ -1,0 +1,15 @@
+<?php
+define('DBhost','localhost');
+define('DBuser','merchantco_user');
+define('DBname','merchantco_db');
+define('DBpass','oH9ihh[HJk(y');
+
+ try{
+  
+  $Connect = new PDO("mysql:host=".DBhost.";dbname=".DBname,DBuser,DBpass);
+  
+ }catch(PDOException $e){
+  
+  die($e->getMessage());
+ }
+?>

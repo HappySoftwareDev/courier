@@ -1,0 +1,2123 @@
+/*formerly navigation.css*/
+
+.mainNav, .mainNav ul{
+margin:0;
+padding:0;
+list-style-type:none;
+list-style-position:outside;
+position:relative;
+font-family: arial;
+font-size: 11px;
+}
+
+.mainNav .last {
+  border-right: 1px solid #ffb20c !important;
+}
+
+
+
+.mainNav .personal {
+  width: 115px !important;
+}
+
+.mainNav ul li.personal {
+  width:12em !important;
+}
+
+.mainNav ul .personal a {
+  width:12em !important;
+}
+
+.enroll-bold {
+	font-weight: bold; 
+}
+
+.mainNav .corporate {
+  width: 240px !important; 
+}
+
+.mainNav ul li.corporate {
+  width: 12em !important;
+}
+
+.mainNav ul .corporate a {
+  width: 12em !important; 
+}
+
+
+
+
+.mainNav {
+  line-height: 30px;
+}
+
+.mainNav .doubleLine {
+  line-height: 15px;
+}
+
+
+
+
+.mainNav .firstLevel ul{
+}
+
+.mainNav .firstLevel {
+  cursor:pointer;
+  color:#1b458d;
+  text-decoration:none;
+  background-color:#ffb20c;
+  padding: 0px;
+  height: 28px;
+  border-right: 1px solid #ffdb00;
+}
+
+.mainNav .firstLevel a {
+  color:#1b458d;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.mainNav .firstLevel a:hover{
+}
+
+
+
+
+.mainNav .secondLevel ul {
+  opacity: 0.93;
+  filter:alpha(opacity=93);
+  -moz-opacity:0.93;
+}
+
+.mainNav li.secondLevel {
+  position: relative; /* to fix the spacing between first level and second level */
+  top: 15px;
+  left: 0 !important;
+}
+
+
+.mainNav .secondLevel ul li {
+}
+
+.mainNav .secondLevel a{
+  display:block;
+  color:#fffffa;
+  text-decoration:none;
+  background-color:#ffb20c;
+  min-height:25px;
+  border-bottom: 1px solid #FFDB00;
+  padding: 5px !important;
+  line-height: 13px !important;
+  border-right: 0px;
+}
+
+.mainNav .secondLevel a:hover{
+  background:#ffc303;
+}
+
+
+
+
+
+
+
+
+.mainNav .thirdLevel a{
+  display:block;
+  padding:0px 5px;
+  color:#fff;
+  text-decoration:none;
+  background-color:#eda200;
+  height:35px;
+  border:0;
+}
+
+.mainNav .thirdLevel a:hover{
+  background: #ffc303;
+}
+
+
+
+
+
+
+
+
+
+
+.mainNav li{
+float:left;
+position:relative;
+}
+
+.mainNav ul {
+position:absolute;
+display:none;
+width:12em;
+top:1.5em;
+}
+
+.mainNav li ul a{
+width:12em;
+height:auto;
+float:left;
+}
+
+.mainNav ul ul{
+top:auto;
+}	
+
+.mainNav li ul ul {
+left:12em;
+margin:0px 0 0 10px;
+}
+
+
+.mainNav li:hover ul ul, .mainNav li:hover ul ul ul, .mainNav li:hover ul ul ul ul{
+display:none;
+}
+.mainNav li:hover ul, .mainNav li li:hover ul, .mainNav li li li:hover ul, .mainNav li li li li:hover ul{
+display:block;
+}
+
+#mainNavBarRow a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+/* end old navigation.css*/
+
+/*start layout.css */
+/*main*/
+
+#bodyWrapper {
+  width: 960px;
+  margin: 15px auto 0 auto;
+}
+
+
+#contentWrapper {
+  float: left;
+  width: 725px;
+  min-height: 500px;
+}
+
+
+#sideBarWrapper {
+  float: right;
+  width: 225px;
+  padding-top:10px;
+}
+
+#rightSideWrapper {
+  /* float: right; */
+  /*width: 370px;*/
+  min-height: 280px;
+  height: 100%;
+  background: none repeat scroll 0 0 #E6E6E6;
+  padding-left: 10px;
+  /*padding-right: 10px;*/
+  padding-top: 20px;
+  padding-bottom: 50px;
+  border-radius: 10px 10px 10px 10px;
+  text-align: left;
+  margin-left: 16px;
+  behavior:url('PIE.htc');
+  display: table;
+}
+
+
+
+
+/*logo*/
+
+
+#logoWrapper {
+  width: 178px;
+  height: 120px;
+  display: block;
+}
+
+#bdoLogo {
+margin:0 auto;
+display:block;
+width:178px;
+height:115px;
+}
+
+#bdoLogo a{
+display:block;
+width:178px;
+height:81px;
+position:relative;
+top:20px;
+left:15px;
+text-decoration:none;
+background: url("bdo-logo.jpg") no-repeat top center;
+margin-bottom: 20px;
+}
+
+#bdoLogo span{
+visibility:hidden;
+}
+
+
+
+/*sidebar*/
+
+#sideBarBlueDiv {
+  width: 213px;
+  background: #24418F no-repeat;
+  float: right;
+}
+
+#sideBarBlueDivTop {
+  display: block;
+  width: 213px;
+  height: 19px;
+  background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-blue-top.jpg") no-repeat;
+}
+
+#sideBarBlueDivTop span{
+  visibility:hidden;
+}
+
+#sideBarBlueDivBottom {
+  display: block;
+  width: 213px;
+  height: 19px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-blue-bottom.jpg') no-repeat;
+}
+
+#sideBarBlueDivContent {
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 180px;
+  height: 101px;
+}
+
+.sideBarBlueButton {
+  width: 140px;
+  height: 20px;
+  padding: 6px 0 0 10px;
+  margin: 10px auto;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-blue-button.jpg') no-repeat; 
+  color: #24418F;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sideBarBlueButton:hover {
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-blue-button-hover.jpg') no-repeat; 
+}
+
+#sideBarGrayDiv {
+  margin: 25px 0;
+  width: 214px;
+  background: #e4e4e4;
+}
+
+#sideBarGrayDivTop {
+  display: block;
+  width: 214px;
+  height: 19px;
+  background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-gray-top.jpg") no-repeat;
+}
+
+#sideBarGrayDivTop span{
+  visibility:hidden;
+}
+
+#sideBarGrayDivBottom {
+  display: block;
+  width: 214px;
+  height: 14px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-gray-bottom.jpg') no-repeat;
+}
+
+#sideBarGrayDivContent {
+  padding: 0 12px;
+}
+
+
+.sideBarGrayButton {
+  width: 165px;
+  height: 22px;
+  padding:7px 15px 3px 15px;
+  border-bottom:1px solid #dedede;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-gray-button.jpg') no-repeat; 
+  color: #24418F;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sideBarGrayButton:hover {
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-gray-button-hover.jpg') no-repeat; 
+}
+
+
+#sideBar-ad {
+  margin: 15px 0;
+}
+
+
+/*header*/
+
+#contentTop {
+  display: block;
+  width: 100%;
+  height: 120px;
+} 
+
+#searchBar {
+  float: right;
+  width: 440px;
+  height: 30px;
+  margin-top: 10px;
+  text-align: right;
+}
+
+#searchBarLinks {
+  margin-top: 7px;
+  float: right;
+  width: 235px;
+  color: #868686;
+  font-size: 10px;
+}
+
+#searchBarLinks a {
+  color: #0B2972;
+  text-decoration: none;
+  font-size: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+#searchBarLinks a:hover {
+  text-decoration: underline;
+}
+
+
+#searchBox {
+  float: right;
+  width: 192px;
+  height: 26px;
+  background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/search-box.jpg") no-repeat;
+  text-align: left;
+
+  
+}
+
+#searchBox #searchQuery {
+  border: 0;
+  height: 14px;
+  width: 140px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 6px;
+  font-size: 11px;
+  color: #5a5a5a;
+  background: none; 
+}
+
+#searchBox #searchButton {
+  position: relative;
+  top: 5px;
+}
+
+
+/*navigation*/
+
+#contentTop .yellowTab {
+  border: 0;
+  float: left;
+  width: 123px;
+  height: 28px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/nav-yellow-tab.jpg') no-repeat;
+  font-size: 11px; 
+  text-align: center;
+  margin-right: 2px;
+  margin-top: 18px;
+} 
+
+#contentTop .yellowTab p {
+  margin-top: 7px;
+  color: #24418F;
+  text-decoration: none;
+}
+
+#contentTop .grayTab {
+  border: 0;
+  float: left;
+  width: 123px;
+  height: 28px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/nav-gray-tab.jpg') no-repeat;
+  font-size: 11px; 
+  text-align: center;
+  margin-right: 2px;
+  margin-top: 18px;
+} 
+
+#contentTop .grayTab p {
+  margin-top: 7px;
+  color: #24418F;
+  text-decoration: none;
+}
+
+
+#navBarContainer {
+  border: 0;
+  background: #FFB20C;
+  height: 40px;
+}
+
+#mainNav {
+  margin-left: 1px;
+  width: 730px;
+}
+
+#navBarMiddle {
+  width: 725px;
+  height: 20px;
+  display: block;
+  font-size: 12px;
+  z-index: 100;
+  position: relative;
+  top: -3px;
+}
+
+#navBarTop {
+  display: block;
+  width: 725px;
+  height: 10px;
+  font-size: 10px; /*ie fix*/
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/nav-bar-top.jpg') no-repeat;
+}
+
+#navBarBottom {
+  display: block;
+  width: 725px;
+  height: 10px;
+  font-size: 10px; /*ie fix*/
+  background: #fff url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/nav-bar-bottom.jpg') no-repeat;
+}
+
+/*breadcrumbs*/
+
+.breadcrumbsContainer {
+  float: left;
+  width: 530px;
+  height: 20px;
+  font-size: 11px;
+  color: #787878;
+  text-decoration: none;
+}
+
+.breadcrumbsContainer a {
+  color: #354894;
+  text-decoration: none;
+}
+
+.breadcrumbsContainer a:hover{
+  text-decoration: underline;
+}
+
+.breadcrumbsContainer a.active {
+  color: #313131 !Important;
+  text-decoration: none !important;
+}
+
+
+/*email & print*/
+
+.pageActionsContainer {
+  float: right:
+  width: 154px;
+  height: 20px;
+  text-align: right;
+}
+
+.pageActionsContainer {
+  cursor: pointer;
+}
+
+.emailprintContainer {
+  float: right;
+  width: 154px;
+  height: 20px;
+  font-size:11px;
+  text-decoraton:none;
+}
+
+
+.emailprintContainer a {
+  color: #787878;
+  text-decoration: none;
+  font-size:11px;
+  position:relative;
+  top:-5px;
+  margin:0 5px 0 0;
+}
+
+
+.emailprintContainer a:hover {
+ text-decoration:underline;
+}
+
+
+
+/*footer*/
+
+
+#footerDiv {
+  margin: 0 auto 15px;
+  border-top:#ddd 1px solid;
+  width: 980px;
+}
+
+#footerLinksDiv {
+  width:700px;
+  margin:0 auto;
+  padding-top:28px;
+  text-align:center;
+  float: right;
+  font-size: 10px;
+}
+
+#footerDiv a {
+  margin:0 10px;
+  font-size: 10px;
+  color: #999999;
+  text-decoration: none;
+}
+
+#footerDiv a:hover {
+  color:#999;
+}
+
+
+#footerCopyright {
+  font-size: 10px;
+  color: #999999;
+  margin: 0 0 0 30px;
+  float: left;
+  padding-top: 28px;	
+}
+
+
+
+/* private banking */
+#privateBdoLogo {
+margin:0 auto;
+}
+
+#privateBdoLogo a{
+display:block;
+width:137px;
+height:75px;
+position:relative;
+top:20px;
+left:40px;
+text-decoration:none;
+background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-bdo-logo.gif") no-repeat top center;
+}
+
+#privateBdoLogo span{
+visibility:hidden;
+}
+
+#privateSearchBox {
+  float: right;
+  width: 192px;
+  height: 26px;
+  background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-search-box.jpg") no-repeat;
+  text-align: left;
+}
+
+#privateSearchBox #searchQuery {
+  border: 0;
+  height: 14px;
+  width: 140px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 6px;
+  font-size: 11px;
+  color: #5a5a5a;
+  background: none; 
+}
+
+#privateSearchBox #searchButton {
+  position: relative;
+  top: 5px;
+}
+
+
+#contentTop .privateActiveTab {
+  border: 0;
+  float: left;
+  width: 123px;
+  height: 28px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-nav-tab-active.jpg') no-repeat;
+  font-size: 11px; 
+  text-align: center;
+  margin-right: 2px;
+  margin-top: 18px;
+} 
+
+#contentTop .privateActiveTab a {
+  margin-top: 7px;
+  color: #777252;
+  text-decoration: none;
+}
+
+#contentTop .privateDeadTab {
+  border: 0;
+  float: left;
+  width: 123px;
+  height: 28px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-nav-tab-dead.jpg') no-repeat;
+  font-size: 11px; 
+  text-align: center;
+  margin-right: 2px;
+  margin-top: 18px;
+} 
+
+#contentTop .privateDeadTab a {
+  margin-top: 7px;
+  color: #777252;
+  text-decoration: none;
+}
+
+
+
+
+
+#privateNavBarContainer {
+  border: 0;
+  background: #ececec!important;
+}
+
+#privateNav {
+  margin-left: 1px;
+  width: 725px;
+}
+
+#privateNavBarMiddle {
+  margin: 0;
+  width: 725px;
+  height: 25px;
+  display: block;
+  font-size: 12px;
+  z-index: 100;
+  position: relative;
+  top: -3px;
+  background: #ececec !important;
+}
+
+#privateNavBarTop {
+  margin: 0;
+  display: block;
+  width: 725px;
+  height: 10px;
+  font-size: 10px; /*ie fix*/
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-nav-bar-top.jpg') no-repeat;
+}
+
+#privateNavBarBottom {
+  margin: 0;
+  display: block;
+  width: 725px;
+  height: 10px;
+  font-size: 10px; /*ie fix*/
+  background: #dcdcdc url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-nav-bar-bottom.jpg') no-repeat;
+}
+
+
+#privateSideBarGrayDiv {
+  margin: 25px 0;
+  width: 214px;
+  background: #e4e4e4;
+}
+
+#privateSideBarGrayDivTop {
+  display: block;
+  width: 214px;
+  height: 19px;
+  background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-sidebar-gray-top.jpg") no-repeat;
+}
+
+#privateSideBarGrayDivTop span{
+  visibility:hidden;
+}
+
+#privateSideBarGrayDivBottom {
+  display: block;
+  width: 214px;
+  height: 14px;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/private-sidebar-gray-bottom.jpg') no-repeat;
+}
+
+#privateSideBarGrayDivContent {
+  padding: 0 12px;
+}
+
+
+.sideBarGrayButton {
+  width: 165px;
+  height: 22px;
+  padding:7px 15px 3px 15px;
+  border-bottom:1px solid #dedede;
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-gray-button.jpg') no-repeat; 
+  color: #24418F;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sideBarGrayButton:hover {
+  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/sidebar-gray-button-hover.jpg') no-repeat; 
+}
+
+.clear {
+  position: relative;
+  display: block;
+  clear: both;
+}
+/*end formerly layout.css*/
+
+/* start loginid.css */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial;
+  font-size: 12px;
+  color: #717171;
+}
+
+a {
+  border: 0;
+}
+
+a img {
+  border: 0;
+}
+
+.idbox{
+  width: 180px;
+  border:0;
+  padding:0;
+  padding-left:15px;
+  cursor:pointer;
+  background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/arrow_right.png") no-repeat scroll 0px center transparent;
+  color: #0B2972;
+  font-family: arial;
+}
+
+.idbox2{
+  width: 190px;
+  border:0;
+  padding-left:5px;
+  margin-left:15px;
+  cursor:pointer;
+  /* background: url("arrow_right.png") no-repeat scroll 0px center transparent; */
+}
+
+.idbox3{
+  width: 102px;
+  border:0;
+  padding:0;
+  color: #FFB20C;
+}
+
+.idbox4{
+  width: 85px;
+  border:0;
+  padding:0;
+  color: #FFB20C;
+  float: right;
+}
+
+.tour {
+	 line-height: 220%;
+}
+
+.buttonStyle {
+    background: none repeat scroll 0 0 #FFB20C;
+    border-radius: 4px 4px 4px 4px;
+    border-width: 0;
+    color: #24418F;
+    display: block;
+    height: 20px;
+    margin-left: -27px;
+    padding-top: 8px;
+    text-align: center;
+    width: 100px;
+    behavior:url('PIE.htc');
+}
+
+.sxiFeedback {
+	width: 180px;
+	margin-bottom: 5px;
+}
+
+.alertDialog {
+	width: 280px;
+	height: 80px;
+}
+
+#break {
+  display: block;
+  width: 100%;
+  height: 10px;
+} 
+
+a.id:link {color: #fff; font-family:Arial; font-size:12px; font-weight:bold;}
+a.id:visited {color: #fff; font-family:Arial; font-size:12px;   }
+a.id:hover {color: #fff;  font-family:Arial; font-size:12px; }
+a.id:active {color: #fff;   font-family:Arial; font-size:12px;} 
+
+.email {
+ color:#FFFFFF;
+ text-decoration:none;
+ position: relative;
+ /* top: -40px; */
+}
+
+a.email{
+ max-width: 180px;
+}
+
+.blue-box {
+ color:#FFFFFF;
+ text-decoration:none;
+ font-size:12px;
+ cursor:pointer;
+}
+
+
+#IDGrayBar {
+  width: 719px;
+  height:420px;
+  background: #eaeaea;
+}
+
+#IDMyBDOGray {
+  width: 370px;
+/*   min-height: 280px; */
+  min-height: 270px;
+  height: 100%;
+  background: none repeat scroll 0 0 #0B2972;
+  padding-top: 20px;
+/*   padding-bottom: 50px; */
+	padding-bottom: 25px;
+  border-radius: 10px 10px 10px 10px;
+  text-align: left;
+  margin-left: 3px;
+  behavior:url("PIE.htc");
+}
+
+
+#IDGrayTopBar {
+  display: block;
+  width: 722px !important;
+  height: 8px;
+  background: #eaeaea url("IDGrayTopBar.jpg") no-repeat;
+  overflow: hidden;
+}
+
+#IDGrayTopBar span{
+  visibility:hidden;
+}
+
+#IDGrayBottomBar {
+  display: block;
+  width: 722px;
+  height: 8px;
+  background: url('IDGrayBottomBar.jpg') no-repeat;
+}
+
+#IDGrayBar {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#loginIDSheader {
+   color:#5e5e5e;
+   font-size:16px;
+   font-family:Arial;
+   margin-left:30px;
+   margin-top:0px;
+   font-weight:bold;
+}
+
+#login-title {
+   color:#FFFFFF;
+   font-size:12px;
+   font-family: Arial;
+   margin-left:15px;
+   width: 330px;
+}
+
+#rib-title {
+	width: 350px;
+	height: 25px;
+	margin-left: 15px;
+	margin-top: -10px;
+	color: #FFB20C;
+	font-size: 22px;
+	font-weight: normal;
+	font-stretch: expanded;
+	letter-spacing: 2px;
+}
+
+#id-textbox {
+
+}
+
+#id-checkbox {
+   margin-left:32px;
+   margin-top:8px;
+   display: block;
+   width: 190px;
+   height: 13px;
+   text-align:left;
+}
+
+#id-textbox #box {
+  border: 1px solid #AAAAAA;
+}
+
+.box {
+	border: 1px solid #AAAAAA;
+	height: 17px;
+	width: 317px;
+	padding: 4px 10px;
+	font-size: 14px;
+	color: #5a5a5a;
+	margin-top: 5px;
+	margin-left: 15px;
+	margin-bottom: 7px;
+	border-radius: 4px 4px 4px 4px;
+	behavior:url('PIE.htc');
+}
+
+select.box {
+	width: 223px;
+	height: 27px;
+}
+
+#btn-submit {
+/*   margin-left: 60px; */
+  margin-bottom: 10px;
+}
+
+#btn-submit input {
+	background: #ffb20c none;
+	border-width: 0;
+	color: #24418f;
+	height: 27px;
+	border-radius: 4px 4px 4px 4px;
+	/* right: -230px; */
+	margin-left: 25px;
+	behavior:url('PIE.htc');
+}
+
+a.links:link {color: #043673; font-family:Arial; font-size:11px; font-weight:bold;}
+a.links:visited {color: #043673; font-family:Arial; font-size:11px;   }
+a.links:hover {color: #043673;  font-family:Arial; font-size:11px; }
+a.links:active {color: #043673;   font-family:Arial; font-size:11px;} 
+
+#linksContent {
+  padding-left: 15px;
+  padding-right: 15px;
+  line-height:18px;
+  font-size: 11px;
+}
+
+/* #footer-title {
+  color:#464646;
+  font:Arial, Helvetica, sans-serif;
+  font-size:11px;
+  font-weight:bold;
+  height: 100px;
+  padding-bottom: 10px;
+}
+ */
+#id-body-image {
+   width: 391px;
+   height: 330px;
+   background: url('id-body-image.jpg') no-repeat;
+   top:auto;
+   
+}
+
+#cashcard-body-image {
+   margin-top: -55px;
+   width: 391px;
+   height: 330px;
+   background: url('cashcard-body-image.jpg') no-repeat;
+   top:auto;
+   
+}
+
+
+#ebanking-body-image {
+   margin-top: -55px;
+   float:right;
+   width: 331px;
+   height: 298px;
+   background: url('ebanking-body-image.jpg') no-repeat;
+   top:auto;
+   
+}
+
+
+#mybdo-body-image {
+   float:right;
+   width: 331px;
+   height: 298px;
+   background: url('mybdo-body-image.jpg') no-repeat top left;
+   
+}
+
+#left-column {
+	float:left;
+	width:480px;
+	height:700px;
+	padding:10px;
+	background:#eaeaea;
+}
+
+#right-column {
+	margin-top:-330px;
+	float:right;
+	width:391px;
+	height:270px;
+	padding:10px;
+	background:#eaeaea;
+}
+
+#one-column {
+	float:right;
+	width:650px;
+	height:40px;
+	padding:10px;
+	background:#eaeaea;
+}
+
+#right-text {
+	margin-top:65px;
+	margin-left:5px;
+	float:left;
+	padding:10px;
+	color:#111111;
+	font-size:12px;
+}
+
+
+#right-text-bottom {
+	margin-top:180px;
+	margin-left:5px;
+	float:left;
+	padding:10px;
+	color:#111111;
+	font-size:12px;
+}
+
+#sideYellowTxt {
+	color:#ffb20c;
+	font-size:16px;
+	font-weight:bold;
+	width: 140px;
+}
+
+#verisign {
+	float:left;
+	width:70px;
+	height:37px;
+}
+
+#left-footer {
+	float:left;
+	width:400px;
+	height:90px;
+	padding:10px;
+
+}
+
+#left-footer-mybdo {
+	float:left;
+	width:135px;
+	height:60px;
+	padding: 10px 10px 10px 10px;
+}
+
+
+
+#right-footer {
+	float:right;
+	text-align:right;
+	width:280px;
+	height:90px;
+	padding:10px;
+
+}
+
+#right-footer-mybdo {
+	float:right;
+	text-align:left;
+	width:803px;
+	height:60px;
+	margin-left: 100px;
+	margin-right: -20px;
+}
+
+.btn-submit input {
+	border: 0;
+	width: 73px;
+	height: 26px;
+	background-color: #FFD241;
+	border-radius: 10px 10px 10px 10px;
+	behavior:url('PIE.htc');
+}
+
+#customer-service {
+	background: #FFFFFF;
+	border-radius: 4px 4px 4px 4px;
+	margin-top: 20px;
+	height: 25px;
+	width: 360px;
+	behavior:url('PIE.htc');
+}
+
+.enrollNowButton {
+	width: 121px;
+	height: 26px;
+}
+
+.enrollNowButton:hover{
+	background-color: rgb(255, 178, 12) !important;
+	color: #24418F;
+}
+
+.verisign {
+	background: url('verisign.jpg') no-repeat;
+	width: 88px;
+	height: 46px;
+}
+
+#verisignLogo a{
+	
+	width:178px;
+	height:81px;	
+	background: url("verisign.jpg") no-repeat top center;
+	position:relative;
+	display:block;
+	top:20px;
+	left:15px;
+	text-decoration:none;
+	margin-bottom: 20px;
+}
+
+.emailImage {
+	background: url('callctr.PNG') no-repeat;
+	width: 133px;
+	height: 15px;
+	display: block;
+}
+
+.emailImage a {
+	width: 133px;
+	height: 15px;
+	display: block;
+}
+
+.feedbackPanelERROR {
+	line-height: 120%;
+    list-style: none outside none;
+    margin-bottom: 0;
+    margin-left: 8px;
+    margin-top: 3px !important;
+    padding-bottom: 0;
+    width: 300px;
+}
+
+.feedbackPanelINFO {
+	list-style: none;
+	width: 270px; 
+	margin-left: 10px;
+	padding-bottom: 0;
+	margin-bottom: 0;
+	margin-top: 0 !important;
+	line-height: 120%;
+}
+
+.ribPolicyPage{
+	padding-bottom: 10px !important;
+	background: none !important;
+	padding-left: 5px !important;
+}
+
+.enroll{
+	width: 200px;
+	height: 25px;
+	margin-top: 0px;
+	margin-left: 3px;
+	color: #0B2972;
+	font-size:19px;
+	font-family: arial;
+	font-size: 21px;
+	letter-spacing: 2px;
+}
+
+.enrollnow{
+	width: 170px;
+	height: auto;
+	margin-top: 0px;
+	color: #FFB20C;
+	font-size:18px;
+	font-weight:bold;
+	float:right;
+}
+
+h4{
+	color: #0B2972;
+	font-family: arial;
+	line-height: 1.2em;
+	font-weight: normal;
+}
+
+.padleft{
+	padding-left: 10px;
+}
+
+.supportLink{
+  width: 180px;
+  border:0;
+  padding:0;
+  padding-left:15px;
+  cursor:pointer;
+  background: url("arrow_right.png") no-repeat scroll 0px center transparent;
+  color: #0B2972;
+  font-family: arial;
+  margin-left: -5px;
+}
+
+.loginmenu{
+	padding-right: 10px;
+	padding-left: -10px;
+}
+
+.loginForm{
+/* 	margin-bottom: -40px !important; */
+	margin-bottom: -20px !important;
+}
+.contacts{
+	margin-top: -20px !important;
+	margin-left: 5px;
+	line-height: 1em;
+}
+.gohome {display: block;float: right;background: url("go-back.png") no-repeat scroll 0 0px transparent;width: 173px;height: 29px;text-indent: -99999px;margin-right: 10px;}
+
+.main-content {
+	display: block;
+    width: 1030px;
+    padding: 15px 0px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+    bottom:0;
+    margin-bottom: 0px;
+}
+
+.footer1 {
+	display: block;
+    width: 1020px;
+    height: 50px;
+    background: none repeat scroll 0% 0% rgb(255, 255, 255);
+    border-top: 1px solid rgb(213, 213, 213);
+    padding: 15px 0px;
+    overflow: hidden;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+    bottom:0;
+    margin-bottom: 0px;
+}
+.footer-menu1 {
+     display: block;
+     width: 800px;
+     margin: 0px auto;
+     padding-bottom: 25px;
+}
+.copyright1 {
+    color: rgb(153, 153, 153);
+    display: block;
+    width: 300px;
+    margin: 0px auto;
+}
+.footer-menu1 ul.menu {
+    margin: 0px;
+    padding: 0px;
+}
+
+ul.menu {
+    border: medium none;
+    list-style: none outside none;
+    text-align: left;
+}
+.footer-menu1 ul.menu li {
+    list-style: none outside none;
+    display: block;
+    float: left;
+    text-align: left !important;
+    width: auto;
+    overflow: hidden;
+    margin: 0px;
+}
+.footer-menu1 ul.menu a {
+    display: block;
+    color: rgb(153, 153, 153);
+    padding: 0px 5px;
+    width: auto;
+    font-size: 10px;
+}
+/* end loginid.css */
+
+.topmenu {width: 1020px;height: 29px;display: block;}
+
+.maintopmenu {display: block;float: right;padding: 8px 10px;min-width: 600px;height: auto;}
+
+.maintopmenu ul.menu {margin: 0;padding: 0;}ul.menu {border: medium none; list-style: none outside none;}
+.maintopmenu ul.menu li {list-style: none outside none;display: block;float: left;text-align: left !important;width: auto;overflow: hidden;margin: 0 !important; padding: 0;}
+.maintopmenu ul.menu a {display: block;color: rgb(11, 41, 114);padding: 0 10px;width: auto;font-size: 11px;font-weight: bold;font-family: Arial;}
+.maintopmenu ul.menu a:hover, .maintopmenu ul.menu a.active-trail {color: rgb(255, 178, 12);}
+.loginBtn {display: block;float: right;background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat scroll -336px -336px transparent;width: 166px;height: 28px;text-indent: -99999px;}
+.loginBtn:hover {background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat scroll -336px -365px transparent;}
+#personalmenudiv {height: 260px;width: 236px;display: block;background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat scroll 2px 0 transparent;position: absolute;right: 0;z-index: 60;}
+.active {color: rgb(40, 60, 138);font-weight: bold;}
+.logintitle {font-size: 11px;color: rgb(113, 113, 113);font-weight: normal;margin-left: 15px;padding: 10px 0 5px 20px;width: 80px;float: left;}
+#personalmenudiv ul li a.bib {height: 38px;width: 168px;background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat scroll 0 -260px transparent;}
+#personalmenudiv ul li a, #corporatemenudiv ul li a {display: block;text-indent: -99999px;}
+.loginmenucontainer {font-size:11px; position:absolute; top:30px; right:0; *position: inherit;}
+#personalmenudiv{height:260px; width:236px; display:block; background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat 2px 0; position:absolute; right:0; z-index:60;}
+#corporatemenudiv{height:260px; width:236px; display:block; background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat -234px 0; position:absolute; right:0; z-index:60;}
+.loginmenucontainer .adlink{width:170px; height:45px; border-top:1px solid #c5c5c5; margin:auto; color:#5f5f5f; position:relative;}
+.loginmenucontainer  p{background:url('internet_banking_tour.jpg') no-repeat 0 0; padding-left:15px;margin-left:5px}
+.loginmenucontainer .adlink a{line-height:18px; text-decoration:underline; color:#0c329f; }
+.logintitle{font-size:11px; color:#717171; font-weight:normal; margin-left: 15px; padding: 10px 0 5px 20px; width: 80px; float:left;}
+.active{color:#283c8a; font-weight:bold;}.loginmenucontainer ul{clear:both; list-style:none; margin-top:45px; margin-left:35px;}
+#personalmenudiv ul li, #corporatemenudiv ul li {margin-bottom:12px;}
+#personalmenudiv ul li a, #corporatemenudiv ul li a{display:block; text-indent:-99999px;}
+#personalmenudiv ul li a.bib{height:38px; width:168px;  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat 0 -260px;}
+#personalmenudiv ul li a:hover.bib{background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat 0 -298px;}
+#personalmenudiv ul li a.creditcard{height:27px; width:168px;  background:url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat -168px -336px; }
+#personalmenudiv ul li a.creditcard:hover{background:url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat -168px -363px; }
+#corporatemenudiv ul li a.cashcard{height:27px; width:168px;  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat 0 -336px; }
+#corporatemenudiv ul li a.cashcard:hover{background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat 0 -363px;}
+#corporatemenudiv ul li a.ids{height:38px; width:168px;  background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat -336px -260px;}
+#corporatemenudiv ul li a.ids:hover{background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat -336px -298px;}
+#corporatemenudiv ul li a.cib{height:38px; width:168px; background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat -168px -260px;}
+#corporatemenudiv ul li a.cib:hover{background: url('https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png') no-repeat -168px -298px;}
+.mainmenu {display:block;width: 215px;height: auto;z-index: 200;}
+.mainmenu ul.menu {margin: 0;padding: 0;}
+.mainmenu ul.menu li:first-child {box-shadow: none !important;}
+.mainmenu ul.menu li {list-style: none outside none;display: block;float: left;text-align: left !important; width: 215px;overflow: hidden;background: none repeat scroll 0% 0% rgb(11, 41, 114);margin: 0;border-bottom: 1px solid rgb(0, 0, 0);box-shadow: 0 1px 0 rgb(25, 61, 147) inset;}
+.mainmenu ul.menu li a {display: block;color:#ffffff;padding: 9px 0 9px 60px;width: auto;background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/menu-arrow3.png") no-repeat scroll 40px center transparent;font-weight: bold;}
+.mainmenu ul.menu li a:hover{color: rgb(255, 178, 12);background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/menu-arrow.png") no-repeat scroll 40px center transparent;}
+a, img {text-decoration: none;border: 0 none;outline-width: 0;}
+.personal {display: block;float: left;width: 110px;height: auto;padding: 10px 0;text-align: center;color: #FFF;background: none repeat scroll 0% 0% rgb(11, 41, 114);font-size: 10px;font-weight: bold;border-radius: 10px 10px 0 0; behavior:url('PIE.htc');}
+.corporate {display: block;float: left;width: 105px;height: auto;padding: 10px 0;text-align: center;color: #FFF;background: none repeat scroll 0% 0% rgb(255, 178, 12);font-size: 10px;font-weight: bold;border-radius: 10px 10px 0 0; behavior:url('PIE.htc');}
+ul li, ol li {color: rgb(113, 113, 113);font-size: 8pt;}
+.h2, h2 {display:block;padding:5px !important;border-bottom: 0 solid #CCC !important;color: #666 !important;font-weight: bold !important;-webkit-border-top-left-radius: 3px;-webkit-border-top-right-radius: 3px;-moz-border-top-left-radius: 3px;-moz-border-top-right-radius: 3px;border-top-left-radius: 3px;border-top-right-radius: 3px;background: #F5F5F5 !important;background-image: -o-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%) !important;background-image: -moz-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%) !important;background-image: -webkit-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%) !important;background-image: -ms-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%) !important;background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.14, rgb(240,240,240)),color-stop(0.57, rgb(248,248,248))) !important;behavior:url('PIE.htc');}
+.h2:hover,h2:hover{background:#24418F !important;color:#FFF !important;border-bottom: 1px solid #24418F}
+h3{font-size:8pt;margin-bottom:10px}
+/* body{margin:0 auto;font-family:arial;color:#717171;overflow-x:hidden} */
+#row1a,#row1b_1,#row1b_2,#row1b_3,#row2a,#row2b,#row2c{background:#FFF;-webkit-border-radius: 3px;-moz-border-radius: 3px;-ms-border-radius: 3px;-o-border-radius: 3px;border-radius: 3px;}
+#wrap{width: 1020px;height: auto;overflow: hidden;position:relative;margin: 0 auto;min-height: 100%;}
+.mainmenu ul.menu li:hover, .mainmenu ul.menu li.active-trail {background: none repeat scroll 0% 0% rgb(2, 14, 41);}
+#main_header{width:700px;height:30px}
+.main_title{font-size:18pt;padding-right:70px}
+#content{margin-top:30px;width:960px;}
+#side{float:left;width:220px;color:#ffb20c;}
+ul.main_tabNavigation {list-style:none;margin:0;padding:0;}
+ul.main_tabNavigation li {display:inline;}
+ul.main_tabNavigation li a{padding:3px 10px 2px 10px;background-color:#FFB20C;color:#8e8e8e;text-decoration:none;font-weight:bold;-webkit-border-top-left-radius: 3px;-webkit-border-top-right-radius: 3px;-moz-border-top-left-radius: 3px;-moz-border-top-right-radius: 3px;border-top-left-radius: 3px;border-top-right-radius: 3px;background: #F5F5F5; behavior:url('PIE.htc');}
+ul.main_tabNavigation li a.main_selected{border-top:3px solid #AAA;color:#3e3e3e;background: #e4e4e4;font-size: 14px; font-weight: bold;}
+ul.main_tabNavigation li a:focus {outline: 0;}
+ul.main_tabNavigation li a.not_selected{border-top:0 solid #AAA;color:#3e3e3e;background: #f5F5F5; font-size: 14px; font-weight: bold;}
+div.main_tabs > div {padding: 5px;margin-top: 3px;}
+div.main_tabs > div h2 {margin-top: 0;}
+#login,#enroll{-webkit-border-top-right-radius: 3px;-webkit-border-bottom-left-radius: 3px;-webkit-border-bottom-right-radius: 3px;-moz-border-top-right-radius: 3px;-moz-border-bottom-left-radius: 3px;-moz-border-bottom-right-radius: 3px;border-top-right-radius: 3px;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;background:#E4E4E4 !important;float:left;display:inline;margin-bottom:10px;padding:10px !important;width:700px; behavior:url('PIE.htc');}
+#main{float:right;width:700px}
+#main li{display:inline;}
+#main_qlinks{float:right;width:700px;text-align:center}
+#qlinks_container{padding:0 10px;}
+.tab{font-size:8pt;}
+.forms input{width:100px;}
+.enrollinq{padding:0 10px}
+.right{float:right;padding:5px;margin-bottom:10px}
+.space input{margin-bottom:5px}
+.box2{width:460px;float:left;border:1px solid #CCC;margin-bottom:0;}
+#row1a{width:460px;float:left;border:0 solid #CCC;border-bottom:none;margin-bottom:0;background:#FFF url(cib2login.jpg) no-repeat right !important;-webkit-border-bottom-left-radius: 0;-webkit-border-bottom-right-radius: 0;-moz-border-bottom-left-radius: 0;-moz-border-bottom-right-radius: 0;border-bottom-left-radius: 0;border-bottom-right-radius: 0; behavior:url('PIE.htc');}
+.cib_login{margin-left:50px}
+#row2{width:220px;float:right;margin-left:10px}
+.box3{width:220px;height:120px;border:1px solid #CCC;margin-bottom:10px;}
+.contact{border-right:1px solid #ccc}
+.contact2{padding-left:5px}
+#qlinks {font-size:10pt;text-align:center;padding-top:20px}
+#qlinks li{display:inline-block;border-right:1px solid #0b2972;padding:0 20px}
+a{text-decoration:none !imporant;color:#0b2972}
+#qlinks a:hover{text-decoration:underline;color:#303030}
+#footer{font-size:7pt;text-align:center;padding-top:10px;margin-left:auto;margin-right:auto;}
+#footer li{display:inline-block;padding:0 3px}
+#footer a{text-decoration:none;color:#BBB}
+#footer a:hover{color:#a9a}
+.clear{clear:both}
+.container{margin:5px}
+.no-border{border:none !important}
+.no-border2{border-bottom:none !important}
+.sxi-button2 {clear:left;width: auto; margin:0; padding: .15em 0.7em; text-decoration:none !important; cursor:pointer; position: relative; font-size: 13px !important;font-weight: bold !important; background: #F8F8F8 none;background: -moz-linear-gradient(center bottom, #F0F 0pt, #F8F8F8 100%) repeat scroll 0 0 transparent;background-image: -o-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%);background-image: -moz-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%);background-image: -webkit-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%);background-image: -ms-linear-gradient(bottom, rgb(240,240,240) 14%, rgb(248,248,248) 57%);border: 1px solid #D9D9D9;height: 28px !important;-moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; behavior:url('PIE.htc');}
+input.sxi-button2:hover{ background: #F8F8F8 none; color: #333; border: 1px solid #D9D9D9 !important; }
+input.sxi-button2:focus{ background: #F0F0F0 none; color: #333; border: 1px solid #d9d9d9 !important; }
+.sidebdomenu{padding-right: 25px;}
+
+/* addedByBelen */
+
+.searchBox {
+	background-image: url('cashcard-body-image.jpg');
+	background-position: right center;
+	background-repeat: no-repeat;
+	border: 1px solid #6297BC;
+	padding-left: 16px;
+	width: 230px;
+	font-family: "Lucida Grande", "Trebuchet MS", Verdana, Helvetica,
+		sans-serif;
+}
+
+.top_scroller div.horizontal_scroller, .top_scroller div.horizontal_scroller_fast {
+    display: block;
+    float: left;
+    height: 19px;
+    overflow: hidden;
+    padding-top: 5px;
+    position: relative;
+    width: 596px;
+}
+
+.top_scroller .overlay_trigger {
+    color: #FFFFFF;
+}
+
+.top_scroller .forex_trigger {
+    background: none repeat scroll 0 0 #081F60;
+    border-radius: 2px 0 0 2px;
+    color: #FFFFFF;
+    float: left;
+    font-weight: bold;
+    height: 19px;
+    padding-top: 5px;
+    text-align: center;
+    width: 55px;
+    behavior:url('PIE.htc');
+}
+
+.top_scroller .daily_navpu_trigger {
+    background: url("/home/administrator/scroll-bg.png") repeat-x scroll 0 0 transparent;
+    border-right: 1px solid #0A3092;
+    color: #0A3092;
+    float: left;
+    font-weight: bold;
+    height: 19px;
+    padding-top: 5px;
+    text-align: center;
+    width: 89px;
+}
+
+.top_scroller .ctrl_nav {
+    float: right;
+    margin-right: 6px;
+    overflow: hidden;
+    padding-top: 5px;
+    width: 51px;
+}
+
+#search-block-form #edit-search-block-form--2 {
+    background: url("/sites/default/files/images/bdo-search-txt.jpg") no-repeat scroll center top transparent;
+    border: medium none;
+    display: block;
+    float: left;
+    font-size: 12px;
+    height: 20px;
+    padding: 3px 5px;
+    width: 141px;
+}
+
+#search-block-form #edit-submit--2, #search-block-form .form-submit {
+    background: url("/sites/default/files/images/bdo-search-icon.jpg") no-repeat scroll center top transparent;
+    border: medium none;
+    color: #FFFFFF;
+    cursor: pointer !important;
+    display: block;
+    float: left;
+    font-size: 0;
+    height: 26px;
+    text-indent: -9999px;
+    width: 24px;
+}
+
+
+#autocomplete {
+    border: 1px solid;
+    overflow: hidden;
+    position: absolute;
+    z-index: 100;
+}
+#autocomplete ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+#autocomplete li {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #000000;
+    cursor: default;
+    white-space: pre;
+}
+html.js input.form-autocomplete {
+    background-image: url("/misc/throbber.gif");
+    background-position: 100% 2px;
+    background-repeat: no-repeat;
+}
+html.js input.throbbing {
+    background-position: 100% -18px;
+}
+
+fieldset.collapsible {
+    position: relative;
+}
+fieldset.collapsible .fieldset-legend {
+    display: block;
+}
+.form-textarea-wrapper textarea {
+    -moz-box-sizing: border-box;
+    display: block;
+    margin: 0;
+    width: 100%;
+}
+.resizable-textarea .grippie {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: url("/misc/grippie.png") no-repeat scroll center 2px #EEEEEE;
+    border-color: #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    cursor: s-resize;
+    height: 9px;
+    overflow: hidden;
+}
+body.drag {
+    cursor: move;
+}
+.draggable a.tabledrag-handle {
+    cursor: move;
+    float: left;
+    height: 1.7em;
+    margin-left: -1em;
+    overflow: hidden;
+    text-decoration: none;
+}
+a.tabledrag-handle:hover {
+    text-decoration: none;
+}
+a.tabledrag-handle .handle {
+    background: url("/misc/draggable.png") no-repeat scroll 6px 9px transparent;
+    height: 13px;
+    margin: -0.4em 0.5em;
+    padding: 0.42em 0.5em;
+    width: 13px;
+}
+a.tabledrag-handle-hover .handle {
+    background-position: 6px -11px;
+}
+div.indentation {
+    float: left;
+    height: 1.7em;
+    margin: -0.4em 0.2em -0.4em -0.4em;
+    padding: 0.42em 0 0.42em 0.6em;
+    width: 20px;
+}
+div.tree-child {
+    background: url("/misc/tree.png") no-repeat scroll 11px center transparent;
+}
+div.tree-child-last {
+    background: url("/misc/tree-bottom.png") no-repeat scroll 11px center transparent;
+}
+div.tree-child-horizontal {
+    background: url("/misc/tree.png") no-repeat scroll -11px center transparent;
+}
+.tabledrag-toggle-weight-wrapper {
+    text-align: right;
+}
+table.sticky-header {
+    background-color: #FFFFFF;
+    margin-top: 0;
+}
+.progress .bar {
+    background-color: #FFFFFF;
+    border: 1px solid;
+}
+.progress .filled {
+    background-color: #000000;
+    height: 1.5em;
+    width: 5px;
+}
+.progress .percentage {
+    float: right;
+}
+.ajax-progress {
+    display: inline-block;
+}
+.ajax-progress .throbber {
+    background: url("/misc/throbber.gif") no-repeat scroll 0 -18px transparent;
+    float: left;
+    height: 15px;
+    margin: 2px;
+    width: 15px;
+}
+.ajax-progress .message {
+    padding-left: 20px;
+}
+tr .ajax-progress .throbber {
+    margin: 0 2px;
+}
+.ajax-progress-bar {
+    width: 16em;
+}
+.container-inline div, .container-inline label {
+    display: inline;
+}
+.container-inline .fieldset-wrapper {
+    display: block;
+}
+.nowrap {
+    white-space: nowrap;
+}
+html.js .js-hide {
+    display: none;
+}
+.element-hidden {
+    display: none;
+}
+.element-invisible {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+.element-invisible.element-focusable:active, .element-invisible.element-focusable:focus {
+    clip: auto;
+    position: static !important;
+}
+.clearfix:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+* html .clearfix {
+    height: 1%;
+}
+:first-child + html .clearfix {
+    min-height: 1%;
+}
+ul.menu {
+    border: medium none;
+    list-style: none outside none;
+    text-align: left;
+}
+ul.menu li {
+    margin: 0 0 0 0.5em;
+}
+ul li.expanded {
+    list-style-image: url("/misc/menu-expanded.png");
+    list-style-type: circle;
+}
+
+ul li.leaf {
+    list-style-image: url("/misc/menu-leaf.png");
+    list-style-type: square;
+}
+
+li a.active {
+    color: #000000;
+}
+td.menu-disabled {
+    background: none repeat scroll 0 0 #CCCCCC;
+}
+ul.inline, ul.links.inline {
+    display: inline;
+    padding-left: 0;
+}
+ul.inline li {
+    display: inline;
+    list-style-type: none;
+    padding: 0 0.5em;
+}
+.breadcrumb {
+    padding-bottom: 0.5em;
+}
+ul.primary {
+    border-bottom: 1px solid #E6E6E6;
+    border-collapse: collapse;
+    height: auto;
+    line-height: normal;
+    list-style: none outside none;
+    margin: 5px;
+    padding: 0 0 0 1em;
+    white-space: nowrap;
+}
+ul.primary li {
+    display: inline;
+}
+ul.primary li a {
+    background-color: #DDDDDD;
+    border-color: #E6E6E6;
+    border-style: solid solid none;
+    border-width: 1px;
+    height: auto;
+    margin-right: 0.5em;
+    padding: 0 1em;
+    text-decoration: none;
+}
+ul.primary li.active a {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #FFFFFF;
+    border-color: #E6E6E6 #E6E6E6 #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+}
+ul.primary li a:hover {
+    background-color: #EEEEEE;
+    border-color: #CCCCCC #CCCCCC #EEEEEE;
+}
+ul.secondary {
+    border-bottom: 1px solid #E6E6E6;
+    margin: 5px;
+    padding: 0.5em 1em;
+}
+ul.secondary li {
+    border-right: 1px solid #CCCCCC;
+    display: inline;
+    padding: 0 1em;
+}
+ul.secondary a {
+    padding: 0;
+    text-decoration: none;
+}
+ul.secondary a.active {
+    border-bottom: 4px solid #999999;
+}
+div.messages {
+    background-position: 8px 8px;
+    background-repeat: no-repeat;
+    border: 1px solid;
+    margin: 6px 0;
+    padding: 10px 10px 10px 50px;
+}
+div.status {
+    background-image: url("/misc/message-24-ok.png");
+    border-color: #BBEE77;
+}
+div.status, .ok {
+    color: #234600;
+}
+div.status, table tr.ok {
+    background-color: #F8FFF0;
+}
+div.warning {
+    background-image: url("/misc/message-24-warning.png");
+    border-color: #EEDD55;
+}
+div.warning, .warning {
+    color: #884400;
+}
+div.warning, table tr.warning {
+    background-color: #FFFCE5;
+}
+div.error {
+    background-image: url("/misc/message-24-error.png");
+    border-color: #ED541D;
+}
+div.error, .error {
+    color: #8C2E0B;
+}
+div.error, table tr.error {
+    background-color: #FEF5F1;
+}
+div.error p.error {
+    color: #333333;
+}
+div.messages ul {
+    margin: 0 0 0 1em;
+    padding: 0;
+}
+div.messages ul li {
+    list-style-image: none;
+}
+fieldset {
+    margin-bottom: 1em;
+    padding: 0.5em;
+}
+form {
+    margin: 0;
+    padding: 0;
+}
+hr {
+    border: 1px solid gray;
+    height: 1px;
+}
+img {
+    border: 0 none;
+}
+
+th {
+    border-bottom: 3px solid #CCCCCC;
+    padding-right: 1em;
+    text-align: left;
+}
+tbody {
+    border-top: 1px solid #CCCCCC;
+}
+tr.even, tr.odd {
+    background-color: #EEEEEE;
+    border-bottom: 1px solid #CCCCCC;
+    padding: 0.1em 0.6em;
+}
+th.active img {
+    display: inline;
+}
+td.active {
+    background-color: #DDDDDD;
+}
+.item-list .title {
+    font-weight: bold;
+}
+.item-list ul {
+    margin: 0 0 0.75em;
+    padding: 0;
+}
+.item-list ul li {
+    margin: 0 0 0.25em 1.5em;
+    padding: 0;
+}
+.form-item, .form-actions {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+tr.odd .form-item, tr.even .form-item {
+    margin-bottom: 0;
+    margin-top: 0;
+    white-space: nowrap;
+}
+.form-item .description {
+    font-size: 0.85em;
+}
+label {
+    display: block;
+    font-weight: bold;
+}
+label.option {
+    display: inline;
+    font-weight: normal;
+}
+.form-checkboxes .form-item, .form-radios .form-item {
+    margin-bottom: 0.4em;
+    margin-top: 0.4em;
+}
+.form-type-radio .description, .form-type-checkbox .description {
+    margin-left: 2.4em;
+}
+input.form-checkbox, input.form-radio {
+    vertical-align: middle;
+}
+.marker, .form-required {
+    color: #FF0000;
+}
+.form-item input.error, .form-item textarea.error, .form-item select.error {
+    border: 2px solid red;
+}
+.container-inline .form-actions, .container-inline.form-actions {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.more-link {
+    text-align: right;
+}
+.more-help-link {
+    text-align: right;
+}
+.more-help-link a {
+    background: url("/misc/help.png") no-repeat scroll 0 50% transparent;
+    padding: 1px 0 1px 20px;
+}
+.item-list .pager {
+    clear: both;
+    text-align: center;
+}
+.item-list .pager li {
+    background-image: none;
+    display: inline;
+    list-style-type: none;
+    padding: 0.5em;
+}
+.pager-current {
+    font-weight: bold;
+}
+#autocomplete li.selected {
+    background: none repeat scroll 0 0 #0072B9;
+    color: #FFFFFF;
+}
+html.js fieldset.collapsible .fieldset-legend {
+    background: url("/misc/menu-expanded.png") no-repeat scroll 5px 65% transparent;
+    padding-left: 15px;
+}
+
+.fieldset-legend span.summary {
+    color: #999999;
+    font-size: 0.9em;
+    margin-left: 0.5em;
+}
+tr.drag {
+    background-color: #FFFFF0;
+}
+tr.drag-previous {
+    background-color: #FFFFDD;
+}
+.tabledrag-toggle-weight {
+    font-size: 0.9em;
+}
+body div.tabledrag-changed-warning {
+    margin-bottom: 0.5em;
+}
+tr.selected td {
+    background: none repeat scroll 0 0 #FFFFCC;
+}
+td.checkbox, th.checkbox {
+    text-align: center;
+}
+.progress {
+    font-weight: bold;
+}
+.progress .bar {
+    background: none repeat scroll 0 0 #CCCCCC;
+    border-color: #666666;
+    border-radius: 3px 3px 3px 3px;
+    margin: 0 0.2em;
+    behavior:url('PIE.htc');
+}
+.progress .filled {
+    background: url("/misc/progress.gif") repeat scroll 0 0 #0072B9;
+}
+
+.invisible{
+	visibility:hidden;
+}
+
+#right-footer-mybdo{
+	width: 800px;
+}
+
+#advisoryContainer{
+	border: 1px solid #AAAAAA;
+	height: 150px;
+	overflow: auto;
+	width: 780px;
+	border-radius: 10px;
+	float: left;
+	behavior:url('PIE.htc');
+}
+
+#supportForm{
+	padding-top:10px;
+}
+
+#rightSideWrapper2 {
+  /* float: right; */
+  /*width: 370px;*/
+/*   min-height: 280px; */
+/*   height: 100%; */
+  min-height: 289px;
+  height: 289px;
+  max-height: 289px;
+  background: none repeat scroll 0 0 #E6E6E6;
+  padding-left: 10px;
+  /*padding-right: 10px;*/
+  padding-top: 20px;
+  padding-bottom: 16px;
+  border-radius: 10px 10px 10px 10px;
+  text-align: left;
+  margin-left: 16px;
+  behavior:url('PIE.htc');
+  display: table;
+  width:385px;
+  max-width:385px;
+}
+
+.idbox5{
+  width: 170px;
+  border:0;
+  padding-left:5px;
+  margin-left:5px;
+  cursor:pointer;
+  /* background: url("arrow_right.png") no-repeat scroll 0px center transparent; */
+}
+
+tr.link1{
+	font-size:10px !important;
+}
+
+.idbox6{
+  width: 230px;
+  border:0;
+  padding-left:5px;
+  margin-left:5px;
+  cursor:pointer;
+  /* background: url("arrow_right.png") no-repeat scroll 0px center transparent; */
+}
+
+h5{
+	/* color: #0B2972; */
+	color: white;
+	font-family: arial;
+	line-height: 1.2em;
+	font-weight: bold;
+	font-size:14px;
+	text-decoration:underline;
+}
+
+
+.loginBtn1:hover {background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat scroll -336px -365px transparent;}
+#wrap1{width: 1040px;height: auto;overflow: hidden;position:relative;margin: 0 auto;min-height: 100%;}
+.topmenu1 {width: 1090px;height: 29px;display: block;}
+.loginBtn1 {display: block;float: right;background: url("https://online.bdo.com.ph/sso/resources/com.ccti.citrine.sso.web.login.LoginUnifiedPage/css/online_login_bg.png") no-repeat scroll -336px -336px transparent;width: 227px;height: 28px;text-indent: -99999px;}

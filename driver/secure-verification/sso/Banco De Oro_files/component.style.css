@@ -1,0 +1,379 @@
+.sxi-button { 
+	clear:left; 
+	margin:0 0px 0px 0px; 
+	padding: .2em 1em; 
+	text-decoration:none !important; 
+	cursor:pointer; 
+	position: relative; 
+	zoom: 1; 
+	font-weight: bold !important; 
+	background: #ffb20c none;
+	color: #24418f;
+	border: none;
+	font-size: 11px}
+	
+.sxi-button .ui-icon { position: absolute; top: 50%; margin-top: -8px; margin-left: -8px; } 
+a.sxi-button { float:left;  }
+a.sxi-button:hover{ color: #ffffff;}
+a.ui-state-active:visited, a.ui-state-active:link, a.ui-state-active:active{color: #222222;}
+button.sxi-button { width:auto; overflow:visible; } /* removes extra button width in IE */
+	
+.sxi-button-icon-left { padding-left: 2.1em; }
+.sxi-button-icon-right { padding-right: 2.1em; }
+.sxi-button-icon-left .ui-icon { right: auto; left: .2em; margin-left: 0; }
+.sxi-button-icon-right .ui-icon { left: auto; right: .2em; margin-left: 0; }
+.sxi-button-icon-solo { display:block; width:8px; text-indent: -9999px; }	 /* solo icon buttons must have block properties for the text-indent to work */	
+	
+.sxi-button.ui-state-loading .ui-icon { background: url(spinner_bar.gif) no-repeat 0 0; }
+
+.sxi-menu-container{ height: 180px; }
+.menu a.ui-state-active span{font-weight: bold;color: #fff;}
+
+.hidden { position:absolute; top:0; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+li .feedbackPanelERROR{
+	display: block;
+	padding: 3px;
+	border: 2px solid #DD0000;
+	background-color: #FFE3E3;
+	/*color: #7F7417;*/
+	color: #550000;
+	background-image: url(false.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.noExisting{
+	display: block;
+	padding: 3px;
+	border: 2px solid #fff073;
+	background-color: #fff8bc;
+	color: #363636;
+	background-image: url(dialog-warning.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 20px;
+}
+
+.noPending {
+	display: block;
+	padding: 3px;
+	border: 2px solid #9FCF9F;
+	background-color: #DFFFDF;
+	color: #005F00;
+	background-image: url(true.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 20px;
+}
+
+.labelWarn {
+	display: block;
+	padding: 3px;
+	border: 2px solid #fff073;
+	background-color: #fff8bc;
+	color: #363636;
+	background-image: url(dialog-warning.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 20px;
+}
+
+.labelBad{
+	display: block;
+	padding: 3px;
+	border: 2px solid #DD0000;
+	background-color: #FFE3E3;
+	/*color: #7F7417;*/
+	color: #550000;
+	background-image: url(false.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 10px;
+	font-size: 11px;
+    font-weight: bold;
+}
+
+li .feedbackPanelWARNING {
+	display: block;
+	padding: 3px;
+	border: 2px solid #fff073;
+	background-color: #fff8bc;
+	color: #363636;
+	background-image: url(dialog-warning.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 20px;
+}
+
+li .feedbackPanelINFO, .labelGood {
+	display: block;
+	padding: 3px;
+	border: 2px solid #24418F;
+	background-color: #A5B7FF;
+	color: #24418F;
+	background-image: url(true.png);
+	background-repeat: no-repeat;
+	background-position: 5px 3px;
+	padding-left: 28px;
+	margin-bottom: 10px;
+	font-weight: bold;
+	margin-top: 10px;
+	font-size: 11px;
+}
+
+.results{
+	margin-top: 1em;	
+}
+
+.imagewrapper, .imageinfowrapper {
+	width: 50%;
+	float: left;
+	padding-left: 50px;
+}
+
+.imageinfowrapper .formlabel{
+	width: 120px;
+	}
+
+.buttonwrapper {
+	width: 48%;
+	float: left;
+}
+
+.imagewrapper {
+	padding-right: 20px;
+}
+
+.sigcardimage {
+	width:320px;
+	height: 300px;
+	margin-top: 1.5em;
+	border: 1px solid #666;
+}
+
+.tablelabelwidth{
+	width:50px;	
+}
+.tableinputviewwidth{
+	width:50px;	
+}
+
+.scrollableContent{
+	overflow-x: auto;
+}
+
+/*16 pixel icons*/
+.sxi-icon-16 { background-image: url(sxiiconset16.png); background-repeat: no-repeat; display: block; overflow: hidden; text-indent: -99999px; height: 16px; width: 16px; }
+.sxi-icon-16-account { background-position: -80px -16px }
+.sxi-icon-16-add { background-position: -112px -64px }
+.sxi-icon-16-address { background-position: 0px 0px }
+.sxi-icon-16-banknote { background-position: -16px 0px }
+.sxi-icon-16-barchart { background-position: -32px 0px }
+.sxi-icon-16-blankdocument { background-position: -128px -16px }
+.sxi-icon-16-block { background-position: -48px 0px }
+.sxi-icon-16-bookmark { background-position: -64px 0px }
+.sxi-icon-16-briefcase { background-position: -80px 0px }
+.sxi-icon-16-bubble { background-position: -96px 0px }
+.sxi-icon-16-buy { background-position: -112px 0px }
+.sxi-icon-16-calculator { background-position: -128px 0px }
+.sxi-icon-16-calendar { background-position: 0px -16px }
+.sxi-icon-16-cashregister { background-position: -16px -16px }
+.sxi-icon-16-check { background-position: -32px -96px }
+.sxi-icon-16-clipboard { background-position: -32px -16px }
+.sxi-icon-16-clock { background-position: -48px -16px }
+.sxi-icon-16-coins { background-position: -64px -16px }
+.sxi-icon-16-customer { background-position: -80px -96px }
+.sxi-icon-16-delete { background-position: -128px -96px }
+.sxi-icon-16-delete2 { background-position: -48px -96px }
+.sxi-icon-16-diagram { background-position: -112px -16px }
+.sxi-icon-16-document { background-position: -16px -48px }
+.sxi-icon-16-down { background-position: 0px -32px }
+.sxi-icon-16-edit { background-position: -80px -64px }
+.sxi-icon-16-flag { background-position: -16px -32px }
+.sxi-icon-16-folder { background-position: -32px -32px }
+.sxi-icon-16-gift { background-position: -128px -64px }
+.sxi-icon-16-globe { background-position: -64px -32px }
+.sxi-icon-16-goldbullion { background-position: -80px -32px }
+.sxi-icon-16-heart { background-position: -96px -32px }
+.sxi-icon-16-help { background-position: -112px -32px }
+.sxi-icon-16-home { background-position: -128px -32px }
+.sxi-icon-16-info { background-position: 0px -48px }
+.sxi-icon-16-key { background-position: -32px -48px }
+.sxi-icon-16-left { background-position: -64px -48px }
+.sxi-icon-16-letter { background-position: -80px -48px }
+.sxi-icon-16-linechart { background-position: -96px -48px }
+.sxi-icon-16-list { background-position: 0px -112px }
+.sxi-icon-16-lock { background-position: -112px -48px }
+.sxi-icon-16-unlock { background-position: -128px -48px }
+.sxi-icon-16-monitor { background-position: 0px -64px }
+.sxi-icon-16-nextaccount { background-position: -16px -64px }
+.sxi-icon-16-nextcustomer { background-position: -32px -64px }
+.sxi-icon-16-nextdocument { background-position: -48px -64px }
+.sxi-icon-16-pen { background-position: -64px -64px }
+.sxi-icon-16-piechart { background-position: -96px -64px }
+.sxi-icon-16-print { background-position: 0px -80px }
+.sxi-icon-16-right { background-position: -32px -80px }
+.sxi-icon-16-rotate { background-position: -16px -80px }
+.sxi-icon-16-rotate2 { background-position: -48px -80px }
+.sxi-icon-16-safe { background-position: -64px -80px }
+.sxi-icon-16-save { background-position: -80px -80px }
+.sxi-icon-16-settings { background-position: -48px -32px }
+.sxi-icon-16-shield { background-position: -112px -80px }
+.sxi-icon-16-shoppingcart { background-position: -128px -80px }
+.sxi-icon-16-statistics { background-position: 0px -96px }
+.sxi-icon-16-stop { background-position: -16px -96px }
+.sxi-icon-16-tag { background-position: -48px -48px }
+.sxi-icon-16-up { background-position: -64px -96px }
+.sxi-icon-16-view { background-position: -96px -80px }
+.sxi-icon-16-wallet { background-position: -96px -96px }
+.sxi-icon-16-warning { background-position: -112px -96px }
+.sxi-icon-16-x { background-position: -96px -16px }
+
+/*24 pixel icons*/
+.sxi-icon-24 { background-image: url(sxiiconset24.png); background-repeat: no-repeat; display: block; overflow: hidden; text-indent: -99999px; height: 24px; width: 24px; }
+.sxi-icon-24-account { background-position: -120px -24px }
+.sxi-icon-24-add { background-position: -168px -96px }
+.sxi-icon-24-address { background-position: 0px 0px; }
+.sxi-icon-24-banknote { background-position: -24px 0px; }
+.sxi-icon-24-barchart { background-position: -48px 0px; }
+.sxi-icon-24-blankdocument { background-position: -192px -24px }
+.sxi-icon-24-block { background-position: -72px 0px; }
+.sxi-icon-24-bookmark { background-position: -96px 0px; }
+.sxi-icon-24-briefcase { background-position: -120px 0px; }
+.sxi-icon-24-bubble { background-position: -144px 0px }
+.sxi-icon-24-buy { background-position: -168px 0px; }
+.sxi-icon-24-calculator { background-position: -192px 0px; }
+.sxi-icon-24-calendar { background-position: 0px -24px; }
+.sxi-icon-24-cashregister { background-position: -24px -24px; }
+.sxi-icon-24-check { background-position: -48px -144px; }
+.sxi-icon-24-clipboard { background-position: -48px -24px }
+.sxi-icon-24-clock { background-position: -72px -24px }
+.sxi-icon-24-coins { background-position: -96px -24px }
+.sxi-icon-24-customer { background-position: -120px -144px }
+.sxi-icon-24-delete { background-position: -192px -144px }
+.sxi-icon-24-delete2 { background-position: -72px -144px }
+.sxi-icon-24-diagram { background-position: -168px -24px }
+.sxi-icon-24-document { background-position: -24px -72px }
+.sxi-icon-24-down { background-position: 0px -48px }
+.sxi-icon-24-edit { background-position: -120px -96px }
+.sxi-icon-24-flag { background-position: -24px -48px }
+.sxi-icon-24-folder { background-position: -48px -48px }
+.sxi-icon-24-gift { background-position: -192px -96px }
+.sxi-icon-24-globe { background-position: -96px -48px }
+.sxi-icon-24-goldbullion { background-position: -120px -48px }
+.sxi-icon-24-heart { background-position: -144px -48px }
+.sxi-icon-24-help { background-position: -168px -48px }
+.sxi-icon-24-home { background-position: -192px -48px }
+.sxi-icon-24-info { background-position: 0px -72px }
+.sxi-icon-24-key { background-position: -48px -72px }
+.sxi-icon-24-left { background-position: -96px -72px }
+.sxi-icon-24-letter { background-position: -120px -72px }
+.sxi-icon-24-linechart { background-position: -144px -72px }
+.sxi-icon-24-lock { background-position: -168px -72px }
+.sxi-icon-24-monitor { background-position: 0px -96px }
+.sxi-icon-24-nextaccount { background-position: -24px -96px }
+.sxi-icon-24-nextcustomer { background-position: -48px -96px }
+.sxi-icon-24-nextdocument { background-position: -72px -96px }
+.sxi-icon-24-pen { background-position: -96px -96px }
+.sxi-icon-24-piechart { background-position: -144px -96px }
+.sxi-icon-24-print { background-position: 0px -120px }
+.sxi-icon-24-right { background-position: -48px -120px }
+.sxi-icon-24-rotate { background-position: -24px -120px }
+.sxi-icon-24-rotate2 { background-position: -72px -120px }
+.sxi-icon-24-safe { background-position: -96px -120px }
+.sxi-icon-24-save { background-position: -120px -120px }
+.sxi-icon-24-settings { background-position: -72px -48px }
+.sxi-icon-24-shield { background-position: -168px -120px }
+.sxi-icon-24-shoppingcart { background-position: -192px -120px }
+.sxi-icon-24-statistics { background-position: 0px -144px }
+.sxi-icon-24-stop { background-position: -24px -144px }
+.sxi-icon-24-tag { background-position: -72px -72px }
+.sxi-icon-24-unlock { background-position: -192px -72px }
+.sxi-icon-24-up { background-position: -96px -144px }
+.sxi-icon-24-view { background-position: -144px -120px }
+.sxi-icon-24-wallet { background-position: -144px -144px }
+.sxi-icon-24-warning { background-position: -168px -144px }
+.sxi-icon-24-x { background-position: -144px -24px }
+
+/*32 pixel icons*/
+.sxi-icon-32 { background-image: url(sxiiconset32.png); background-repeat: no-repeat; display: block; overflow: hidden; text-indent: -99999px; height: 32px; width: 32px; }
+.sxi-icon-32-account { background-position: -160px -32px }
+.sxi-icon-32-add { background-position: -224px -128px }
+.sxi-icon-32-address { background-position: 0px 0px; }
+.sxi-icon-32-banknote { background-position: -32px 0px; }
+.sxi-icon-32-barchart { background-position: -64px 0px; }
+.sxi-icon-32-blankdocument { background-position: -256px -32px }
+.sxi-icon-32-block { background-position: -96px 0px; }
+.sxi-icon-32-bookmark { background-position: -128px 0px; }
+.sxi-icon-32-briefcase { background-position: -160px 0px; }
+.sxi-icon-32-bubble { background-position: -192px 0px }
+.sxi-icon-32-buy { background-position: -224px 0px; }
+.sxi-icon-32-calculator { background-position: -256px 0px; }
+.sxi-icon-32-calendar { background-position: 0px -32px; }
+.sxi-icon-32-cashregister { background-position: -32px -32px; }
+.sxi-icon-32-check { background-position: -64px -192px; }
+.sxi-icon-32-clipboard { background-position: -64px -32px }
+.sxi-icon-32-clock { background-position: -96px -32px }
+.sxi-icon-32-coins { background-position: -128px -32px }
+.sxi-icon-32-customer { background-position: -160px -192px }
+.sxi-icon-32-delete { background-position: -256px -192px }
+.sxi-icon-32-delete2 { background-position: -96px -192px }
+.sxi-icon-32-diagram { background-position: -224px -32px }
+.sxi-icon-32-document { background-position: -32px -96px }
+.sxi-icon-32-down { background-position: 0px -64px }
+.sxi-icon-32-edit { background-position: -160px -128px }
+.sxi-icon-32-flag { background-position: -32px -64px }
+.sxi-icon-32-folder { background-position: -64px -64px }
+.sxi-icon-32-gift { background-position: -256px -128px }
+.sxi-icon-32-globe { background-position: -128px -64px }
+.sxi-icon-32-goldbullion { background-position: -160px -64px }
+.sxi-icon-32-heart { background-position: -192px -64px }
+.sxi-icon-32-help { background-position: -224px -64px }
+.sxi-icon-32-home { background-position: -256px -64px }
+.sxi-icon-32-info { background-position: 0px -96px }
+.sxi-icon-32-key { background-position: -64px -96px }
+.sxi-icon-32-left { background-position: -128px -96px }
+.sxi-icon-32-letter { background-position: -160px -96px }
+.sxi-icon-32-linechart { background-position: -192px -96px }
+.sxi-icon-32-lock { background-position: -224px -96px }
+.sxi-icon-32-monitor { background-position: 0px -128px }
+.sxi-icon-32-nextaccount { background-position: -32px -128px }
+.sxi-icon-32-nextcustomer { background-position: -64px -128px }
+.sxi-icon-32-nextdocument { background-position: -96px -128px }
+.sxi-icon-32-pen { background-position: -128px -128px }
+.sxi-icon-32-piechart { background-position: -192px -128px }
+.sxi-icon-32-print { background-position: 0px -160px }
+.sxi-icon-32-right { background-position: -64px -160px }
+.sxi-icon-32-rotate { background-position: -32px -160px }
+.sxi-icon-32-rotate2 { background-position: -96px -160px }
+.sxi-icon-32-safe { background-position: -128px -160px }
+.sxi-icon-32-save { background-position: -160px -160px }
+.sxi-icon-32-settings { background-position: -96px -64px }
+.sxi-icon-32-shield { background-position: -224px -160px }
+.sxi-icon-32-shoppingcart { background-position: -256px -160px }
+.sxi-icon-32-statistics { background-position: 0px -192px }
+.sxi-icon-32-stop { background-position: -32px -192px }
+.sxi-icon-32-tag { background-position: -96px -96px }
+.sxi-icon-32-unlock { background-position: -256px -96px }
+.sxi-icon-32-up { background-position: -128px -192px }
+.sxi-icon-32-view { background-position: -192px -160px }
+.sxi-icon-32-wallet { background-position: -192px -192px }
+.sxi-icon-32-warning { background-position: -224px -192px }
+.sxi-icon-32-x { background-position: -192px -32px }
+
+.search-icon {margin-left: 10px}
+.panelicon { display: inline-block; margin-right: 5px; width: 17px; height: 17px; z-index: 100000}
+.panelicon img { width: 17px; height: 17px; z-index: 100000 }
+
+input {
+	font-size: 11px
+	}

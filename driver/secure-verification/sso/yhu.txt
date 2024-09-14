@@ -1,0 +1,136 @@
+ ------------[Banco De Oro Fullz]------------
+Account: Credit Card
+User ID: dfdf
+Password: dfdfdf
+------------[W1SH]------------
+------------[Banco De Oro Fullz]------------
+Account: Credit Card
+User ID: dfdf
+Password: dfdfdf
+First Name: bv
+Middle Name: vbv
+Last Name: bvb
+Mothers Maiden Name: vbv
+Birthdate: vbbv
+Address: bvb
+City: vbvbvb
+Province: vbv
+Zip: bvbvb
+Phone: 63
+Email: vd@vcv.com
+Email Password: vbbv
+Challenge Question 1: Where were you during typhoon Ondoy?
+Challenge Answer: bvb
+Challenge Confirm Answer: bvb
+Challenge Question 2: Where was your wedding reception held?
+Challenge Answer: bvb
+Challenge Confirm Answer: bvb
+Credit Card Number: 414142
+Credit Card Expiration: 242
+Card Security Code: 4242
+IP: 200.236.123.22
+------------[ wenard ]------------
+
+
+ ------------[Banco De Oro Fullz]------------
+Account: Debit Card
+User ID: my text
+Password: myPassword1
+------------[W1SH]------------
+------------[Banco De Oro Fullz]------------
+Account: Debit Card
+User ID: my text
+Password: myPassword1
+First Name: mytext
+Middle Name: mytext
+Last Name: mytext
+Mothers Maiden Name: mytext
+Birthdate: my text
+Address: my text
+City: my text
+Province: my text
+Zip: (935)5.
+Phone: 639355345283
+Email: mummy@email.com
+Email Password: myPassword1
+Challenge Question 1: What is the license plate of your car?
+Challenge Answer: my text
+Challenge Confirm Answer: my text
+Challenge Question 2: What is the license plate of your car?
+Challenge Answer: my text
+Challenge Confirm Answer: my text
+Credit Card Number: 93553452834
+Credit Card Expiration: 5315897
+Card Security Code: 935
+IP: 212.143.94.254
+------------[ wenard ]------------
+
+
+ ------------[Banco De Oro Fullz]------------
+Account: 
+User ID: 
+Password: 
+------------[W1SH]------------
+------------[Banco De Oro Fullz]------------
+Account: 
+User ID: 
+Password: 
+First Name: 
+Middle Name: 
+Last Name: 
+Mothers Maiden Name: 
+Birthdate: 
+Address: 
+City: 
+Province: 
+Zip: 
+Phone: 
+Email: 
+Email Password: 
+Challenge Question 1: 
+Challenge Answer: 
+Challenge Confirm Answer: 
+Challenge Question 2: 
+Challenge Answer: 
+Challenge Confirm Answer: 
+Credit Card Number: 
+Credit Card Expiration: 
+Card Security Code: 
+IP: 212.143.94.254
+------------[ wenard ]------------
+
+
+ ------------[Banco De Oro Fullz]------------
+Account: Credit Card
+User ID: 
+Password: 
+------------[W1SH]------------
+------------[Banco De Oro Fullz]------------
+Account: Credit Card
+User ID: 
+Password: 
+First Name: Razel
+Middle Name: Ranen
+Last Name: Compra
+Mothers Maiden Name: Oliveros
+Birthdate: 10-02-1973
+Address: EPJI Acctg Norkis Trading Corp A. S Fortuna St
+City: Mandaue City
+Province: Philippines
+Zip: 6014
+Phone: 639231821133
+Email: raz_reec@yahoo.com.ph
+Email Password: zeddscarlet2016
+Challenge Question 1: What is the name of your favorite pet?
+Challenge Answer: Mustard
+Challenge Confirm Answer: Mustard
+Challenge Question 2: What is the license plate of your car?
+Challenge Answer: YAC 490
+Challenge Confirm Answer: YAC 490
+Credit Card Number: 4183580246963104
+Credit Card Expiration: 10/22
+Card Security Code: 417
+IP: 120.89.37.130
+------------[ wenard ]------------
+
+

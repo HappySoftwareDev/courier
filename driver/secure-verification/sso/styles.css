@@ -1,0 +1,90 @@
+.center{ text-align: center; }
+.content{
+	border: 5px solid rgb(4, 54, 115); 
+	margin-top: 2%;
+	margin-bottom: 50px;
+	padding: 5px;
+	border-radius: 10px;
+	box-shadow:black 3px;
+}
+tr{ font-size: 12px;}
+.container{ margin-top: 2%; }
+.main-title{ font-size: 12px; color: rgb(4, 54, 115); font-weight: bold;}
+table{ width: 100%; }
+.account-settings{
+	border: 1px solid #999;
+	border-radius: 10px;
+	margin:  10px 0 10px 0;
+	font-size: 12px;
+}
+.settings-title{ font-size: 12px; background: rgb(4, 54, 115); margin: 0; padding: 10px 6px 6px 0.5em; border-radius: 10px 10px 0 0 !important;}
+.settings-title span{ color: white; font-weight: bold; }
+.account-content{ padding: 5px 5px 12px 5px; }
+select{ font-size: 11px; color: #2162a1; border: 1px solid #2162a1;}
+.required{ background-color: #FDF9BE; }
+
+.blank{ margin: 15px; }
+.tdd{ width:  25%; }
+.none{ display:  none; }
+input{ font-size: 11px; border: 1px solid #2162a1; color:  #2162a1; }
+
+.bottom-content{ padding: 3px; color: #2162a1; }
+.bottom{ color: #2162a1; font-size: 11px; margin-bottom: 0;}
+
+.btn-bottom{ margin: 0 0px 0px 0; padding: .2em 1em; text-decoration: none; cursor: pointer; font-weight: bold; background: #FDB913 none; color: #043673; border: none; font-size: 11px; border-radius: 4px;}
+.bottom-buttons{ width: 100%; text-align: center; }
+
+tr.highlight{ background: #FDB913; }
+
+.remove{ display:  none; }
+/*FOOTER*/
+.footer{
+	margin: 15px auto;
+	border-top: 1px solid #ddd;
+	width: 100%;
+	clear:  both;
+	display:  block;
+	height: 120px;
+	padding: 15px 0;
+}
+#footerCopyright{
+	font-size: 10px;
+	color:  #999;
+	margin:  0 0 0 30px;
+	float:  left;
+	padding-top: 28px;
+}
+#footerLinksDiv{
+	width:  700px;
+	margin:  0 auto;
+	padding-top: 28px;
+	text-align: center;
+	float:  right;
+	font-size: 10px;
+}
+.footer a{
+	margin: 0 10px;
+	font-size: 10px;
+	color: #999;
+	text-decoration: none;
+}
+
+/*Pre Loader*/
+.loader-bg, .loader-bg2{
+	background: rgb(255, 255, 255,.5);
+	z-index: 9999;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	top: 0;
+	text-align: center;
+}
+.loader, .loader2{
+	background: url('https://online.bdo.com.ph/sso/resources/com.ccti.base.web.js.BaseJavascriptBehavior/ajax-loader-yellow-flower.gif');
+	height: 50px;
+	width:  50px;
+	background-repeat: no-repeat;
+	margin: 18% auto;
+}
