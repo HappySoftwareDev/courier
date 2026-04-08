@@ -1,9 +1,0 @@
-
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteCond %{REMOTE_ADDR} !^192\.168\.43\.213$
-RewriteCond %{REMOTE_ADDR} !^100\.100\.
-RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
-RewriteCond %{REQUEST_URI} !^/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
-RewriteRule !^maintenance.php$ /maintenance.php [R=302,L]
-</IfModule>

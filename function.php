@@ -1,27 +1,29 @@
 <?php
-$hostname_Connect = "localhost";
-$database_Connect = "kundaita_mc_db";
-$username_Connect = "kundaita_mc_user";
-$password_Connect = "#;H}MXNXx(kB";
+/**
+ * Legacy Functions Library - MIGRATED TO NEW SYSTEM
+ * 
+ * All functions now use the new PDO database system.
+ * Centralized bootstrap ensures consistent database access.
+ */
 
-// FOR DEV ENV
-// $hostname_Connect = "localhost";
-// $database_Connect = "kundaita_mc_db";
-// $username_Connect = "root";
-// $password_Connect = "";
+// Load centralized bootstrap
+if (!defined('APP_ROOT')) {
+    require_once dirname(__FILE__) . '/config/bootstrap.php';
+}
 
-$Connect = @mysqli_connect($hostname_Connect, $username_Connect, $password_Connect, $database_Connect);
-// $Connect = @mysqli_connect("localhost","root","", "kundaita_mc_db");
+// Note: All functions below have been updated to use $DB (PDO) instead of $Connect (MySQLi)
+// The old $Connect variable is no longer available - all code must use the new system
 
 function getClients()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `clients`";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['client_id'];
         $Name = $row_type['Name'];
         $Email = $row_type['Email'];
@@ -39,13 +41,14 @@ function getClients()
 
 function getUsers()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `users`";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['client_id'];
         $Name = $row_type['Name'];
         $Email = $row_type['EmailAddress'];
@@ -62,13 +65,14 @@ function getUsers()
 
 function getDrivers()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `driver`";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['driverID'];
         $Name = $row_type['name'];
         $phone = $row_type['phone'];
@@ -95,13 +99,14 @@ function getDrivers()
 
 function getDriversOnMaps()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `driver`";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['driverID'];
         $Name = $row_type['name'];
         $phone = $row_type['phone'];
@@ -124,15 +129,16 @@ function getDriversOnMaps()
 
 function getDriversOnApp()
 {
-    if (isset($_SESSION['MM_Username'])) {
-        $user = $_SESSION['MM_Username'];
-        global $Connect;
+    if (isset($_SESSION['user_email'])) {
+        $user = $_SESSION['user_email'];
+        global $DB;
 
-        $get = "SELECT * FROM `driver` where username = '$user'  ";
+        $get = "SELECT * FROM `driver` where username = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$user]);
+        $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($drivers as $row_type) {
             $ID = $row_type['driverID'];
             $Name = $row_type['name'];
             $phone = $row_type['phone'];
@@ -171,14 +177,17 @@ function getDriversOnApp()
 
 function getDriversNameOnApp()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'] ?? null;
+    if (!$user) return;
+    
+    global $DB;
 
-    $get = "SELECT * FROM `driver` where username = '$user' LIMIT 1 ";
+    $get = "SELECT * FROM `driver` where username = ? LIMIT 1";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['driverID'];
         $Name = $row_type['name'];
         $phone = $row_type['phone'];
@@ -199,14 +208,17 @@ function getDriversNameOnApp()
 
 function getTaxiDriversLiveJob()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'] ?? null;
+    if (!$user) return;
+    
+    global $DB;
 
-    $get = "SELECT * FROM `driver` where username = '$user' LIMIT 1 ";
+    $get = "SELECT * FROM `driver` where username = ? LIMIT 1";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $type_of_service = $row_type['type_of_service'];
 
         $link = "afterPick.php";
@@ -223,13 +235,14 @@ function getTaxiDriversLiveJob()
 
 function getBookings()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `bookings`";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['order_id'];
         $email_from = $row_type['email'];
         $address = $row_type['pick_up_address'];
@@ -257,13 +270,14 @@ function getBookings()
 
 function getBookingInv()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `bookings`";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['order_id'];
         $email_from = $row_type['email'];
         $address = $row_type['pick_up_address'];
@@ -291,26 +305,28 @@ function getBookingInv()
 
 function getExDateToDriver()
 {
-    global $Connect;
+    global $DB;
 
-    $user = $_SESSION['MM_Username'];
+    $user = $_SESSION['user_email'];
 
-    $get_driver = "SELECT * FROM driver WHERE username='$user' ";
+    $get_driver = "SELECT * FROM driver WHERE username = ?";
+    $stmt = $DB->prepare($get_driver);
+    $stmt->execute([$user]);
+    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run_driver = mysqli_query($Connect, $get_driver);
-
-    while ($row_type = mysqli_fetch_array($run_driver)) {
+    foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
         $company_name = $row_type['company_name'];
         $online = $row_type['online'];
         $mode_of_transport = $row_type['mode_of_transport'];
         $username = $row_type['username'];
 
-        $get = "SELECT * FROM `users` WHERE Name='$company_name'";
+        $get = "SELECT * FROM `users` WHERE Name = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$company_name]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($users as $row_type) {
             $ID = $row_type['ID'];
             $Name = $row_type['Name'];
             $Email = $row_type['email'];
@@ -333,14 +349,15 @@ function getExDateToDriver()
 function getBookingsToDriver()
 {
 
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
 
-    $get_driver = "SELECT * FROM driver WHERE username='$user' ";
+    $get_driver = "SELECT * FROM driver WHERE username = ?";
+    $stmt = $DB->prepare($get_driver);
+    $stmt->execute([$user]);
+    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run_driver = mysqli_query($Connect, $get_driver);
-
-    while ($row_type = mysqli_fetch_array($run_driver)) {
+    foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
         $company_name = $row_type['company_name'];
         $online = $row_type['online'];
@@ -349,11 +366,12 @@ function getBookingsToDriver()
         $username = $row_type['username'];
 
 
-        $get = "SELECT * FROM bookings WHERE status ='new' AND vehicle_type='$type_of_service' ORDER BY Date DESC LIMIT 8 ";
+        $get = "SELECT * FROM bookings WHERE status = 'new' AND vehicle_type = ? ORDER BY Date DESC LIMIT 8";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$type_of_service]);
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($bookings as $row_type) {
             $ID = $row_type['order_id'];
             $Date = $row_type['Date'];
             $email_fro = $row_type['email'];
@@ -380,11 +398,12 @@ function getBookingsToDriver()
             $cost = "";
             $url = "";
 
-            $get_commission = "SELECT * FROM `prizelist` ";
+            $get_commission = "SELECT * FROM `prizelist`";
+            $stmt = $DB->prepare($get_commission);
+            $stmt->execute();
+            $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $run_commission = mysqli_query($Connect, $get_commission);
-
-            while ($row_type = mysqli_fetch_array($run_commission)) {
+            foreach ($commissions as $row_type) {
 
                 $parcel_driver_commission = $row_type['parcel_driver_commission'];
                 $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -430,14 +449,15 @@ function getBookingsToDriver()
 function getBookingsToTruckDrivers()
 {
 
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
 
-    $get_driver = "SELECT * FROM driver WHERE username='$user' ";
+    $get_driver = "SELECT * FROM driver WHERE username = ?";
+    $stmt = $DB->prepare($get_driver);
+    $stmt->execute([$user]);
+    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run_driver = mysqli_query($Connect, $get_driver);
-
-    while ($row_type = mysqli_fetch_array($run_driver)) {
+    foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
         $company_name = $row_type['company_name'];
         $online = $row_type['online'];
@@ -445,11 +465,12 @@ function getBookingsToTruckDrivers()
         $type_of_service = $row_type['type_of_service'];
         $username = $row_type['username'];
 
-        $get = "SELECT * FROM `users` WHERE Name='$company_name'";
+        $get = "SELECT * FROM `users` WHERE Name = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$company_name]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($users as $row_type) {
             $ID = $row_type['ID'];
             $Name = $row_type['Name'];
             $Email = $row_type['email'];
@@ -460,11 +481,12 @@ function getBookingsToTruckDrivers()
 
             if (date("Y-m-d") < $expire) {
 
-                $get = "SELECT * FROM bookings WHERE status ='new' AND vehicle_type='$type_of_service' AND company_name='$company_name' ORDER BY Date DESC LIMIT 8 ";
+                $get = "SELECT * FROM bookings WHERE status = 'new' AND vehicle_type = ? AND company_name = ? ORDER BY Date DESC LIMIT 8";
+                $stmt = $DB->prepare($get);
+                $stmt->execute([$type_of_service, $company_name]);
+                $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                $run = mysqli_query($Connect, $get);
-
-                while ($row_type = mysqli_fetch_array($run)) {
+                foreach ($bookings as $row_type) {
                     $ID = $row_type['order_id'];
                     $Date = $row_type['Date'];
                     $email_fro = $row_type['email'];
@@ -488,11 +510,12 @@ function getBookingsToTruckDrivers()
                     $drop_time = $row_type['drop_time'];
 
 
-                    $get_commission = "SELECT * FROM `prizelist` ";
+                    $get_commission = "SELECT * FROM `prizelist`";
+                    $stmt = $DB->prepare($get_commission);
+                    $stmt->execute();
+                    $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    $run_commission = mysqli_query($Connect, $get_commission);
-
-                    while ($row_type = mysqli_fetch_array($run_commission)) {
+                    foreach ($commissions as $row_type) {
 
                         $parcel_driver_commission = $row_type['parcel_driver_commission'];
                         $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -541,14 +564,15 @@ function getBookingsToTruckDrivers()
 function getBookingsToTaxiDrivers()
 {
 
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
 
-    $get_driver = "SELECT * FROM driver WHERE username='$user' ";
+    $get_driver = "SELECT * FROM driver WHERE username = ?";
+    $stmt = $DB->prepare($get_driver);
+    $stmt->execute([$user]);
+    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run_driver = mysqli_query($Connect, $get_driver);
-
-    while ($row_type = mysqli_fetch_array($run_driver)) {
+    foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
         $company_name = $row_type['company_name'];
         $online = $row_type['online'];
@@ -556,11 +580,12 @@ function getBookingsToTaxiDrivers()
         $type_of_service = $row_type['type_of_service'];
         $username = $row_type['username'];
 
-        $get = "SELECT * FROM `users` WHERE Name='$company_name'";
+        $get = "SELECT * FROM `users` WHERE Name = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$company_name]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($users as $row_type) {
             $ID = $row_type['ID'];
             $Name = $row_type['Name'];
             $Email = $row_type['email'];
@@ -571,11 +596,12 @@ function getBookingsToTaxiDrivers()
 
             if (date("Y-m-d") < $expire) {
 
-                $get = "SELECT * FROM bookings WHERE status ='new' AND delivery_type='$type_of_service' AND company_name='$company_name' ORDER BY Date DESC LIMIT 8 ";
+                $get = "SELECT * FROM bookings WHERE status = 'new' AND delivery_type = ? AND company_name = ? ORDER BY Date DESC LIMIT 8";
+                $stmt = $DB->prepare($get);
+                $stmt->execute([$type_of_service, $company_name]);
+                $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                $run = mysqli_query($Connect, $get);
-
-                while ($row_type = mysqli_fetch_array($run)) {
+                foreach ($bookings as $row_type) {
                     $ID = $row_type['order_id'];
                     $Date = $row_type['Date'];
                     $email_fro = $row_type['email'];
@@ -631,14 +657,16 @@ function getBookingsToTaxiDrivers()
 
 function getAcceptedBookingsToDriver()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
     $service = "";
     $cost = "";
-    $get = "SELECT * FROM `bookings` where username ='$user' && status ='accepted' ORDER BY Date DESC LIMIT 8";
-    $run = mysqli_query($Connect, $get);
+    $get = "SELECT * FROM `bookings` where username = ? AND status = 'accepted' ORDER BY Date DESC LIMIT 8";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
         $Date = $row_type['Date'];
         $email_fro = $row_type['email'];
@@ -662,11 +690,12 @@ function getAcceptedBookingsToDriver()
         $drop_time = $row_type['drop_time'];
         $service = $row_type['vehicle_type'];
 
-        $get_commission = "SELECT * FROM `prizelist` ";
+        $get_commission = "SELECT * FROM `prizelist`";
+        $stmt = $DB->prepare($get_commission);
+        $stmt->execute();
+        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run_commission = mysqli_query($Connect, $get_commission);
-
-        while ($row_type = mysqli_fetch_array($run_commission)) {
+        foreach ($commissions as $row_type) {
 
             $parcel_driver_commission = $row_type['parcel_driver_commission'];
             $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -704,13 +733,15 @@ function getAcceptedBookingsToDriver()
 
 function getAcceptedBookingsToDriver2()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
     $service = "";
-    $get = "SELECT * FROM `bookings` where username = '$user' && status ='accepted' ORDER BY Date DESC LIMIT 8";
-    $run = mysqli_query($Connect, $get);
+    $get = "SELECT * FROM `bookings` where username = ? AND status = 'accepted' ORDER BY Date DESC LIMIT 8";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
         $Date = $row_type['Date'];
         $email_fro = $row_type['email'];
@@ -733,11 +764,12 @@ function getAcceptedBookingsToDriver2()
         $drop_time = $row_type['drop_time'];
         $service = $row_type['vehicle_type'];
 
-        $get_commission = "SELECT * FROM `prizelist` ";
+        $get_commission = "SELECT * FROM `prizelist`";
+        $stmt = $DB->prepare($get_commission);
+        $stmt->execute();
+        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run_commission = mysqli_query($Connect, $get_commission);
-
-        while ($row_type = mysqli_fetch_array($run_commission)) {
+        foreach ($commissions as $row_type) {
 
             $parcel_driver_commission = $row_type['parcel_driver_commission'];
             $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -768,13 +800,15 @@ function getAcceptedBookingsToDriver2()
 
 function getAfterPickBookingsToDriver()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
     $service = "";
-    $get = "SELECT * FROM `bookings` where  username = '$user' AND status = 'on the way' ORDER BY Date DESC LIMIT 8";
-    $run = mysqli_query($Connect, $get);
+    $get = "SELECT * FROM `bookings` where username = ? AND status = 'on the way' ORDER BY Date DESC LIMIT 8";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
         $Date = $row_type['Date'];
         $email_fro = $row_type['email'];
@@ -797,11 +831,12 @@ function getAfterPickBookingsToDriver()
         $drop_time = $row_type['drop_time'];
         $service = $row_type['vehicle_type'];
 
-        $get_commission = "SELECT * FROM `prizelist` ";
+        $get_commission = "SELECT * FROM `prizelist`";
+        $stmt = $DB->prepare($get_commission);
+        $stmt->execute();
+        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run_commission = mysqli_query($Connect, $get_commission);
-
-        while ($row_type = mysqli_fetch_array($run_commission)) {
+        foreach ($commissions as $row_type) {
 
             $parcel_driver_commission = $row_type['parcel_driver_commission'];
             $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -833,14 +868,16 @@ function getAfterPickBookingsToDriver()
 
 function getCompletedBookingsToDriver()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
     $service = "";
     $cost = "";
-    $get = "SELECT * FROM `bookings` where  username = '$user' AND status = 'deliverd' ";
-    $run = mysqli_query($Connect, $get);
+    $get = "SELECT * FROM `bookings` where username = ? AND status = 'deliverd'";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
         $Date = $row_type['Date'];
         $email_fro = $row_type['email'];
@@ -863,11 +900,12 @@ function getCompletedBookingsToDriver()
         $drop_time = $row_type['drop_time'];
         $service = $row_type['vehicle_type'];
 
-        $get_commission = "SELECT * FROM `prizelist` ";
+        $get_commission = "SELECT * FROM `prizelist`";
+        $stmt = $DB->prepare($get_commission);
+        $stmt->execute();
+        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run_commission = mysqli_query($Connect, $get_commission);
-
-        while ($row_type = mysqli_fetch_array($run_commission)) {
+        foreach ($commissions as $row_type) {
 
             $parcel_driver_commission = $row_type['parcel_driver_commission'];
             $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -899,13 +937,15 @@ function getCompletedBookingsToDriver()
 
 function getAllarchivedBookingsToDriver()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
     $service = "";
-    $get = "SELECT * FROM `bookings` where  username = '$user'";
-    $run = mysqli_query($Connect, $get);
+    $get = "SELECT * FROM `bookings` where username = ?";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
         $Date = $row_type['Date'];
         $email_fro = $row_type['email'];
@@ -928,11 +968,12 @@ function getAllarchivedBookingsToDriver()
         $drop_time = $row_type['drop_time'];
         $service = $row_type['vehicle_type'];
 
-        $get_commission = "SELECT * FROM `prizelist` ";
+        $get_commission = "SELECT * FROM `prizelist`";
+        $stmt = $DB->prepare($get_commission);
+        $stmt->execute();
+        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run_commission = mysqli_query($Connect, $get_commission);
-
-        while ($row_type = mysqli_fetch_array($run_commission)) {
+        foreach ($commissions as $row_type) {
 
             $parcel_driver_commission = $row_type['parcel_driver_commission'];
             $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -966,12 +1007,14 @@ function getLiveOrderBookingsToDriver()
     if (isset($_GET['orderD'])) {
 
         $MrE = $_GET['orderD'];
-        global $Connect;
+        global $DB;
         $service = "";
-        $get = "SELECT * FROM `bookings` order_id = '$MrE' ";
-        $run = mysqli_query($Connect, $get);
+        $get = "SELECT * FROM `bookings` WHERE order_id = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$MrE]);
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($bookings as $row_type) {
             $ID = $row_type['order_id'];
             $Date = $row_type['Date'];
             $email_fro = $row_type['email'];
@@ -994,11 +1037,12 @@ function getLiveOrderBookingsToDriver()
             $drop_time = $row_type['drop_time'];
             $service = $row_type['vehicle_type'];
 
-            $get_commission = "SELECT * FROM `prizelist` ";
+            $get_commission = "SELECT * FROM `prizelist`";
+            $stmt = $DB->prepare($get_commission);
+            $stmt->execute();
+            $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $run_commission = mysqli_query($Connect, $get_commission);
-
-            while ($row_type = mysqli_fetch_array($run_commission)) {
+            foreach ($commissions as $row_type) {
 
                 $parcel_driver_commission = $row_type['parcel_driver_commission'];
                 $freight_driver_commission = $row_type['freight_driver_commission'];
@@ -1043,13 +1087,14 @@ function getLiveOrderBookingsToDriver()
 
 function getBlog()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `blog` ORDER BY Post_date DESC";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['ID'];
         $name = $row_type['Name'];
         $Date = $row_type['date'];
@@ -1084,13 +1129,14 @@ function getBlog()
 
 function getBlogVids()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `Video_blog` ORDER BY post_date DESC limit 4";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['ID'];
         $Post_date = $row_type['post_date'];
         $name = $row_type['Title'];
@@ -1112,13 +1158,14 @@ function getBlogVids()
 
 function getBlogAllVids()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `Video_blog` ORDER BY post_date DESC";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['ID'];
         $Post_date = $row_type['post_date'];
         $name = $row_type['Title'];
@@ -1141,13 +1188,14 @@ function getBlogAllVids()
 
 function getBlogPop()
 {
-    global $Connect;
+    global $DB;
 
     $get = "SELECT * FROM `blog` ORDER BY Post_date DESC LIMIT 3";
+    $stmt = $DB->prepare($get);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['ID'];
         $Post_date = $row_type['Post_date'];
         $name = $row_type['Name'];
@@ -1176,13 +1224,14 @@ function getBlog_item()
     if (isset($_GET['blogID'])) {
 
         $MrE = $_GET['blogID'];
-        global $Connect;
+        global $DB;
 
-        $get = "SELECT * FROM `blog` where ID = '$MrE' ";
+        $get = "SELECT * FROM `blog` where ID = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$MrE]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($results as $row_type) {
             $ID = $row_type['ID'];
             $name = $row_type['Name'];
             $Date = $row_type['date'];
@@ -1214,13 +1263,14 @@ function getBlog_comments()
     if (isset($_GET['blogID'])) {
 
         $MrE1 = $_GET['blogID'];
-        global $Connect;
+        global $DB;
 
-        $get = "SELECT * FROM `blog_comments` where Blog_id = '$MrE1' ";
+        $get = "SELECT * FROM `blog_comments` where Blog_id = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$MrE1]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($results as $row_type) {
             $ID1 = $row_type['ID'];
             $name1 = $row_type['Name'];
             $Date1 = $row_type['Date'];
@@ -1250,15 +1300,15 @@ function getBlogVideo_comments()
     if (isset($_GET['watch'])) {
 
         $MrE1 = $_GET['watch'];
-
         $vidCom = "video" . $MrE1;
-        global $Connect;
+        global $DB;
 
-        $get = "SELECT * FROM `blog_comments` where Blog_id = '$vidCom' ";
+        $get = "SELECT * FROM `blog_comments` where Blog_id = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$vidCom]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $run = mysqli_query($Connect, $get);
-
-        while ($row_type = mysqli_fetch_array($run)) {
+        foreach ($results as $row_type) {
             $ID1 = $row_type['ID'];
             $name1 = $row_type['Name'];
             $Date1 = $row_type['Date'];
@@ -1284,14 +1334,15 @@ function getBlogVideo_comments()
 
 function getChatsFroDr()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
 
-    $get = "SELECT chat_drivers.*, driver.* FROM chat_drivers, driver where chat_drivers.IDFrom = driver.driverID AND driver.username = '$user'";
+    $get = "SELECT chat_drivers.*, driver.* FROM chat_drivers, driver where chat_drivers.IDFrom = driver.driverID AND driver.username = ?";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['ID'];
         $Date = $row_type['Date'];
         $Name = $row_type['name'];
@@ -1315,14 +1366,15 @@ function getChatsFroDr()
 
 function getReplyChatsFroDr()
 {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['user_email'];
+    global $DB;
 
-    $get = "SELECT replychat_drivers.*, driver.* FROM replychat_drivers, driver where replychat_drivers.IDFrom = driver.driverID AND driver.username = '$user'";
+    $get = "SELECT replychat_drivers.*, driver.* FROM replychat_drivers, driver where replychat_drivers.IDFrom = driver.driverID AND driver.username = ?";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['ID'];
         $Date = $row_type['Date'];
         $Name = $row_type['name'];
@@ -1344,21 +1396,24 @@ function getReplyChatsFroDr()
 }
 function checkCoupon()
 {
-    global $Connect;
+    global $DB;
     $userid = $_POST['userid'];
     $coupon = $_POST['coupon'];
     $today = date('Y-m-d');
 
-    $get = "SELECT * FROM user_coupons WHERE user_id = '$userid' AND expiry_date >= '$today' AND user_coupons.used < user_coupons.limit_used AND coupon = '$coupon'";
-
-    $run = mysqli_query($Connect, $get);
-    $result = mysqli_fetch_array($run);
+    $get = "SELECT * FROM user_coupons WHERE user_id = ? AND expiry_date >= ? AND user_coupons.used < user_coupons.limit_used AND coupon = ?";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$userid, $today, $coupon]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = !empty($results) ? $results[0] : null;
+    
     if (empty($result)) {
 
-        $getuc = "SELECT * FROM common_coupon WHERE  expiry_date >= '$today' AND common_coupon.used < common_coupon.limit_used AND coupon = '$coupon'";
-
-        $run1 = mysqli_query($Connect, $getuc);
-        $result1 = mysqli_fetch_array($run1);
+        $getuc = "SELECT * FROM common_coupon WHERE expiry_date >= ? AND common_coupon.used < common_coupon.limit_used AND coupon = ?";
+        $stmt = $DB->prepare($getuc);
+        $stmt->execute([$today, $coupon]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result1 = !empty($results) ? $results[0] : null;
         return $result1;
     } else {
         return $result;
@@ -1369,14 +1424,15 @@ function checkCoupon()
 
 function getClientBookingHistory()
  {
-    $user = $_SESSION['MM_Username'];
-    global $Connect;
+    $user = $_SESSION['CC_Username'];
+    global $DB;
 
-    $get = "SELECT * FROM `bookings` WHERE email ='$user' ";
+    $get = "SELECT * FROM `bookings` WHERE email = ?";
+    $stmt = $DB->prepare($get);
+    $stmt->execute([$user]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $run = mysqli_query($Connect, $get);
-
-    while ($row_type = mysqli_fetch_array($run)) {
+    foreach ($results as $row_type) {
         $ID = $row_type['order_id'];
         $order_number = $row_type['order_number'];
         $date_booked = $row_type['Date'];
@@ -1411,3 +1467,5 @@ function getClientBookingHistory()
             </tr>";
     }
 }
+
+

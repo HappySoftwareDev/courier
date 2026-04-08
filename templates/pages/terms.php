@@ -1,0 +1,382 @@
+<?php include ("admin/pages/site_settings.php"); ?>
+
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Order online your parcel delivery, freight delivery and relocation services with <?php echo $site_name ?></title>
+        <meta name="author" content="<?php echo $site_name ?>">
+        <meta name="keywords" content="book online, transport services, parcel delivery, goods freight, intercity parcel delivery, freight delivery, inner city dlivery, international courier services">
+        <meta name="description" content="Book online and let us send your parcels, freight, or help you relocate anywhere">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shorBtcut icon" type="image/x-icon" href="img/favicon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+		<!-- CSS here -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/animate.min.css">
+        <link rel="stylesheet" href="css/magnific-popup.css">
+        <link rel="stylesheet" href="fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="css/dripicons.css">
+        <link rel="stylesheet" href="css/slick.css">
+        <link rel="stylesheet" href="css/default.css">
+         <link rel="stylesheet" href="css/swiper.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+       
+    </head>
+    <body>
+        <!-- header -->
+        <header class="header-area">            
+            <div id="header-sticky" class="menu-area">
+                <div class="container">
+                    <div class="second-menu">
+                        <div class="row align-items-center">
+                            <div class="col-xl-2 col-lg-2">
+                                <div class="logo">
+                                    <a href="index.html"><img src="img/logo/w_logo.png" alt="logo" width="200"></a>
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-9">
+                                <div class="responsive" ><i class="icon dripicons-align-right" style="color:grey"></i></div>
+                                <div class="main-menu text-right text-xl-right">
+                                     <nav id="mobile-menu">
+                                        <ul>
+                                            <li class="has-sub">
+												<a href="https://merchantcouriers.com/newweb/">Home</a>
+											</li>
+                                            <li class="has-sub"> 
+                                                <a href="#screen">Deliveries</a>
+                                                <ul>													
+                                                    <li><a href="book/parcel_delivery.php">Parcel Delivery</a></li>
+                                                    <li><a href="book/freight.booking.php">Freight Delivery</a></li>
+                                                    <li><a href="book/furniture_go.php">Relocation Delivery</a></li>
+                                                    <li><a href="freight.reg.php">New Customer? Register.</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="privacy.html">Privacy Policy</a></li>
+                                                    <li><a href="terms.html">Terms of Use</a></li> 
+                                               </ul>
+                                            
+                                           </li>
+                                           <li class="has-sub"> 
+                                            <a href="#screen">Sign Up</a>
+                                            <ul>
+                                                <li><a href="freight.reg.php">Customer Sign-Up</a></li>													
+                                                <li><a href="driver_registration.php">Driver Sign-Up</a></li>
+                                           </ul>
+                                        
+                                       </li>
+                                       <li class="has-sub"> 
+                                            <a href="#screen">Login</a>
+                                            <ul>
+                                                <li><a href="book/">Customer Login</a></li>													
+                                                <li class="login"><a href="driver/index.php">Driver Login</a></li>
+                                                
+                                           </ul>
+                                        
+                                       </li>
+                                     
+                                       <li><a href="#contact">Contact</a></li>
+                                       <li><a href="invite-email.php">Share</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 text-right d-none d-xl-block">
+                                <div class="header-btn second-header-btn">
+                                    <a href="#" class="btn">Online Quote</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- header-end -->
+        <!-- main-area -->
+        <main>
+           
+            <section id="about" class="services-area services-bg pt-25 pb-20" style="background-image: url(img/shape/header-sape2.png); background-position: right top; background-size: auto;background-repeat: no-repeat;">
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="section-title  pl-40 pr-40 mb-45">
+                                <h2>Terms of Use</h2>
+                                <h3>Last Updated</h3>
+                                <p>25 July 2021</p>
+                                <p>&nbsp;</p>
+                                
+                                <h3>Introduction</h3>
+        <p>Merchant Couriers (the company name) ("us", "we", or "our") private business corporation operates the site http://www.merchantcouriers.co.zw (the "Site"). This page informs you of our policies regarding the collection, use and disclosure of Personal Information we receive from users of the Site. We use your Personal Information only for providing services and improving the Site. By using the Site, you agree to the collection and use of information in accordance with this Terms of Use, and inclusive of Privacy Policy under the tab on the Site labeled Privacy Policy.</p>
+
+        <p>&nbsp;</p>
+
+        <h3>Unauthorized/Illegal Usage</h3>
+        <p>You will be required to register with Merchant Couriers in order to access and use the features of the Service or Site. If you choose to register for the Service, you agree to provide and maintain true, accurate, current and complete information about yourself and the entity you represent as prompted by the Privacy Policy agreement, found under the tab Privacy Policy on this site. Registration data and certain other information about you are governed by our Privacy Policy. If you are entering into these Terms on behalf of a company, business or other legal entity, you represent and warrant that you have the authority to bind such entity and its affiliates to these Terms, in which case the terms "you" or "your" shall refer to such entity and its affiliates. If you do not have such authority, or if you do not agree with these Terms, you must not accept these Terms and may not use the Service and will attract personal liability for you or the entity you represent, the obligations contracted for herein. Any reference in these Terms to "Party" shall be construed as a reference to either you or us, as the context may require and "Parties" shall be a reference to both you and us collectively. Any such registration by you or on behalf of another party with fake information for the use of our services and Site shall be deemed as illegal by Merchant Couriers and preceeded with necessary arbitration to protect our customers and business from loss or liability due to fraudulents activites on the internet and off the internet. </p>
+
+        <p>&nbsp;</p>
+
+        <h3>Ownership</h3>
+        <p>Merchant Couriers, the company and the Site, maintains ownership of any material under the copyright law act, and any registered trademarks, API's and ideas that have been patented as its property. Our services are only leased, rented or licenced to you as the customer or business partner but remains the legally owned property of Merchant Couriers at any given time except under an agreement of sale where the actual component, asset, idea or patent of the business has been sold to you, the party in full or in part. Any services that you use through this Site and under our Company Logo and Banner cannot be claimed as owned by you the customer or business that we are in partnership with, for the day to day actvivites of our business.</p>
+
+        <p>&nbsp;</p>
+
+        <h3>Service Descriptions</h3>
+        <p>
+            1. The "Service" includes Pickup and Deliveries of parcels.
+            2. The Company Logo, Site; its registered trademarks and patents ™ and ® repectively.
+            3. Our Computer and Mobile Service used through internet enabled devices.
+            4. We Deliver With Speed delivery services; and
+            5. all software , data, reports, text, images, sounds,
+            video, and content made available through any of the information on this Site and off this Site in advertised channels (collectively referred to as the "Content").
+            6. Any new features added to or augmenting the Service are also subject to these Terms. </p>
+        <p>&nbsp;</p>
+
+        <h3>Computer and Mobile Services</h3>
+        <p>1. The Service includes certain services that are available via a computer or mobile device, including 1. the ability to
+            upload content to the Service via a computer or mobile device;
+            2. the ability to browse the Service and the Site from a computer or mobile device; and
+            3. the ability to access certain features through an computer or mobile application (also called app). </p>
+        <p>&nbsp;</p>
+
+
+        <h3>Access and Use of our Site and Services</h3>
+        <p>(A) DELIVERY POLICY
+            Subject to availability and receipt of payment, requests will be processed within the same day of booking, unless otherwise indicated on booking times and delivery confirmed
+            by way email / SMS notificatios.
+            </br> </br>
+            (B) BORDER PROTECTION The offering on this website/web app/mobile app services is available only in countries lsted as serviced locations on this website, where Merchant Couriers has acquired legal registration or local operators licencing.
+            </br></br>
+            (C)CUSTOMER PRIVACY POLICY Merchant Couriers shall take all reasonable steps to protect the personal information of users. For the purpose of this clause,
+            "personal information" shall be defined as detailed in the Privacy Policy on this Site.</br> </br>
+            (D)PAYMENT OPTIONS ACCEPTED
+            Payment may be made via PAYNOW the Zimbabwean Registered Merchant, which accepts Visa, MasterCard, Diners or American Express Cards, Mobile Money Services, V payments or by bank transfer into the (Our
+            Company) bank account, the details of which will be provided upon request. To encourage our digital payments services, we encourage payment transfers to made as soon as booking or at an agreeable invoiced quarter as our business depends on instant payments to pay commissions and salaries to its employees. Therefore certain advance payments may not be accepted except under mutual business agreement, after establishing strong business relationships. </br> </br>
+            (E)CARD ACQUIRING AND SECURITY
+            Card transactions will be acquired for Merchant Couriers via PAYNOW (Pty) Ltd who are the approved payment gateway for
+            all ZIMBABWEAN AND other international acquiring Banks. PAYNOW uses the strictest form of encryption, namely BUYSAFE. Users may go to http://www.paynow.co.zw to view their security
+            certificate and security policy. </br></br>
+            (F)CUSTOMER DETAILS DIFFERENT TO CARD OR FINANCIAL INSTISTUITION DETAILS
+            Customer details will be stored by Merchant Couriers separately from card details which are entered by the client on PAYNOW's
+            secure site. For more detail on PAYNOW refer to www.paynow.co.zw. <br /></br>
+            (G)MERCHANT COUNTRY OF OPERATIONS AND TRADING CURRENCY
+            The PAYNOW merchant of payments country of operations at the time of presenting payment options to the customer is Zimbabwe.
+            Transaction currency is United States Dollars (USD). <br /></br>
+            (H)OUR RESPONSIBILITY
+            Merchant Couriers takes responsibility for all aspects relating to the transactions from use of our services, sold on
+            this Site, Customer service and support, dispute resolution and delivery of parcels, packages, documents and letters via our courier service business. <br /></br>
+            (I)UPDATING THESE TERMS Merchant Couriers may in our sole discretion, change this agreement or any part thereof at any time without
+            notice. <br />
+
+
+        <p>&nbsp;</p>
+        <h3>Return and Refunds policy</h3>
+        <p>Merchant Couriers deems that every delivery is done with full consciousness and decision making by the booking customer. However in the event that a mistake delivery booking was done, Merchant Couriers reserves the full righs not to accept storage, return of parcels or packages after they have been accepted for delivery and have progressed beyond 50% (after customer has been sent an ON THE WAY to drop off location via sms/email notification) in the delivery proess, and if customer delays to notify us of cancellation via phonecall. In cases of cancellation, a cancellation fee will be incurred of 30% of the total value or price charged on delivery after booking. Merchant Couriers will
+            refund the client the remaining balance after cancellation charge of 30% of delivery within 14 Days from the day of Booking the delivery. Cancellation of orders by the client will attract a 30% administration fee. Bowever if delivery is below 50% stage of progress in the delivery process customer will be charged an administration fee of 15% of the full value or price that was charged after booking the delivery. Upon emergency such as a vehicle accident or other incident that can delay the delivery by more than 24hrs from the day of booking, merchant couriers will continue and deliver the customer's goods and will offer the client a free delivery discount voucher worth 50% of the next delivery of the customers goods. However, the customer must pay the 50% balance before the delivery is done.</p>
+        <p>&nbsp;</p>
+
+        <h3>Warranty and Support</h3>
+        <p>You represent and warrant to Merchant Couriers
+            You have full power and authority to enter into these Terms; you own all Your Content or have obtained all permissions, releases, rights or licenses required to engage in
+            your posting and other activities and allow Merchant Couriers to perform its obligations in connection with the Services
+            without obtaining any further releases or consents; Your Content and other activities in connection with the Service, and Merchant Couriers exercise of all rights and
+            license granted by you herein, do not and will not violate, infringe, or misappropriate any third Party's
+            copyright, trademark, right of privacy or publicity, or other personal or proprietary right, nor does Your
+            Content contain any matter that is defamatory, obscene, unlawful, threatening, abusive, tortious, offensive or
+            harassing; and you are eighteen (18) years of age or older and should you be under 18 years of age, you have required the
+            consent or assistance of your parent or guardian. </p>
+        <p>&nbsp;</p>
+
+
+        <h3>Disclaimer of Warranty</h3>
+        <p>
+            The Services may be temporarily unavailable for scheduled maintenance or for unscheduled emergency
+            maintenance, either by Merchant Couriers or by third-Party providers, or because of other causes beyond our reasonable control,
+            but Merchant Couriers shall use reasonable efforts to provide advance notice on the Site or by email of any scheduled service
+            disruption. However, the Service, including the Site, Software and Content, and any server and network components
+            are provided on an "as is" and "as available" basis without any warranties of any kind, and Merchant Couriers expressly disclaims
+            any and all warranties, whether express or implied, including, but not limited to, the implied warranties of
+            merchantability, title, fitness for a particular purpose, and non-infringement. You acknowledge that Merchant Couriers does not
+            warrant that the service or software will be uninterrupted, timely, secure, error-free or virus-free, nor does it make
+            any warranty as to the results that may be obtained from use of the services or software, and no information, advice
+            or services obtained by you from Merchant Couriers or through the service shall create any warranty not expressly stated in these
+            Terms.
+        </p>
+        <p>&nbsp;</p>
+
+        <h3>Limitation of Liability</h3>
+        <p>
+            Under no circumstances and under no legal theory (whether in contract, delict, tort, or otherwise) shall Merchant Couriers
+            be liable to you or any Third Party for - (a) any indirect, incidental, special, exemplary, consequential or punitive damages, including lost profits,
+            lost sales or business, lost data, or (b)any direct damages, costs, losses or liabilities in excess of the fees actually paid by you in the last six (6)
+            months preceding the event giving rise to your claim, or, if no fees apply, equivalent to twenty United states dollars (US$20). </p>
+        <p>&nbsp;</p>
+
+        <h3>Indemnification</h3>
+        <p>
+            You hereby defend, indemnify, and hold Merchant Couriers harmless from and against all claims, actions or demands, including
+            without limitation all legal and accounting fees, arising or resulting from your breach of these Terms or our Privacy Policy, any of Your
+            Content, or your other access, contribution to, use or misuse of the Service. Merchant Couriers shall provide notice to you of any
+            such claim, suit or demand. Merchant Couriers reserves the right to assume the exclusive defense and control of any matter which
+            is subject to indemnification under this clause. In such case, you agree to cooperate with any reasonable requests
+            assisting Merchant Couriers defense of such matters. </p>
+        <p>&nbsp;</p>
+
+
+        <h3>Insurance Cover and Risk Management</h3>
+        <p>
+
+            1. Merchant Couriers shall give you as part of the Service, goods in transit insurance cover with a reputable
+            insurance company ("Insurer"), to insure the items which are being delivered under the Service for the risks
+            stipulated. This option is extended to you under the following terms: <br/> <br/>
+            (A) at booking the service you authorise us to deduct the amount of the fee/premium applicable to such insurance agreement from
+            your credit card and or mobile money service; <br>
+            (B) you shall be contracting with such Insurer together with Merchant Couriers (and not Merchant Couriers alone) on the terms and conditions to be found under the terms of the insurer's goods in transit policy, which terms and conditions shall
+            be deemed to have been incorporated during delivery and are not valid outside of a delivery time or of a live pruchased product order progressing in our system; <br>
+            (C) all claims for loss, destruction and/or damage of any items being delivered under the Service shall be
+            directed to the Insurer in Zimbabwe; to the extent that you have selected the option upon booking to acquire
+            insurance from the Insurer then you hereby irrevocably waive and abandon all claims against Merchant Couriers for
+            all loss, damage and/or destruction as aforesaid. <br><br>
+            2. Merchant Couriers always recommends that you acquire insurance from the delivery booking process we offer to be fully covered in case of any unfavorable incidents. However, subject to the terms below,
+            if you have not selected the option to acquire insurance when booking your delivery, then Merchant Couriers will only reimburse you
+            for actual loss of or damage to any items being delivered while in Merchant Couriers Possession (as defined herein
+            below) up to a maximum reimbursement of US$50 per delivery, provided however that any reimbursement
+            hereunder may not exceed the total value of the original delivery. For purposes hereof, an item shall be deemed
+            to be in Merchant Couriers Possession from the point of pickup of the parcel, or package from you until it reaches the
+            dropp off location via one of our delivery courier driver or rider merchants. <br><br>
+            3. If a delivery is lost or damaged while in Merchant Couriers Possession (and you have not purchased insurance from
+            our delivery booking formula), you may file a claim with Merchant Couriers for reimbursement. All claims must
+            be initiated within 10 days of the mailing date by contacting us at Merchant Couriers where we will provide
+            more details on how to file a claim. The original paid invoice of the delivery label and evidence (photograph or physical package) of the damged goods will be required to file claim. If the recipient accepts the delivery without noting any
+            damage on the delivery record, we reserve the right to assume the goods were delivered in good condition. We will require all contents of the delivery package, parcel or documents and their deemed value documented ( receipts of purchase if they were pruchased or market value of goods to match with our market valuation you chose in the process when booking delivery) in order to process claims. </p>
+        <p>&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                   
+                  
+                </div>
+            </section>
+            <!-- services-area-end -->
+		
+           
+        </main>
+        <!-- main-area-end -->
+        <!-- footer -->
+        <footer class="footer-bg footer-p pt-60" style="background-image: url(img/bg/f-bg.png); background-position: center top; background-size: auto;background-repeat: no-repeat;">            
+  
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-xl-3 col-lg-3 col-sm-6">
+                            <div class="footer-widget mb-30">
+                                <div class="logo mt-15 mb-15">
+                                    <a href="#"><img src="img/logo/w_logo.png" alt="logo"></a>
+                                </div>
+                                <div class="footer-text mb-20">
+                                </div>
+                                <div class="footer-social">
+                                    <a href="https://www.facebook.com/merchantcouriers/"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+						<div class="col-xl-2 col-lg-3 col-sm-6">
+                            <div class="footer-widget mb-30">
+                                <div class="f-widget-title">
+                                    <h5>Partners</h5>
+                                </div>
+                                <div class="footer-link">
+                                    <ul>                                        
+                                        <li><a href="#">Affiliate Login</a></li>
+										<li><a href="#">Developer Docs</a></li>
+                                        <li><a href="#">eCommerce API</a></li>                                      
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-sm-6">
+                            <div class="footer-widget mb-30">
+                                <div class="f-widget-title">
+                                    <h5>Information</h5>
+                                </div>
+                                <div class="footer-link">
+                                    <ul>
+                                        <li><a href="#">News and Updates</a></li>
+                                        <li><a href="terms.html">Terms of Use</a></li>
+                                        <li><a href="privacy.html">Privacy Policy</a></li>                                       
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="col-xl-3 col-lg-3 col-sm-6">
+                            <div class="footer-widget mb-30">
+                                <div class="f-widget-title">
+                                    <h5>Contact Us</h5>
+                                </div>
+                                <div class="footer-link">
+                                    <div class="f-contact">
+                                    <ul>
+                                    <li>
+                                        <i class="icon dripicons-phone"></i>
+                                        <span>+263 779 495 409</span>
+                                    </li>
+                                    <li>
+                                      <i class="fal fa-map-marker-alt"></i>
+                                         <span>Harare, Zimbabwe</span>
+                                    </li>
+                                </ul>
+                                    
+                                    </div>
+                                   
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright-wrap text-center">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="copyright-text">
+                                <p>&copy; 2021 @ Merchant Couriers. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- footer-end -->
+
+
+		<!-- JS here -->
+        <script src="js/vendor/modernizr-3.5.0.min.js"></script>
+        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/one-page-nav-min.js"></script>
+        <script src="js/slick.min.js"></script>
+        <script src="js/ajax-form.js"></script>
+        <script src="js/paroller.js"></script>
+        <script src="js/wow.min.js"></script>
+        <script src="js/js_isotope.pkgd.min.js"></script>
+        <script src="js/imagesloaded.min.js"></script>
+        <script src="js/parallax.min.js"></script>
+        <script src="js/jquery.waypoints.min.js"></script>
+        <script src="js/jquery.counterup.min.js"></script>
+        <script src="js/jquery.scrollUp.min.js"></script>
+        <script src="js/typed.js"></script>
+        <script src="js/parallax-scroll.js"></script>
+        <script src="js/jquery.magnific-popup.min.js"></script>
+        <script src="js/element-in-view.js"></script>
+        <script src="js/swiper.min.js"></script>
+        <script src="js/main.js"></script>
+      
+        
+        
+    </body>
+</html>
+

@@ -1,0 +1,22 @@
+{
+  "contact_form": {
+    "subject": "New Contact Form Submission from {{name}}",
+    "body": "<h2>New Contact Message</h2><p><strong>Name:</strong> {{name}}</p><p><strong>Email:</strong> {{email}}</p><p><strong>Message:</strong></p><p>{{message}}</p>"
+  },
+  "booking_confirmation": {
+    "subject": "Booking Confirmation - Order #{{order_number}}",
+    "body": "<h2>Your Booking is Confirmed</h2><p>Order Number: {{order_number}}</p><p>Pick-up Date: {{pickup_date}}</p><p>Drop-off Date: {{dropoff_date}}</p><p>Amount: {{amount}}</p>"
+  },
+  "invoice": {
+    "subject": "Invoice #{{invoice_number}} - {{company_name}}",
+    "body": "<h2>Invoice</h2><p>Invoice Number: {{invoice_number}}</p><p>Order: {{order_number}}</p><p>Amount: {{amount}}</p><p>Due Date: {{due_date}}</p>"
+  },
+  "password_reset": {
+    "subject": "Password Reset Request",
+    "body": "<p>Click the link below to reset your password:</p><p><a href='{{reset_link}}'>Reset Password</a></p><p>This link expires in {{expiry}}.</p>"
+  },
+  "welcome": {
+    "subject": "Welcome to {{company_name}}",
+    "body": "<h2>Welcome {{name}}!</h2><p>Thank you for joining {{company_name}}. Your account has been created successfully.</p>"
+  }
+}

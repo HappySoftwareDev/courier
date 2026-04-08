@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<info>
-	<infoitem key="UD_booking" value="name:order_id;datatype:int,name:pick_up_address;datatype:string,name:pick_up_time;datatype:string,name:pick_up_date;datatype:string,name:Name;datatype:string,name:email;datatype:string,name:drop_address;datatype:string,name:drop_date;datatype:string,name:weight;datatype:string,name:insurance;datatype:string,name:quantity;datatype:string,name:value;datatype:string,name:type_of_transport;datatype:string,name:drivers_note;datatype:string" />
-</info>

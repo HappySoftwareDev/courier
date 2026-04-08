@@ -1,0 +1,17 @@
+{
+  "quote": {
+    "message": "Pick Up: {{from_address}}. Destination: {{to_address}}. Weight: {{weight}}. Value: {{value}}. Quantity: {{quantity}}. Transport: {{transport}}. Insurance: {{insurance}}. Distance: {{distance}}. Quote Price: {{price}} {{company_name}} - {{web_url}} Call/WhatsApp: {{phone}}"
+  },
+  "booking_confirmation": {
+    "message": "Your booking #{{order_number}} is confirmed! Pick-up: {{pickup_date}} {{pickup_time}}. Driver will contact you shortly. {{company_name}}"
+  },
+  "booking_accepted": {
+    "message": "Your booking has been accepted by driver {{driver_name}}. Contact: {{driver_phone}}. Tracking: {{tracking_link}}"
+  },
+  "delivery_status": {
+    "message": "Your package is {{status}}. Location: {{location}}. Estimated arrival: {{eta}}. {{company_name}}"
+  },
+  "payment_received": {
+    "message": "Payment of {{amount}} for order {{order_number}} has been received. Thank you! {{company_name}}"
+  }
+}

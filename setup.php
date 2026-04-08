@@ -1,219 +1,476 @@
 <?php
-$hostname_Connect = "localhost";
-$database_Connect = "merchant_db";
-$username_Connect = "merchant_merchan";
-$password_Connect = "YfgYm3s869";
+/**
+ * Database & Admin Setup Wizard
+ * Two-step installation: Database Config → Admin User Creation
+ * 
+ * Works with /public_html/app/ subdirectory structure (WordPress compatible)
+ * After successful setup, delete this file (setup.php)
+ */
 
-// $hostname_Connect = "localhost";
-// $database_Connect = "merchant_db";
-// $username_Connect = "root";
-// $password_Connect = "";
-$Connect = mysqli_connect($hostname_Connect, $username_Connect, $password_Connect) or trigger_error(mysql_error(), E_USER_ERROR);
+// Define APP_ROOT to work from /app/ subdirectory
+define('APP_ROOT', dirname(__FILE__));
 
-$query = "CREATE DATABASE " . $database_Connect;
-
-mysqli_query($Connect, $query);
-
-mysqli_select_db($Connect, $database_Connect);
-
-$query = "
-
--- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
---
--- Host: 127.0.0.1
--- Generation Time: Jun 05, 2017 at 05:11 AM
--- Server version: 10.1.16-MariaDB
--- PHP Version: 5.6.24
-
-SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
-SET time_zone = '+00:00';
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `merchantcourier`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `bookings`
---
-
-CREATE TABLE `bookings` (
-  `order_id` int(11) NOT NULL,
-  `pick_up_address` varchar(80) NOT NULL,
-  `pick_up_time` varchar(40) NOT NULL,
-  `pick_up_date` varchar(40) NOT NULL,
-  `Name` varchar(80) NOT NULL,
-  `email` varchar(40) NOT NULL,
-  `drop_address` varchar(40) NOT NULL,
-  `drop_date` varchar(40) NOT NULL,
-  `weight` varchar(40) NOT NULL,
-  `insurance` varchar(40) NOT NULL,
-  `quantity` varchar(40) NOT NULL,
-  `value` varchar(40) NOT NULL,
-  `type_of_transport` varchar(40) NOT NULL,
-  `drivers_note` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`order_id`, `pick_up_address`, `pick_up_time`, `pick_up_date`, `Name`, `email`, `drop_address`, `drop_date`, `weight`, `insurance`, `quantity`, `value`, `type_of_transport`, `drivers_note`) VALUES
-(2, 'Budiriro 5B', '10:00 am to - 11:00 am', '2017-05-31', 'Emmanuel Bamhara', 'bamhara1@gmail.com', 'Glen View', '2017-06-01', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'This is a test'),
-(3, 'Budiriro 5B Harare', '6:00 am - to - 7:00 am', '2017-06-02', 'Emmanuel Bamhara', 'bamhara1@gmail.com', 'Borrowdale Harare', '2017-06-03', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'Please be on time'),
-(4, 'Budiriofgbg', '10:00 am to - 11:00 am', '32342', 'fbsfbggfbfgb', 'mre@gmail.com', 'Bfdbgb', '3243534', '0 KG - 5 KG''s', '$2.00', '2 items', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'This is cool'),
-(5, 'Budiriro 5B Harare', '10:00 am to - 11:00 am', '2017-06-03', 'Emmanuel Bamhara', 'bamhara1@gmail.com', 'Borrowdale Harare', '2017-06-03', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'This is a test'),
-(6, 'Glendale Harare', '6:00 am - to - 7:00 am', '2017-06-03', 'Emmanuel Bamhara', 'bamhara1@gmail.com', 'Borrowdale Harare', '2017-06-09', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'Please be on time'),
-(7, 'Mandara west', '8:00 am - to - 9:00 am', '2017-06-03', 'Emmanuel Bamhara', 'mre@hdiientertainment.com', 'Borrowdale Harare', '2017-06-03', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'On time or i won''t pay'),
-(8, 'Mandara west', '8:00 am - to - 9:00 am', '2017-06-03', 'Emmanuel Bamhara', 'mre@hdiientertainment.com', 'Borrowdale Harare', '2017-06-03', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'On time or i won''t pay'),
-(9, 'Mandara west', '8:00 am - to - 9:00 am', '2017-06-03', 'Emmanuel Bamhara', 'mre@hdiientertainment.com', 'Borrowdale Harare', '2017-06-03', '0 KG - 5 KG''s', 'no insurance', '1 item', '$5,00 - $20,00', 'Car ($2.00 per Km)', 'On time or i won''t pay');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `businesspartners`
---
-
-CREATE TABLE `businesspartners` (
-  `businessID` int(11) NOT NULL,
-  `businessName` varchar(40) NOT NULL,
-  `email` varchar(40) NOT NULL,
-  `phone` int(16) NOT NULL,
-  `businessLocation` varchar(40) NOT NULL,
-  `businessType` varchar(40) NOT NULL,
-  `estimateDeliveries` varchar(40) NOT NULL,
-  `pick_up_address` varchar(40) NOT NULL,
-  `deliveryTime` varchar(40) NOT NULL,
-  `PreferedTransport` varchar(40) NOT NULL,
-  `NameOfContact` varchar(40) NOT NULL,
-  `PersonPhone` int(16) NOT NULL,
-  `password` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `businesspartners`
---
-
-INSERT INTO `businesspartners` (`businessID`, `businessName`, `email`, `phone`, `businessLocation`, `businessType`, `estimateDeliveries`, `pick_up_address`, `deliveryTime`, `PreferedTransport`, `NameOfContact`, `PersonPhone`, `password`) VALUES
-(1, 'Chicken Inn', 'admin@chickeninn.com', 775972428, 'Harare Zimbabwe', 'Retail & Shopping', '1-10', 'Mount Pleasant', 'Day', 'Car', 'John Chibaba', 776971106, 'mre123');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `clients`
---
-
-CREATE TABLE `clients` (
-  `client_id` int(11) NOT NULL,
-  `Name` varchar(40) NOT NULL,
-  `Email` varchar(40) NOT NULL,
-  `Password` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `clients`
---
-
-INSERT INTO `clients` (`client_id`, `Name`, `Email`, `Password`) VALUES
-(1, 'Emmanuel Bamhara', 'mre@gmail.com', 'mre123');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `driver`
---
-
-CREATE TABLE `driver` (
-  `driverID` int(11) NOT NULL,
-  `name` varchar(40) NOT NULL,
-  `phone` int(16) NOT NULL,
-  `address` varchar(50) NOT NULL,
-  `vehicleMake` varchar(40) NOT NULL,
-  `model` varchar(40) NOT NULL,
-  `year` varchar(20) NOT NULL,
-  `engineCapacity` varchar(40) NOT NULL,
-  `DOB` date NOT NULL,
-  `occupation` varchar(100) NOT NULL,
-  `documents` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `driver`
---
-
-INSERT INTO `driver` (`driverID`, `name`, `phone`, `address`, `vehicleMake`, `model`, `year`, `engineCapacity`, `DOB`, `occupation`, `documents`) VALUES
-(1, 'Emmanuel Bamhara', 775972428, 'Budiriro 5B Harare', 'Honda fit', 'Very old', '2003', 'Its good', '2017-06-04', 'none', 'Diamond.JPG');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `bookings`
---
-ALTER TABLE `bookings`
-  ADD PRIMARY KEY (`order_id`);
-
---
--- Indexes for table `businesspartners`
---
-ALTER TABLE `businesspartners`
-  ADD PRIMARY KEY (`businessID`);
-
---
--- Indexes for table `clients`
---
-ALTER TABLE `clients`
-  ADD PRIMARY KEY (`client_id`);
-
---
--- Indexes for table `driver`
---
-ALTER TABLE `driver`
-  ADD PRIMARY KEY (`driverID`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `bookings`
---
-ALTER TABLE `bookings`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
---
--- AUTO_INCREMENT for table `businesspartners`
---
-ALTER TABLE `businesspartners`
-  MODIFY `businessID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `clients`
---
-ALTER TABLE `clients`
-  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `driver`
---
-ALTER TABLE `driver`
-  MODIFY `driverID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-";
-$ret = mysqli_multi_query($Connect, $query);
-if ($ret) {
-    echo "<p>Database and tables have been created</p>";
-} else {
-    echo "<p>Error: " . mysql_error();
-    +"</p>";
+// Check if already configured
+if (file_exists(APP_ROOT . '/config/.setup-complete')) {
+    die('<h1>Already Configured</h1><p>This system has already been set up. If you need to reconfigure, delete the file <code>config/.setup-complete</code> and refresh this page.</p>');
 }
+
+$errors = [];
+$success = false;
+$step = isset($_POST['step']) ? intval($_POST['step']) : 1;
+$dbConfigSaved = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    // Step 1: Database Configuration
+    if ($step === 1) {
+        $dbHost = trim($_POST['db_host'] ?? 'localhost');
+        $dbUser = trim($_POST['db_user'] ?? '');
+        $dbPass = trim($_POST['db_pass'] ?? '');
+        $dbName = trim($_POST['db_name'] ?? '');
+
+        // Validate inputs
+        if (empty($dbUser)) $errors[] = 'Database User is required';
+        if (empty($dbName)) $errors[] = 'Database Name is required';
+
+        // Test database connection
+        if (empty($errors)) {
+            try {
+                $pdo = new PDO(
+                    "mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4",
+                    $dbUser,
+                    $dbPass,
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    ]
+                );
+                
+                // Update database-config.php
+                $configContent = "<?php
+/**
+ * Database Configuration
+ * Generated by setup.php on " . date('Y-m-d H:i:s') . "
+ * 
+ * Can be overridden by environment variables:
+ * DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_CHARSET, DB_PORT
+ */
+
+return [
+    'driver' => getenv('DB_DRIVER') ?: 'pdo',
+    'host' => getenv('DB_HOST') ?: '$dbHost',
+    'user' => getenv('DB_USER') ?: '$dbUser',
+    'pass' => getenv('DB_PASS') ?: '$dbPass',
+    'name' => getenv('DB_NAME') ?: '$dbName',
+    'charset' => getenv('DB_CHARSET') ?: 'utf8mb4',
+    'port' => getenv('DB_PORT') ?: 3306,
+    'options' => [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_INIT_COMMAND => \"SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci\"
+    ]
+];
+";
+
+                if (!file_put_contents(APP_ROOT . '/config/database-config.php', $configContent)) {
+                    $errors[] = 'Failed to write database configuration. Check file permissions on config/ folder.';
+                } else {
+                    // Database config saved, move to step 2
+                    $step = 2;
+                    $dbConfigSaved = true;
+                }
+            } catch (PDOException $e) {
+                $errors[] = 'Database connection failed: ' . $e->getMessage();
+            }
+        }
+    }
+    
+    // Step 2: Admin User Creation
+    elseif ($step === 2) {
+        require_once APP_ROOT . '/config/bootstrap.php';
+        
+        $adminEmail = trim($_POST['admin_email'] ?? '');
+        $adminPass = trim($_POST['admin_pass'] ?? '');
+        $adminPassConfirm = trim($_POST['admin_pass_confirm'] ?? '');
+        $siteName = trim($_POST['site_name'] ?? 'WGroos Courier');
+
+        // Validate inputs
+        if (empty($adminEmail)) $errors[] = 'Admin Email is required';
+        if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) $errors[] = 'Invalid email format';
+        if (strlen($adminPass) < 8) $errors[] = 'Admin Password must be at least 8 characters';
+        if ($adminPass !== $adminPassConfirm) $errors[] = 'Passwords do not match';
+
+        if (empty($errors)) {
+            try {
+                // Hash password
+                $hashedPass = password_hash($adminPass, PASSWORD_BCRYPT);
+
+                // Create admin user in users table
+                $stmt = $DB->prepare("
+                    INSERT INTO users (username, email, password, role, status, created_at) 
+                    VALUES (?, ?, ?, ?, ?, NOW())
+                ");
+                
+                $stmt->execute([
+                    'admin',
+                    $adminEmail,
+                    $hashedPass,
+                    'admin',
+                    'active'
+                ]);
+
+                // Save site name to config
+                $CONFIG->set('site_name', $siteName);
+
+                // Create setup completion marker
+                file_put_contents(APP_ROOT . '/config/.setup-complete', 'Setup completed on ' . date('Y-m-d H:i:s'));
+                
+                $success = true;
+            } catch (PDOException $e) {
+                $errors[] = 'Failed to create admin user: ' . $e->getMessage();
+            }
+        }
+    }
+}
+
+?><!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WGroos Courier - Setup Wizard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 550px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #eee;
+            z-index: 0;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-number {
+            width: 40px;
+            height: 40px;
+            background: #eee;
+            color: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .progress-step.active .progress-number {
+            background: #667eea;
+            color: white;
+        }
+        .progress-step.completed .progress-number {
+            background: #4CAF50;
+            color: white;
+        }
+        .progress-label {
+            font-size: 12px;
+            color: #999;
+            font-weight: 500;
+        }
+        .progress-step.active .progress-label {
+            color: #667eea;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        .success-box {
+            background: #f0f7ff;
+            border: 2px solid #4CAF50;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .success-box h2 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        .success-box p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .success-box code {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .next-steps {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .next-steps strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .next-steps ol {
+            margin-left: 20px;
+            font-size: 14px;
+        }
+        .next-steps li {
+            margin-bottom: 8px;
+        }
+        h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .credentials-box {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .credentials-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .credentials-box div {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <?php if ($success): ?>
+            <div class="success-box">
+                <h2>✓ Setup Complete!</h2>
+                <p>Your WGroos Courier system is ready to go!</p>
+                
+                <div class="credentials-box">
+                    <strong>Login Credentials:</strong>
+                    <div>Email: <code><?php echo htmlspecialchars($adminEmail); ?></code></div>
+                    <div>Password: <code>(the password you just set)</code></div>
+                </div>
+                
+                <div class="next-steps">
+                    <strong>Next Steps:</strong>
+                    <ol>
+                        <li><strong>Delete setup.php</strong> from your server for security</li>
+                        <li><strong>Import database:</strong> Go to cPanel → phpMyAdmin → Import <code>wgroosco_app_wgroos.sql</code></li>
+                        <li><strong>Run migrations:</strong> Execute the 4 SQL migrations in phpMyAdmin</li>
+                        <li><strong>Access admin:</strong> Visit <code>https://yourdomain.com/portals/admin/</code> and login</li>
+                        <li><strong>Configure payment:</strong> Set API keys in Site Management → Payment</li>
+                    </ol>
+                </div>
+            </div>
+        <?php else: ?>
+            <h1>Setup Wizard</h1>
+            <p class="subtitle">Configure your WGroos Courier system</p>
+
+            <!-- Progress Indicator -->
+            <div class="progress">
+                <div class="progress-step <?php echo $step >= 1 ? 'active' : ''; ?>">
+                    <div class="progress-number">1</div>
+                    <div class="progress-label">Database</div>
+                </div>
+                <div class="progress-step <?php echo $step >= 2 ? 'active' : ''; ?>">
+                    <div class="progress-number">2</div>
+                    <div class="progress-label">Admin User</div>
+                </div>
+            </div>
+
+            <?php if (!empty($errors)): ?>
+                <div class="alert alert-error">
+                    <strong>Setup Failed:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo htmlspecialchars($error); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST">
+                <input type="hidden" name="step" value="<?php echo $step; ?>">
+
+                <?php if ($step === 1): ?>
+                    <!-- Step 1: Database Configuration -->
+                    <h3>Database Configuration</h3>
+
+                    <div class="form-group">
+                        <label for="db_host">Database Host</label>
+                        <input type="text" id="db_host" name="db_host" value="localhost" required>
+                        <div class="help-text">Usually <code>localhost</code> on shared hosting</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="db_user">Database User</label>
+                        <input type="text" id="db_user" name="db_user" required>
+                        <div class="help-text">From cPanel → MySQL Databases (format: cpaneluser_dbname)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="db_pass">Database Password</label>
+                        <input type="password" id="db_pass" name="db_pass">
+                        <div class="help-text">Leave blank if no password</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="db_name">Database Name</label>
+                        <input type="text" id="db_name" name="db_name" required>
+                        <div class="help-text">Your database name from cPanel</div>
+                    </div>
+
+                    <button type="submit">Test Connection & Continue →</button>
+
+                <?php elseif ($step === 2): ?>
+                    <!-- Step 2: Admin User Creation -->
+                    <h3>Create Admin User</h3>
+
+                    <div class="form-group">
+                        <label for="site_name">Site Name</label>
+                        <input type="text" id="site_name" name="site_name" value="WGroos Courier" required>
+                        <div class="help-text">Your business name (displayed in emails and admin panel)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="admin_email">Admin Email</label>
+                        <input type="email" id="admin_email" name="admin_email" required>
+                        <div class="help-text">For logging into admin panel</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="admin_pass">Admin Password</label>
+                        <input type="password" id="admin_pass" name="admin_pass" required>
+                        <div class="help-text">Minimum 8 characters. Use mix of letters, numbers, symbols</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="admin_pass_confirm">Confirm Password</label>
+                        <input type="password" id="admin_pass_confirm" name="admin_pass_confirm" required>
+                        <div class="help-text">Must match the password above</div>
+                    </div>
+
+                    <button type="submit">Complete Setup ✓</button>
+
+                <?php endif; ?>
+            </form>
+
+            <?php if ($step === 1): ?>
+                <div class="next-steps">
+                    <strong>Getting Your Database Credentials:</strong>
+                    <ol>
+                        <li>Log in to cPanel</li>
+                        <li>Go to <strong>MySQL Databases</strong></li>
+                        <li>Create a new database</li>
+                        <li>Create a database user and assign to database</li>
+                        <li>Copy the credentials and paste above</li>
+                        <li>Click "Test Connection & Continue"</li>
+                    </ol>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</body>
+</html>

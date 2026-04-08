@@ -1,0 +1,26 @@
+{
+  "new_order": {
+    "title": "New Order Available",
+    "message": "New {{transport_type}} order: {{pickup_location}} → {{dropoff_location}}. Earn {{amount}}. Accept now!"
+  },
+  "order_accepted": {
+    "title": "Order Accepted",
+    "message": "You've accepted order {{order_number}}. Pick-up at {{pickup_location}} {{pickup_time}}"
+  },
+  "customer_nearby": {
+    "title": "Customer Nearby",
+    "message": "Customer is {{distance}} away. Heading to pick-up location."
+  },
+  "delivery_complete": {
+    "title": "Delivery Complete",
+    "message": "Order {{order_number}} delivered successfully. Amount: {{amount}}"
+  },
+  "payment_confirmed": {
+    "title": "Payment Confirmed",
+    "message": "Payment of {{amount}} for order {{order_number}} confirmed!"
+  },
+  "system_alert": {
+    "title": "{{alert_type}}",
+    "message": "{{alert_message}}"
+  }
+}

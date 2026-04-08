@@ -1,0 +1,26 @@
+# Sensitive Configuration
+config/api-keys.php
+config/keys.json
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Uploads & Storage
+storage/uploads/
+storage/invoices/
+
+# Database backups (optional)
+*.sql
+!migrations/*.sql
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
