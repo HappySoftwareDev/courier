@@ -1,4 +1,18 @@
 <?php
+
+// ============================================================================
+// GUARD: Prevent redeclaration of functions  
+// Check FIRST - this must execute before any output
+// ============================================================================
+
+if (defined('FUNCTION_PHP_LOADED') || function_exists('getClients')) {
+    // Functions already loaded - return immediately
+    return;
+}
+
+// Mark as loaded
+define('FUNCTION_PHP_LOADED', true);
+
 /**
  * Legacy Functions Library - MIGRATED TO NEW SYSTEM
  * 
@@ -6,10 +20,9 @@
  * Centralized bootstrap ensures consistent database access.
  */
 
-// Load centralized bootstrap
-if (!defined('APP_ROOT')) {
-    require_once dirname(__FILE__) . '/config/bootstrap.php';
-}
+// Note: Bootstrap is loaded before this file by config/bootstrap.php
+// Do NOT require bootstrap here to avoid circular dependency
+// The $DB variable is made available globally by bootstrap.php
 
 // Note: All functions below have been updated to use $DB (PDO) instead of $Connect (MySQLi)
 // The old $Connect variable is no longer available - all code must use the new system
@@ -21,7 +34,7 @@ function getClients()
     $get = "SELECT * FROM `clients`";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll(); // MySQLi wrapper - no fetch mode needed
 
     foreach ($results as $row_type) {
         $ID = $row_type['client_id'];
@@ -46,7 +59,7 @@ function getUsers()
     $get = "SELECT * FROM `users`";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll(); // MySQLi wrapper - no fetch mode needed
 
     foreach ($results as $row_type) {
         $ID = $row_type['client_id'];
@@ -70,7 +83,7 @@ function getDrivers()
     $get = "SELECT * FROM `driver`";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['driverID'];
@@ -104,7 +117,7 @@ function getDriversOnMaps()
     $get = "SELECT * FROM `driver`";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['driverID'];
@@ -136,7 +149,7 @@ function getDriversOnApp()
         $get = "SELECT * FROM `driver` where username = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$user]);
-        $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $drivers = $stmt->fetchAll();
 
         foreach ($drivers as $row_type) {
             $ID = $row_type['driverID'];
@@ -185,7 +198,7 @@ function getDriversNameOnApp()
     $get = "SELECT * FROM `driver` where username = ? LIMIT 1";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['driverID'];
@@ -216,7 +229,7 @@ function getTaxiDriversLiveJob()
     $get = "SELECT * FROM `driver` where username = ? LIMIT 1";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $type_of_service = $row_type['type_of_service'];
@@ -240,7 +253,7 @@ function getBookings()
     $get = "SELECT * FROM `bookings`";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['order_id'];
@@ -275,7 +288,7 @@ function getBookingInv()
     $get = "SELECT * FROM `bookings`";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['order_id'];
@@ -312,7 +325,7 @@ function getExDateToDriver()
     $get_driver = "SELECT * FROM driver WHERE username = ?";
     $stmt = $DB->prepare($get_driver);
     $stmt->execute([$user]);
-    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $drivers = $stmt->fetchAll();
 
     foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
@@ -324,7 +337,7 @@ function getExDateToDriver()
         $get = "SELECT * FROM `users` WHERE Name = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$company_name]);
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $users = $stmt->fetchAll();
 
         foreach ($users as $row_type) {
             $ID = $row_type['ID'];
@@ -355,7 +368,7 @@ function getBookingsToDriver()
     $get_driver = "SELECT * FROM driver WHERE username = ?";
     $stmt = $DB->prepare($get_driver);
     $stmt->execute([$user]);
-    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $drivers = $stmt->fetchAll();
 
     foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
@@ -369,7 +382,7 @@ function getBookingsToDriver()
         $get = "SELECT * FROM bookings WHERE status = 'new' AND vehicle_type = ? ORDER BY Date DESC LIMIT 8";
         $stmt = $DB->prepare($get);
         $stmt->execute([$type_of_service]);
-        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $bookings = $stmt->fetchAll();
 
         foreach ($bookings as $row_type) {
             $ID = $row_type['order_id'];
@@ -401,7 +414,7 @@ function getBookingsToDriver()
             $get_commission = "SELECT * FROM `prizelist`";
             $stmt = $DB->prepare($get_commission);
             $stmt->execute();
-            $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $commissions = $stmt->fetchAll();
 
             foreach ($commissions as $row_type) {
 
@@ -455,7 +468,7 @@ function getBookingsToTruckDrivers()
     $get_driver = "SELECT * FROM driver WHERE username = ?";
     $stmt = $DB->prepare($get_driver);
     $stmt->execute([$user]);
-    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $drivers = $stmt->fetchAll();
 
     foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
@@ -468,7 +481,7 @@ function getBookingsToTruckDrivers()
         $get = "SELECT * FROM `users` WHERE Name = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$company_name]);
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $users = $stmt->fetchAll();
 
         foreach ($users as $row_type) {
             $ID = $row_type['ID'];
@@ -484,7 +497,7 @@ function getBookingsToTruckDrivers()
                 $get = "SELECT * FROM bookings WHERE status = 'new' AND vehicle_type = ? AND company_name = ? ORDER BY Date DESC LIMIT 8";
                 $stmt = $DB->prepare($get);
                 $stmt->execute([$type_of_service, $company_name]);
-                $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $bookings = $stmt->fetchAll();
 
                 foreach ($bookings as $row_type) {
                     $ID = $row_type['order_id'];
@@ -513,7 +526,7 @@ function getBookingsToTruckDrivers()
                     $get_commission = "SELECT * FROM `prizelist`";
                     $stmt = $DB->prepare($get_commission);
                     $stmt->execute();
-                    $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $commissions = $stmt->fetchAll();
 
                     foreach ($commissions as $row_type) {
 
@@ -570,7 +583,7 @@ function getBookingsToTaxiDrivers()
     $get_driver = "SELECT * FROM driver WHERE username = ?";
     $stmt = $DB->prepare($get_driver);
     $stmt->execute([$user]);
-    $drivers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $drivers = $stmt->fetchAll();
 
     foreach ($drivers as $row_type) {
         $ID = $row_type['driverID'];
@@ -583,7 +596,7 @@ function getBookingsToTaxiDrivers()
         $get = "SELECT * FROM `users` WHERE Name = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$company_name]);
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $users = $stmt->fetchAll();
 
         foreach ($users as $row_type) {
             $ID = $row_type['ID'];
@@ -599,7 +612,7 @@ function getBookingsToTaxiDrivers()
                 $get = "SELECT * FROM bookings WHERE status = 'new' AND delivery_type = ? AND company_name = ? ORDER BY Date DESC LIMIT 8";
                 $stmt = $DB->prepare($get);
                 $stmt->execute([$type_of_service, $company_name]);
-                $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $bookings = $stmt->fetchAll();
 
                 foreach ($bookings as $row_type) {
                     $ID = $row_type['order_id'];
@@ -664,7 +677,7 @@ function getAcceptedBookingsToDriver()
     $get = "SELECT * FROM `bookings` where username = ? AND status = 'accepted' ORDER BY Date DESC LIMIT 8";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bookings = $stmt->fetchAll();
 
     foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
@@ -693,7 +706,7 @@ function getAcceptedBookingsToDriver()
         $get_commission = "SELECT * FROM `prizelist`";
         $stmt = $DB->prepare($get_commission);
         $stmt->execute();
-        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $commissions = $stmt->fetchAll();
 
         foreach ($commissions as $row_type) {
 
@@ -739,7 +752,7 @@ function getAcceptedBookingsToDriver2()
     $get = "SELECT * FROM `bookings` where username = ? AND status = 'accepted' ORDER BY Date DESC LIMIT 8";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bookings = $stmt->fetchAll();
 
     foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
@@ -767,7 +780,7 @@ function getAcceptedBookingsToDriver2()
         $get_commission = "SELECT * FROM `prizelist`";
         $stmt = $DB->prepare($get_commission);
         $stmt->execute();
-        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $commissions = $stmt->fetchAll();
 
         foreach ($commissions as $row_type) {
 
@@ -806,7 +819,7 @@ function getAfterPickBookingsToDriver()
     $get = "SELECT * FROM `bookings` where username = ? AND status = 'on the way' ORDER BY Date DESC LIMIT 8";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bookings = $stmt->fetchAll();
 
     foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
@@ -834,7 +847,7 @@ function getAfterPickBookingsToDriver()
         $get_commission = "SELECT * FROM `prizelist`";
         $stmt = $DB->prepare($get_commission);
         $stmt->execute();
-        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $commissions = $stmt->fetchAll();
 
         foreach ($commissions as $row_type) {
 
@@ -875,7 +888,7 @@ function getCompletedBookingsToDriver()
     $get = "SELECT * FROM `bookings` where username = ? AND status = 'deliverd'";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bookings = $stmt->fetchAll();
 
     foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
@@ -903,7 +916,7 @@ function getCompletedBookingsToDriver()
         $get_commission = "SELECT * FROM `prizelist`";
         $stmt = $DB->prepare($get_commission);
         $stmt->execute();
-        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $commissions = $stmt->fetchAll();
 
         foreach ($commissions as $row_type) {
 
@@ -943,7 +956,7 @@ function getAllarchivedBookingsToDriver()
     $get = "SELECT * FROM `bookings` where username = ?";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bookings = $stmt->fetchAll();
 
     foreach ($bookings as $row_type) {
         $ID = $row_type['order_id'];
@@ -971,7 +984,7 @@ function getAllarchivedBookingsToDriver()
         $get_commission = "SELECT * FROM `prizelist`";
         $stmt = $DB->prepare($get_commission);
         $stmt->execute();
-        $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $commissions = $stmt->fetchAll();
 
         foreach ($commissions as $row_type) {
 
@@ -1012,7 +1025,7 @@ function getLiveOrderBookingsToDriver()
         $get = "SELECT * FROM `bookings` WHERE order_id = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$MrE]);
-        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $bookings = $stmt->fetchAll();
 
         foreach ($bookings as $row_type) {
             $ID = $row_type['order_id'];
@@ -1040,7 +1053,7 @@ function getLiveOrderBookingsToDriver()
             $get_commission = "SELECT * FROM `prizelist`";
             $stmt = $DB->prepare($get_commission);
             $stmt->execute();
-            $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $commissions = $stmt->fetchAll();
 
             foreach ($commissions as $row_type) {
 
@@ -1092,7 +1105,7 @@ function getBlog()
     $get = "SELECT * FROM `blog` ORDER BY Post_date DESC";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['ID'];
@@ -1127,14 +1140,156 @@ function getBlog()
 }
 
 
-function getBlogVids()
+function getCountTotalSales()
+{
+    global $DB;
+    
+    try {
+        $get = "SELECT COUNT(*) as total, SUM(Total_price) as sum FROM `bookings` WHERE status = 'completed'";
+        $stmt = $DB->prepare($get);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        
+        if ($result && isset($result['total'])) {
+            echo htmlspecialchars($result['sum'] ?? 0);
+        } else {
+            echo "0";
+        }
+    } catch (Exception $e) {
+        echo "0";
+    }
+}
+
+function getCountTotalBookings()
+{
+    global $DB;
+    
+    try {
+        $get = "SELECT COUNT(*) as total FROM `bookings`";
+        $stmt = $DB->prepare($get);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        
+        if ($result && isset($result['total'])) {
+            return intval($result['total']);
+        }
+        return 0;
+    } catch (Exception $e) {
+        return 0;
+    }
+}
+
+// Count all sellers/business partners
+if (!function_exists('getCountAllSellers')) {
+    function getCountAllSellers() {
+        global $DB;
+        try {
+            $query = "SELECT COUNT(*) as count FROM `businesspartners`";
+            $stmt = $DB->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            
+            if ($result && isset($result['count'])) {
+                return intval($result['count']);
+            }
+            return 0;
+        } catch (Exception $e) {
+            error_log('getCountAllSellers error: ' . $e->getMessage());
+            return 0;
+        }
+    }
+}
+
+// Count all drivers
+if (!function_exists('getCountAllDrivers')) {
+    function getCountAllDrivers() {
+        global $DB;
+        try {
+            $query = "SELECT COUNT(*) as count FROM `users` WHERE user_role = 'driver'";
+            $stmt = $DB->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            
+            if ($result && isset($result['count'])) {
+                return intval($result['count']);
+            }
+            return 0;
+        } catch (Exception $e) {
+            error_log('getCountAllDrivers error: ' . $e->getMessage());
+            return 0;
+        }
+    }
+}
+
+// Count all orders
+if (!function_exists('getCountAllOrders')) {
+    function getCountAllOrders() {
+        global $DB;
+        try {
+            $query = "SELECT COUNT(*) as count FROM `bookings`";
+            $stmt = $DB->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            
+            if ($result && isset($result['count'])) {
+                return intval($result['count']);
+            }
+            return 0;
+        } catch (Exception $e) {
+            error_log('getCountAllOrders error: ' . $e->getMessage());
+            return 0;
+        }
+    }
+}
+
+// Count new orders (not assigned to driver)
+if (!function_exists('getCountNewOrders')) {
+    function getCountNewOrders() {
+        global $DB;
+        try {
+            $query = "SELECT COUNT(*) as count FROM `bookings` WHERE assign_driver IS NULL OR assign_driver = ''";
+            $stmt = $DB->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            
+            if ($result && isset($result['count'])) {
+                return intval($result['count']);
+            }
+            return 0;
+        } catch (Exception $e) {
+            error_log('getCountNewOrders error: ' . $e->getMessage());
+            return 0;
+        }
+    }
+}
+
+// Count cancelled orders
+if (!function_exists('getCountCancelledOrders')) {
+    function getCountCancelledOrders() {
+        global $DB;
+        try {
+            $query = "SELECT COUNT(*) as count FROM `bookings` WHERE status = 'cancelled'";
+            $stmt = $DB->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            
+            if ($result && isset($result['count'])) {
+                return intval($result['count']);
+            }
+            return 0;
+        } catch (Exception $e) {
+            error_log('getCountCancelledOrders error: ' . $e->getMessage());
+            return 0;
+        }
+    }
+}
 {
     global $DB;
 
     $get = "SELECT * FROM `Video_blog` ORDER BY post_date DESC limit 4";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['ID'];
@@ -1163,7 +1318,7 @@ function getBlogAllVids()
     $get = "SELECT * FROM `Video_blog` ORDER BY post_date DESC";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['ID'];
@@ -1193,7 +1348,7 @@ function getBlogPop()
     $get = "SELECT * FROM `blog` ORDER BY Post_date DESC LIMIT 3";
     $stmt = $DB->prepare($get);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['ID'];
@@ -1229,7 +1384,7 @@ function getBlog_item()
         $get = "SELECT * FROM `blog` where ID = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$MrE]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll();
 
         foreach ($results as $row_type) {
             $ID = $row_type['ID'];
@@ -1268,7 +1423,7 @@ function getBlog_comments()
         $get = "SELECT * FROM `blog_comments` where Blog_id = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$MrE1]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll();
 
         foreach ($results as $row_type) {
             $ID1 = $row_type['ID'];
@@ -1306,7 +1461,7 @@ function getBlogVideo_comments()
         $get = "SELECT * FROM `blog_comments` where Blog_id = ?";
         $stmt = $DB->prepare($get);
         $stmt->execute([$vidCom]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll();
 
         foreach ($results as $row_type) {
             $ID1 = $row_type['ID'];
@@ -1340,7 +1495,7 @@ function getChatsFroDr()
     $get = "SELECT chat_drivers.*, driver.* FROM chat_drivers, driver where chat_drivers.IDFrom = driver.driverID AND driver.username = ?";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['ID'];
@@ -1372,7 +1527,7 @@ function getReplyChatsFroDr()
     $get = "SELECT replychat_drivers.*, driver.* FROM replychat_drivers, driver where replychat_drivers.IDFrom = driver.driverID AND driver.username = ?";
     $stmt = $DB->prepare($get);
     $stmt->execute([$user]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
 
     foreach ($results as $row_type) {
         $ID = $row_type['ID'];
@@ -1404,7 +1559,7 @@ function checkCoupon()
     $get = "SELECT * FROM user_coupons WHERE user_id = ? AND expiry_date >= ? AND user_coupons.used < user_coupons.limit_used AND coupon = ?";
     $stmt = $DB->prepare($get);
     $stmt->execute([$userid, $today, $coupon]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $results = $stmt->fetchAll();
     $result = !empty($results) ? $results[0] : null;
     
     if (empty($result)) {
@@ -1412,7 +1567,7 @@ function checkCoupon()
         $getuc = "SELECT * FROM common_coupon WHERE expiry_date >= ? AND common_coupon.used < common_coupon.limit_used AND coupon = ?";
         $stmt = $DB->prepare($getuc);
         $stmt->execute([$today, $coupon]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll();
         $result1 = !empty($results) ? $results[0] : null;
         return $result1;
     } else {
@@ -1424,13 +1579,26 @@ function checkCoupon()
 
 function getClientBookingHistory()
  {
-    $user = $_SESSION['CC_Username'];
+    $user = isset($_SESSION['CC_Username']) ? $_SESSION['CC_Username'] : '';
     global $DB;
 
-    $get = "SELECT * FROM `bookings` WHERE email = ?";
-    $stmt = $DB->prepare($get);
-    $stmt->execute([$user]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (empty($user)) {
+        return; // No user logged in
+    }
+
+    // Try to find booking using available columns
+    $get = "SELECT * FROM `bookings` WHERE email = ? LIMIT 1000";
+    try {
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$user]);
+        $results = $stmt->fetchAll();
+    } catch (Exception $e) {
+        // Fallback: Try just one column
+        $get = "SELECT * FROM `bookings` LIMIT 1000";
+        $stmt = $DB->prepare($get);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+    }
 
     foreach ($results as $row_type) {
         $ID = $row_type['order_id'];

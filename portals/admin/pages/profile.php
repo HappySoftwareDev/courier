@@ -1,63 +1,252 @@
-<?php require_once('../../config/bootstrap.php'); require_once('../../function.php'); ?>
+<?php
+/**
+ * Admin Profile Page - Modern Version
+ */
 
-<?php require ("login-security.php"); ?>
+require_once '../../../config/bootstrap.php';
+require_once '../signin-security.php';
 
-<?php include ('site_settings.php'); ?>
+// Set variables
+$page_title = 'My Profile';
+$site_name = 'WG ROOS Courier Admin';
 
-<?php include("function.php") ?>
+// Get user info from session
+$username = $_SESSION['CC_Username'] ?? '';
+$admin_name = $_SESSION['user_name'] ?? 'Admin User';
 
-<?php require ("get-sql-value.php"); 
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-    $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+try {
+    global $DB;
+    
+    // Fetch user data
+    $query = "SELECT * FROM `businesspartners` WHERE email = ? LIMIT 1";
+    $stmt = $DB->prepare($query);
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+} catch (Exception $e) {
+    error_log('Profile query error: ' . $e->getMessage());
+    $user = [];
 }
 
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "AdminUpdate")) {
-    $updateSQL = sprintf(
-        "UPDATE `admin` SET Name=%s, Email=%s, phone=%s, Password=%s WHERE ID=%s",
-        GetSQLValueString($_POST['Name'], "text"),
-        GetSQLValueString($_POST['email'], "text"),
-        GetSQLValueString($_POST['phone'], "text"),
-        GetSQLValueString($_POST['password'], "text"),
-        GetSQLValueString($_POST['ID'], "int")
-    );
+$message = '';
+$error = '';
 
-    mysql_select_db($database_Connect, $Connect);
-    $Result1 = mysql_query($updateSQL, $Connect) or die(mysql_error());
-
-    $updateGoTo = "profile.php";
-    if ($updateGoTo) {
-        echo "<script>alert('Details Updated...!')</script>";
-        echo "<script>window.open('profile.php','_self')</script>";
+// Handle profile update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_profile') {
+    $name = trim($_POST['businessName'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $address = trim($_POST['address'] ?? '');
+    $city = trim($_POST['businessLocation'] ?? '');
+    
+    if (empty($name)) {
+        $error = 'Business name cannot be empty';
     } else {
-        echo "<script>alert('error!')</script>";
+        try {
+            $update_query = "UPDATE `businesspartners` SET businessName = ?, phone = ?, address = ?, businessLocation = ? WHERE email = ?";
+            $stmt = $DB->prepare($update_query);
+            $stmt->execute([$name, $phone, $address, $city, $username]);
+            
+            $message = 'Profile updated successfully';
+            
+            // Update session
+            $_SESSION['user_name'] = $name;
+            
+            // Refresh user data
+            $query = "SELECT * FROM `businesspartners` WHERE email = ? LIMIT 1";
+            $stmt = $DB->prepare($query);
+            $stmt->execute([$username]);
+            $user = $stmt->fetch();
+        } catch (Exception $e) {
+            $error = 'Error updating profile: ' . $e->getMessage();
+        }
+    }
+}
+
+// Handle password change
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'change_password') {
+    $old_password = $_POST['old_password'] ?? '';
+    $new_password = $_POST['new_password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    
+    if (empty($old_password) || empty($new_password) || empty($confirm_password)) {
+        $error = 'All password fields are required';
+    } elseif ($new_password !== $confirm_password) {
+        $error = 'New passwords do not match';
+    } elseif (strlen($new_password) < 6) {
+        $error = 'Password must be at least 6 characters';
+    } else {
+        try {
+            // Verify old password
+            if (!password_verify($old_password, $user['password'] ?? '')) {
+                $error = 'Current password is incorrect';
+            } else {
+                // Update password
+                $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+                $update_query = "UPDATE `businesspartners` SET password = ? WHERE email = ?";
+                $stmt = $DB->prepare($update_query);
+                $stmt->execute([$hashed_password, $username]);
+                
+                $message = 'Password changed successfully';
+            }
+        } catch (Exception $e) {
+            $error = 'Error changing password: ' . $e->getMessage();
+        }
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
-    <!-- Include common meta and links -->
-    <?php include 'head.php'; ?>
-
-    <title><?php echo $site_name ?> - Manage Account</title>
-
+    <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
+    <?php include '../head.php'; ?>
 </head>
 
-<body>
+<body class="admin-portal">
 
-    <div id="wrapper">
+    <div class="page-container">
+        
+        <!-- Sidebar Navigation -->
+        <?php include '../sidebar-nav-menu.php'; ?>
+        
+        <!-- Main Content Wrapper -->
+        <div class="main-content">
+            
+            <!-- Header -->
+            <?php include '../header.php'; ?>
+            
+            <!-- Main Content Area -->
+            <main class="main-wrapper">
+                <section class="section">
+                    <div class="container-fluid">
+                        
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <h1><?php echo $page_title; ?></h1>
+                            <p class="text-muted">Manage your admin account settings</p>
+                        </div>
 
-        <!-- Include sidebar navigation and menu -->
-        <?php include 'admin-nav.php'; ?>
+                        <!-- Messages -->
+                        <?php if (!empty($message)): ?>
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <?php echo htmlspecialchars($message); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($error)): ?>
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <?php echo htmlspecialchars($error); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
 
-        <?php
+                        <div class="row">
+                            <!-- Profile Card -->
+                            <div class="col-lg-4 mb-40">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <img src="../assets/images/avatar.png" alt="<?php echo htmlspecialchars($admin_name); ?>" class="rounded-circle mb-3" width="100">
+                                        <h5><?php echo htmlspecialchars($admin_name); ?></h5>
+                                        <p class="text-muted"><?php echo htmlspecialchars($username); ?></p>
+                                        <p class="text-muted small">Admin User</p>
+                                        <hr>
+                                        <p class="text-muted small">
+                                            Member since<br>
+                                            <?php echo date('Y-m-d', strtotime($user['created_at'] ?? 'now')); ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Profile Form -->
+                            <div class="col-lg-8">
+                                <div class="card mb-40">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Update Profile Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="POST" action="">
+                                            <input type="hidden" name="action" value="update_profile">
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Business Name</label>
+                                                <input type="text" class="form-control" name="businessName" value="<?php echo htmlspecialchars($user['businessName'] ?? ''); ?>" required>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Phone</label>
+                                                        <input type="tel" class="form-control" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">City</label>
+                                                        <input type="text" class="form-control" name="businessLocation" value="<?php echo htmlspecialchars($user['businessLocation'] ?? ''); ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Address</label>
+                                                <textarea class="form-control" name="address" rows="3"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Change Password Form -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Change Password</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="POST" action="">
+                                            <input type="hidden" name="action" value="change_password">
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Current Password</label>
+                                                <input type="password" class="form-control" name="old_password" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">New Password</label>
+                                                <input type="password" class="form-control" name="new_password" placeholder="Min 6 characters" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Confirm New Password</label>
+                                                <input type="password" class="form-control" name="confirm_password" required>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Change Password</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <?php include '../footer.php'; ?>
+
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <?php include '../footerscripts.php'; ?>
+
+</body>
+
+</html>
         $user = $_SESSION['MM_Username'];
         $get = "SELECT * FROM `admin` where Email = '$user' ";
 

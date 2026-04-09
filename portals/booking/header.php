@@ -1,19 +1,39 @@
  <?php
- require("../function.php"); 
+ // Function library is already loaded via bootstrap.php
+ // No need to require function.php again
  
- $aData = json_decode(file_get_contents("../admin/pages/keys.json"));
-// echo "<pre>" . print_r($aData, true) . "</pre>";
-$showStripe = isset($aData->stripe_handle) ? $aData->stripe_handle : "";
-$showPaynow = isset($aData->paynow_handle) ? $aData->paynow_handle : "";
+ // Load payment gateway configuration
+ $keysFile = "../../config/keys.json";
+ $aData = null;
+ if (file_exists($keysFile)) {
+     $aData = json_decode(file_get_contents($keysFile));
+ } else {
+     $aData = (object)[];
+ }
+ // echo "<pre>" . print_r($aData, true) . "</pre>";
+ $showStripe = isset($aData->stripe_handle) ? $aData->stripe_handle : "";
+ $showPaynow = isset($aData->paynow_handle) ? $aData->paynow_handle : "";
  
  ?>
  <?php
     // var_dump($Connect);
+    // NOTE: The 'prizelist' table may not exist in the new schema
+    // This is legacy code that retrieves pricing configuration
+    // If the table doesn't exist, pricing data should come from the new pricing_config table
     $get = "SELECT * FROM `prizelist` WHERE company_name='merchant'";
-
-    $stmt = $DB->prepare( $get);
-
-    foreach ($results as $1) {
+    
+    try {
+        $stmt = $DB->prepare($get);
+        $stmt->execute();
+        $results = $stmt->fetchAll() ?: [];
+    } catch (Exception $e) {
+        // If prizelist table doesn't exist, use empty results
+        // Pricing data should be accessed from the new pricing system
+        error_log("Prizelist table error: " . $e->getMessage());
+        $results = [];
+    }
+    
+    foreach ($results as $row) {
         $ID = $row_type['ID'];
         $exchange_rate = $row_type['exchange_rate'];
         $Price_per_km = $row_type['Price_per_km'];
@@ -129,7 +149,7 @@ $showPaynow = isset($aData->paynow_handle) ? $aData->paynow_handle : "";
 
     $stmt = $DB->prepare( $get_w);
 
-    foreach ($results as $1) {
+    foreach ($results as $row) {
         $id = $row_type['id'];
         $weight_range = $row_type['weight_range0'];
         $weight_range1 = $row_type['weight_range1'];
@@ -191,11 +211,17 @@ $showPaynow = isset($aData->paynow_handle) ? $aData->paynow_handle : "";
     }
     ?>
     <?php
-    $user = $_SESSION['CC_Username'];
-    $get = "SELECT * FROM `businesspartners` WHERE email='$user'";
-    $stmt = $DB->prepare( $get);
+    $user = isset($_SESSION['CC_Username']) ? $_SESSION['CC_Username'] : '';
+    if (!empty($user)) {
+        $get = "SELECT * FROM `businesspartners` WHERE email=?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$user]);
+        $results = $stmt->fetchAll();
+    } else {
+        $results = [];
+    }
     $name = '';
-    foreach ($results as $1) {
+    foreach ($results as $row) {
         $name = $row_type['businessName'];
         $affiliate_no = $row_type['affiliate_no'];
         $email = $row_type['email'];
@@ -206,11 +232,12 @@ $showPaynow = isset($aData->paynow_handle) ? $aData->paynow_handle : "";
         $contact_name = $row_type['NameOfContact'];
         $person_phone = $row_type['PersonPhone'];
     }
-    if ($name == "") {
-        $get_user = "SELECT * FROM `users` WHERE email='$user'";
-        $stmt = $DB->prepare( $get_user);
-
-        foreach ($results as $1) {
+    if ($name == "" && !empty($user)) {
+        $get_user = "SELECT * FROM `users` WHERE email=?";
+        $stmt = $DB->prepare($get_user);
+        $stmt->execute([$user]);
+        $results = $stmt->fetchAll();
+        foreach ($results as $row) {
             $name = $row_type['Name'];
             $affiliate_no = $row_type['affiliate_no'];
             $email = $row_type['email'];
@@ -220,8 +247,14 @@ $showPaynow = isset($aData->paynow_handle) ? $aData->paynow_handle : "";
     ?>
 
     <?php
-    $aData = json_decode(file_get_contents("../config/keys.json"));
-    $mapApi = !empty($aData->mapApi) ? $aData->mapApi : "";
+    // Load keys from correct path
+    $keysFile = dirname(dirname(dirname(__FILE__))) . '/config/keys.json';
+    if (file_exists($keysFile)) {
+        $aData = json_decode(file_get_contents($keysFile));
+        $mapApi = !empty($aData->mapApi) ? $aData->mapApi : "";
+    } else {
+        $mapApi = "";
+    }
     ?>
     
     <!-- Include sidebar navigation and menu -->

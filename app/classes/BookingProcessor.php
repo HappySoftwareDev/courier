@@ -148,17 +148,28 @@ class BookingProcessor {
      */
     public function updateBookingStatus($bookingId, $status) {
         try {
-            $validStatuses = ['new', 'accepted', 'picked_up', 'in_transit', 'completed', 'cancelled'];
+            $validStatuses = ['pending', 'new', 'accepted', 'picked_up', 'in_transit', 'completed', 'cancelled'];
 
             if (!in_array($status, $validStatuses)) {
                 return ['success' => false, 'error' => 'Invalid status'];
             }
 
             $stmt = $this->db->prepare(
-                "UPDATE bookings SET status = :status, updated_at = NOW() WHERE order_id = :id"
+                "UPDATE bookings SET status = :status, updated_at = NOW() WHERE booking_id = :id"
             );
 
             if ($stmt->execute([':status' => $status, ':id' => $bookingId])) {
+                
+                // Log the status change
+                try {
+                    $logStmt = $this->db->prepare(
+                        "INSERT INTO booking_history (booking_id, new_status, created_at) VALUES (:id, :status, NOW())"
+                    );
+                    $logStmt->execute([':id' => $bookingId, ':status' => $status]);
+                } catch (Exception $logE) {
+                    error_log("Could not log status change: " . $logE->getMessage());
+                }
+                
                 return ['success' => true, 'message' => 'Status updated'];
             }
 
@@ -395,24 +406,6 @@ class BookingProcessor {
         } catch (Exception $e) {
             error_log("Error fetching booking: " . $e->getMessage());
             return null;
-        }
-    }
-
-    /**
-     * Update booking status
-     */
-    public function updateBookingStatus($bookingId, $status) {
-        try {
-            $stmt = $this->db->prepare(
-                "UPDATE bookings SET status = :status, updated_at = NOW() WHERE booking_id = :id"
-            );
-            return $stmt->execute([
-                ':status' => $status,
-                ':id' => $bookingId
-            ]);
-        } catch (Exception $e) {
-            error_log("Error updating booking status: " . $e->getMessage());
-            return false;
         }
     }
 }

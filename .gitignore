@@ -1,8 +1,32 @@
 # Sensitive Configuration
 config/api-keys.php
 config/keys.json
+config/database-config.php
+firebase-config.php
+web_push/firebase-config.php
 .env
 .env.local
+.env.*.local
+
+# API Keys & Credentials
+*.key
+*.pem
+secrets/
+credentials/
+keys/
+
+# Payment Gateway Keys
+stripe_keys.php
+paynow_keys.php
+konse_keys.php
+
+# Third-party API Keys
+google_api_keys.php
+firebase_keys.php
+
+# Environment Variables
+.env*
+!.env.example
 
 # Logs
 logs/
@@ -24,3 +48,8 @@ storage/invoices/
 # OS files
 .DS_Store
 Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db

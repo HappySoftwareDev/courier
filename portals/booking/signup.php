@@ -108,6 +108,11 @@
   </script>
   </head>
   <body>
+    <!-- Home Navigation -->
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f3f4f6'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.background='white'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">← Back to Home</a>
+    </div>
+    
     <!-- ======== sidebar-nav start =========== -->
     
     <div class="overlay"></div>
@@ -634,8 +639,13 @@
       }
   </script>
   <?php
-    $aData = json_decode(file_get_contents("../config/keys.json"));
-    $mapApi = !empty($aData->mapApi) ? $aData->mapApi : "";
+    $keysFile = '../../config/keys.json';
+    if (file_exists($keysFile)) {
+        $aData = json_decode(file_get_contents($keysFile));
+    } else {
+        $aData = (object)[];
+    }
+    $mapApi = !empty($aData->mapApi) ? $aData->mapApi : '';
   ?>
   <script src="https://maps.google.com/maps/api/js?key=<?php echo $mapApi ?>&sensor=false&libraries=places&callback=initAutocomplete" type="text/javascript"></script>
 

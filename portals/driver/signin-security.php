@@ -13,7 +13,9 @@ if (!defined('APP_ROOT')) {
 
 // Handle driver logout
 if (!empty($_GET['doLogout']) && $_GET['doLogout'] === 'true') {
-    AuthManager::logout();
+    // Destroy session
+    $_SESSION = [];
+    session_destroy();
     
     $returnUrl = 'index.php';
     header('Location: ' . $returnUrl);
@@ -26,14 +28,14 @@ if (!empty($_GET['doLogout']) && $_GET['doLogout'] === 'true') {
  */
 function checkDriverAccess($requiredRole = 'driver') {
     // Public pages that don't require authentication
-    $publicPages = ['index.php', 'driver_registration.php'];
+    $publicPages = ['index.php', 'driver_registration.php', 'forgot_pass.php'];
     $currentPage = basename($_SERVER['PHP_SELF']);
     
     if (in_array($currentPage, $publicPages)) {
-        return true; // Public pages
+        return true; // Public pages - no auth required
     }
     
-    // Require driver authentication
+    // Require driver authentication for ALL other pages
     if (!AuthManager::isAuthenticated()) {
         $currentUrl = urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']);
         header('Location: index.php?login_required=1&return=' . $currentUrl);
@@ -66,7 +68,9 @@ $sessionLastActivity = $_SESSION['last_activity'] ?? time();
 $_SESSION['last_activity'] = time();
 
 if ((time() - $sessionLastActivity) > $sessionTimeout) {
-    AuthManager::logout();
+    // Session expired - destroy it
+    $_SESSION = [];
+    session_destroy();
     header('Location: index.php?expired=1');
     exit;
 }

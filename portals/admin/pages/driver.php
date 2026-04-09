@@ -1,49 +1,17 @@
-<?php require ("login-security.php"); ?>
+<?php
+/**
+ * Admin Drivers Management Page (Legacy - Use drivers.php)
+ * This page is maintained for backward compatibility
+ * Redirect to modern drivers list
+ */
 
-<?php include ('site_settings.php'); ?>
+require_once('../../../config/bootstrap.php');
+require_once('login-security.php');
 
-<?php require("function.php"); ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <!-- Include common meta and links -->
-    <?php include 'head.php'; ?>
-
-    <title><?php echo $site_name ?> - Drivers</title>
-
-
-</head>
-
-<body>
-
-    <div id="wrapper">
-
-        <!-- Include sidebar navigation and menu -->
-        <?php include 'admin-nav.php'; ?>
-
-        <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Manage Drivers</h1>
-                        <div class="col-lg-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Available Drivers
-                                </div>
-                                <!-- /.panel-heading -->
-                                <div class="panel-body">
-                                    <div class="table-responsive table-bordered">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Driver Details</th>
-                                                    <th>Currently</th>
+// Redirect to modern drivers page
+header('Location: drivers.php', true, 301);
+exit;
+?>
                                                     <th>Status</th>
                                                     <th>Info</th>
                                                     <th>Action</th>

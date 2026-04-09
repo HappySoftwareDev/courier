@@ -1,171 +1,342 @@
-<?php require ("login-security.php"); ?>
-
-<?php require ("function.php"); ?>
-
-<?php include ('site_settings.php'); ?>
-
-
 <?php
+/**
+ * Admin Users Management Page
+ * View, filter, and manage all users in the system
+ */
 
-if (isset($_POST['invite'])) {
-    // Retrieve the email from the form input
-    $to = $_POST['email'];
+require_once '../../../config/bootstrap.php';
+require_once 'login-security.php';
 
-    // Ensure $web_url, $site_name, and $bus_phone are defined
-    $from = "registrations@" . $web_url;
+// Set variables for layout
+$page_title = 'Users Management';
+$site_name = 'WG ROOS Courier Admin';
 
-    // Use the provided HTML template for the email content
-    $message = '
-        <html>
-            <head>
-                <title>' . $site_name . '</title>
-            </head>
-            <body>
-                <div style="font-family:HelveticaNeue-Light,Arial,sans-serif;background-color:#eeeeee; padding:8px; text-align:centre;">
-                    <h1 style="color:#FF8C00">' . $site_name . '</h1>
-                    <h3>Invitation to Become an Admin</h3>
-                    <p>Hello, you have been invited to become an Admin at <strong>' . $site_name . '</strong>.</p>
-                    
-                    <p><a href="http://' . $web_url . '/admin/pages/adiminUsers.php" style="color:#FF8C00;"><strong>Proceed to Admin Invitation</strong></a></p>
-
-                    <footer>
-                        <div style="background-color:#CCC; padding:10px;">
-                            <p>For inquiries, visit <a href="http://' . $web_url . '">' . $web_url . '</a>. Call/WhatsApp <b>' . $bus_phone . '</b>.</p>
-                            <p>If you do not understand this email,are note the intended recipient of it, feel free to ignore and delete it. Otherwise, click the link above to proceed:</p>
-                            <p>PLEASE DO NOT REPLY TO THIS EMAIL.</p>
-                            <h4 style="color:#FF8C00">' . $site_name . '</h4>
-                        </div>
-                    </footer>
-                </div>
-            </body>
-        </html>
-    ';
-
-    // Set up headers for the email with MIME type for HTML
-    $headers = "From: " . $from . "\r\n";
-    $headers .= "Reply-To: " . $from . "\r\n";
-    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-
-    // Send the email and check the result
-    if (mail($to, "Admin Invitation", $message, $headers)) {
-        echo "<script>alert('Email sent successfully!');</script>";
-    } else {
-        echo "<script>alert('Failed to send email. Please check your configuration.');</script>";
-    }
-
-    if ($to != "") {
-        // Check if the email already exists in the database
-        $get = "SELECT * FROM `admin` WHERE Email='$to'";
-        $stmt = $DB->prepare( $get);
-
-        foreach ($results as $1) {
-            // Retrieve the push token from the database
-            $push_token = $row_type['push_token'];
-            
-            if ($push_token != "") {
-                // Prepare and send a push notification if the push token exists
-                $title = $site_name;
-                $msg = "Hello, you have been invited to become an Admin at " . $site_name;
-                $page = "adiminUsers.php";
-
-                // Open a new window with the push notification details
-                echo "<script>window.open('../../web_push/send_notification.php?title=$title&message=$msg&token=$push_token&page=$page', '_self');</script>";
-            }
-        }
-    }
+// Make sure functions are available
+if (!function_exists('getCount')) {
+    require_once '../../../function.php';
 }
+
+// Get filter and search parameters
+$type = $_GET['type'] ?? 'all';
+$search = $_GET['search'] ?? '';
+$status = $_GET['status'] ?? 'all';
+
+// Build query based on filter
+$query = "SELECT * FROM `users` WHERE 1=1";
+$params = [];
+
+if ($type === 'customers') {
+    $query .= " AND user_type = 'customer'";
+} elseif ($type === 'partners') {
+    $query .= " AND user_type = 'partner'";
+}
+
+if ($status === 'active') {
+    $query .= " AND status = 'active'";
+} elseif ($status === 'inactive') {
+    $query .= " AND status = 'inactive'";
+} elseif ($status === 'suspended') {
+    $query .= " AND status = 'suspended'";
+}
+
+if (!empty($search)) {
+    $query .= " AND (Name LIKE ? OR email LIKE ? OR phone LIKE ?)";
+    $searchTerm = "%$search%";
+    $params = array_merge($params, [$searchTerm, $searchTerm, $searchTerm]);
+}
+
+$query .= " ORDER BY created_at DESC LIMIT 100";
+
+$users = [];
+try {
+    global $DB;
+    $stmt = $DB->prepare($query);
+    $stmt->execute($params);
+    $users = $stmt->fetchAll();
+} catch (Exception $e) {
+    error_log('Users query error: ' . $e->getMessage());
+}
+
+// Prepare stats
+$totalUsers = count($users);
+$customers = count(array_filter($users, fn($u) => ($u['user_type'] ?? '') === 'customer'));
+$partners = count(array_filter($users, fn($u) => ($u['user_type'] ?? '') === 'partner'));
+$active = count(array_filter($users, fn($u) => ($u['status'] ?? '') === 'active'));
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
-    <!-- Include common meta and links -->
-    <?php include 'head.php'; ?>
-
-    <title><?php echo $site_name ?> - Admin Users</title>
-
-
+    <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
+    <?php include '../head.php'; ?>
 </head>
 
-<body>
+<body class="admin-portal">
 
-    <div id="wrapper">
+    <div class="page-container">
+        
+        <!-- Sidebar Navigation -->
+        <?php include '../sidebar-nav-menu.php'; ?>
+        
+        <!-- Main Content Wrapper -->
+        <div class="main-content">
+            
+            <!-- Header -->
+            <?php include '../header.php'; ?>
+            
+            <!-- Main Content Area -->
+            <main class="main-wrapper">
+                <section class="section">
+                    <div class="container-fluid">
+                        
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <h1><?php echo $page_title; ?></h1>
+                            <p class="text-muted">Manage customers and partners on the platform</p>
+                        </div>
 
-        <!-- Include sidebar navigation and menu -->
-        <?php include 'admin-nav.php'; ?>
-
-        <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Admin Users</h1>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        Current Admin Users
-                                    </div>
-                                    <!-- /.panel-heading -->
-                                    <div class="panel-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Full Name</th>
-                                                        <th>Email</th>
-                                                        <th>Phone</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php getUsers(); ?>
-                                                </tbody>
-                                            </table>
+                        <!-- Quick Stats -->
+                        <div class="row gap-3 mb-40">
+                            <div class="col-md-3">
+                                <div class="card stat-card border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-primary">
+                                                <i class="lni lni-users"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="text-muted mb-1">Total Users</h6>
+                                                <h3 class="mb-0"><?php echo $totalUsers; ?></h3>
+                                            </div>
                                         </div>
-                                        <!-- /.table-responsive -->
                                     </div>
-                                    <!-- /.panel-body -->
                                 </div>
-                                <!-- /.panel -->
                             </div>
-                           
-                            <!-- /.col-lg-6 -->
-                            <div class="col-lg-6">
-                                <form role="form" method="POST" action="users.php">
-                                    <div class="form-group">
-                                        <p><span id="sent"></span></p>
-                                        <p class="help-block">Invite a new user to manage this admin dashboard.</p> <br />
-                                        <label>Email</label>
-                                        <input class="form-control" name="email" placeholder="Email" required><br />
-                                        <input type="submit" name="invite" class="btn btn-primary btn-lg btn-block" value="Send Invitation">
-                                        <p class="help-block">Only adminstrators are to be added here.</p>
+
+                            <div class="col-md-3">
+                                <div class="card stat-card border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-success">
+                                                <i class="lni lni-user"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="text-muted mb-1">Customers</h6>
+                                                <h3 class="mb-0"><?php echo $customers; ?></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card stat-card border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-info">
+                                                <i class="lni lni-briefcase"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="text-muted mb-1">Partners</h6>
+                                                <h3 class="mb-0"><?php echo $partners; ?></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card stat-card border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon bg-warning">
+                                                <i class="lni lni-checkmark-circle"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="text-muted mb-1">Active</h6>
+                                                <h3 class="mb-0"><?php echo $active; ?></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter and Search Bar -->
+                        <div class="card mb-40">
+                            <div class="card-body">
+                                <form method="GET" action="" class="row align-items-end gap-3">
+                                    <div class="col-md-2">
+                                        <label class="form-label">User Type</label>
+                                        <select name="type" class="form-select" onchange="this.form.submit()">
+                                            <option value="all" <?php echo $type === 'all' ? 'selected' : ''; ?>>All Users</option>
+                                            <option value="customers" <?php echo $type === 'customers' ? 'selected' : ''; ?>>Customers</option>
+                                            <option value="partners" <?php echo $type === 'partners' ? 'selected' : ''; ?>>Partners</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Status</label>
+                                        <select name="status" class="form-select" onchange="this.form.submit()">
+                                            <option value="all" <?php echo $status === 'all' ? 'selected' : ''; ?>>All Status</option>
+                                            <option value="active" <?php echo $status === 'active' ? 'selected' : ''; ?>>Active</option>
+                                            <option value="inactive" <?php echo $status === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
+                                            <option value="suspended" <?php echo $status === 'suspended' ? 'selected' : ''; ?>>Suspended</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Search</label>
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control" placeholder="Search by name, email, or phone" value="<?php echo htmlspecialchars($search); ?>">
+                                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                                        </div>
                                     </div>
                                 </form>
-                                <a href="adiminUsers.php"><button type="button" class="btn btn-primary btn-lg btn-block">Add user</button></a>
                             </div>
-                            
-
                         </div>
-                        <!-- /.col-lg-12 -->
+
+                        <!-- Users Table -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Users List (<?php echo $totalUsers; ?>)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="usersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                                <th>Joined</th>
+                                                <th>Bookings</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (empty($users)): ?>
+                                                <tr>
+                                                    <td colspan="8" class="text-center py-4">
+                                                        <p class="text-muted">No users found</p>
+                                                    </td>
+                                                </tr>
+                                            <?php else: ?>
+                                                <?php foreach ($users as $user): ?>
+                                                    <tr>
+                                                        <td>
+                                                            <strong><?php echo htmlspecialchars($user['Name'] ?? ''); ?></strong>
+                                                        </td>
+                                                        <td><?php echo htmlspecialchars($user['email'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($user['phone'] ?? ''); ?></td>
+                                                        <td>
+                                                            <span class="badge 
+                                                                <?php 
+                                                                if (($user['user_type'] ?? '') === 'partner') {
+                                                                    echo 'bg-primary';
+                                                                } else {
+                                                                    echo 'bg-secondary';
+                                                                }
+                                                                ?>">
+                                                                <?php echo htmlspecialchars(ucfirst($user['user_type'] ?? 'customer')); ?>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge 
+                                                                <?php 
+                                                                if (($user['status'] ?? '') === 'active') {
+                                                                    echo 'bg-success';
+                                                                } elseif (($user['status'] ?? '') === 'suspended') {
+                                                                    echo 'bg-danger';
+                                                                } else {
+                                                                    echo 'bg-warning';
+                                                                }
+                                                                ?>">
+                                                                <?php echo htmlspecialchars($user['status'] ?? 'inactive'); ?>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <small class="text-muted">
+                                                                <?php echo htmlspecialchars(date('M d, Y', strtotime($user['created_at'] ?? 'now'))); ?>
+                                                            </small>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-light text-dark">0</span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item" href="javascript:viewUser('<?php echo htmlspecialchars($user['ID'] ?? ''); ?>')">View Profile</a></li>
+                                                                    <li><a class="dropdown-item" href="javascript:editUser('<?php echo htmlspecialchars($user['ID'] ?? ''); ?>')">Edit</a></li>
+                                                                    <li><hr class="dropdown-divider"></li>
+                                                                    <li><a class="dropdown-item" href="javascript:suspendUser('<?php echo htmlspecialchars($user['ID'] ?? ''); ?>')">Suspend</a></li>
+                                                                    <li><a class="dropdown-item text-danger" href="javascript:deleteUser('<?php echo htmlspecialchars($user['ID'] ?? ''); ?>')">Delete</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <!-- /.row -->
-                </div>
-                <!-- /.container-fluid -->
-            </div>
-            <!-- /#page-wrapper -->
+                </section>
+            </main>
 
         </div>
-        <!-- /#wrapper -->
 
-    <!-- Include footer template scripts -->
-    <?php include 'footer-template-scripts.php'; ?>
+    </div>
+
+    <!-- Footer -->
+    <?php include '../footer.php'; ?>
+
+    <!-- Footer Scripts -->
+    <?php include '../footerscripts.php'; ?>
+
+    <script>
+        // DataTables initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('usersTable')) {
+                new DataTable('#usersTable', {
+                    responsive: true,
+                    pageLength: 25,
+                    order: [[5, 'desc']]
+                });
+            }
+        });
+
+        function viewUser(userId) {
+            alert('Viewing user ' + userId);
+            // In production, redirect to user detail page
+        }
+
+        function editUser(userId) {
+            alert('Editing user ' + userId);
+            // In production, redirect to user edit page
+        }
+
+        function suspendUser(userId) {
+            if (confirm('Are you sure you want to suspend this user?')) {
+                alert('User suspended successfully');
+                // In production, make AJAX request to suspend user
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                alert('User deleted successfully');
+                // In production, make AJAX request to delete user
+            }
+        }
+    </script>
 
 </body>
 

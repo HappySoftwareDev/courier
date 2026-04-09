@@ -1,116 +1,224 @@
 <?php
-// Start the session before any output is sent to the browser
-session_start();
+/**
+ * Admin Portal Login Page - Modern Version
+ */
 
-// Load centralized bootstrap
-require_once('../../config/bootstrap.php');
-require_once('../../function.php');
+require_once '../../../config/bootstrap.php';
 
-// *** Validate request to login to this site.
-if ($_POST) {
+// Check if already logged in
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-    $username = trim($_POST['email']);
-    $password = trim($_POST['password']);
+$isLoggedIn = isset($_SESSION['CC_Username']) || isset($_SESSION['admin_id']);
+if ($isLoggedIn) {
+    header('Location: ../index.php', true, 302);
+    exit;
+}
 
-    try {
+$error = '';
+$success = '';
 
-        // Use prepared statements for security
-        $stmt = $Connect->prepare("SELECT * FROM `admin` WHERE Email=:username and Password=:password");
-        $stmt->execute(array(":username" => $username, ":password" => $password));  // Fix to bind password safely
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $count = $stmt->rowCount();
-
-        $MM_UserGroup = "";
-        
-        // Check if password is correct
-        if ($count == 1) {
-            $_SESSION['_Username'] = $username;
-            $_SESSION['_UserGroup'] = $username;
-
-            $go = "index.php";
-            // Redirect using header() (Ensure no output has been sent before this line)
-            header("Location: " . $go);
-            exit(); // Always call exit() after header to ensure no further code is executed
-        } else {
-            echo "Invalid password";
+// Handle login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+    
+    if (empty($email) || empty($password)) {
+        $error = 'Please enter both email and password';
+    } else {
+        try {
+            global $DB;
+            
+            // Check in users table for admin accounts
+            $query = "SELECT * FROM `users` WHERE (email = ? OR username = ?) AND (Password IS NOT NULL OR password_hash IS NOT NULL) LIMIT 1";
+            $stmt = $DB->prepare($query);
+            $stmt->execute([$email, $email]);
+            $user = $stmt->fetch();
+            
+            if ($user) {
+                // Check password - support both plain text and hashed passwords
+                $passwordMatch = false;
+                if (isset($user['Password']) && $user['Password'] === $password) {
+                    $passwordMatch = true;
+                } elseif (isset($user['password_hash']) && password_verify($password, $user['password_hash'])) {
+                    $passwordMatch = true;
+                } elseif (isset($user['password']) && password_verify($password, $user['password'])) {
+                    $passwordMatch = true;
+                }
+                
+                if ($passwordMatch) {
+                    // Valid admin user
+                    $_SESSION['CC_Username'] = $email;
+                    $_SESSION['admin_id'] = $user['ID'] ?? $user['Userid'] ?? 1;
+                    $_SESSION['user_role'] = 'admin';
+                    $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
+                    
+                    header('Location: ../index.php', true, 302);
+                    exit;
+                } else {
+                    $error = 'Invalid email or password';
+                }
+            } else {
+                $error = 'Invalid email or password';
+            }
+        } catch (Exception $e) {
+            error_log('Admin login error: ' . $e->getMessage());
+            $error = 'An error occurred during login. Please try again.';
         }
-    } // End of try block
-
-    catch (PDOException $e) {
-        echo $e->getMessage();
     }
-} // End of POST check
+}
+
+$site_name = 'WG ROOS Courier';
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- Include common meta and links -->
-    <?php include 'head.php'; ?>
-
-    <title><?php echo $site_name ?> - Login</title>
-
-
+    <title>Admin Login | <?php echo $site_name; ?></title>
+    <?php include '../head.php'; ?>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+        
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-login:hover {
+            opacity: 0.9;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .login-footer {
+            text-align: center;
+            color: white;
+            font-size: 12px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="login-panel panel panel-default">
-                 <div class="text-center">
-                        <a href="#"><img src="custom_files/<?php echo $logo ?>" alt="logo" width="200" ></a>
-                    </div>
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form ACTION="login.php" METHOD="POST" role="form" name="adminlogin">
-                            <fieldset>
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" required autofocus>
-                                </div>
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" required>
-                                </div>
-                                <div id="recaptcha-container"></div>
-                                <!-- Change this to a button or input when using this as a form -->
-                                <input type="submit" class="btn btn-lg btn-primary btn-block" value="Login">
-                            </fieldset>
-                        </form>
-                    </div>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <h2>Admin Login</h2>
+            
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-danger">
+                    <?php echo htmlspecialchars($error); ?>
                 </div>
-            </div>
+            <?php endif; ?>
+            
+            <?php if (!empty($success)): ?>
+                <div class="alert alert-success">
+                    <?php echo htmlspecialchars($success); ?>
+                </div>
+            <?php endif; ?>
+            
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="admin@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
+                <a href="../../booking/signin.php" style="color: #667eea; text-decoration: none;">Back to Customer Login</a>
+            </p>
         </div>
     </div>
-
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-
-    <script>
-        // Load Firebase configuration from site management
-        <?php include '../../web_push/firebase-config.php'; ?>
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-    </script>
-    <script>
-        window.onload = function() {
-            render();
-        };
-
-        function render() {
-            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-            recaptchaVerifier.render();
-        }
-    </script>
-
-    <!-- Include footer template scripts -->
-    <?php include 'footer-template-scripts.php'; ?>
+    
+    <div class="login-footer" style="position: fixed; bottom: 20px; width: 100%;">
+        &copy; 2026 <?php echo $site_name; ?>. All rights reserved.
+    </div>
 
 </body>
 

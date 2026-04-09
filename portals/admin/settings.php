@@ -4,11 +4,15 @@
  * Centralized configuration and settings for the entire platform
  */
 
-session_start();
+// Session is already started by bootstrap.php - do NOT call session_start() again
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Check admin access
+// Check admin access BEFORE any output
 if (!isset($_SESSION['admin_id']) && (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin')) {
-    header('Location: /login.php');
+    // Redirect to login - must be before any output
+    header('Location: /login.php', true, 302);
     exit;
 }
 

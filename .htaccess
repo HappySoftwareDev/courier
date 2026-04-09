@@ -40,7 +40,7 @@
 # This allows the app to coexist with WordPress in /public_html/
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /app/
+    RewriteBase /
     
     # Protect sensitive files
     RewriteRule ^config/ - [F,L]
@@ -49,6 +49,13 @@
     
     # Block direct access to certain file types
     RewriteRule \.(env|sql|txt)$ - [F,L]
+    
+    # Portal URL Rewrites - map /admin/, /book/, /driver/ to /portals/admin/, /portals/booking/, /portals/driver/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^admin/(.*)$ portals/admin/$1 [QSA,L]
+    RewriteRule ^book/(.*)$ portals/booking/$1 [QSA,L]
+    RewriteRule ^driver/(.*)$ portals/driver/$1 [QSA,L]
     
     # Allow existing files and directories
     RewriteCond %{REQUEST_FILENAME} !-f

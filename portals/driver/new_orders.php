@@ -10,10 +10,10 @@ if (!isset($_SESSION)) {
 
 error_reporting(0);
 
-include('../admin/pages/site_settings.php');
+include('../../portals/admin/pages/site_settings.php');
 
-require_once '../config/bootstrap.php';
-require_once '../function.php';
+require_once '../../config/bootstrap.php';
+require_once '../../function.php';
 
 $MM_authorizedUsers = "";
 $MM_donotCheckaccess = "true";
@@ -103,16 +103,16 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
             $user = $_SESSION['MM_Username'];
             $get = "SELECT * FROM `driver` where username = '$user' ";
 
-            $stmt = $DB->prepare( $get);
+            $stmt = $DB->prepare($get);
 
-            foreach ($results as $1) {
-                $ID = $row_type['driverID'];
-                $Name = $row_type['name'];
-                $company_name = $row_type['company_name'];
-                $phone = $row_type['phone'];
-                $email = $row_type['email'];
-                $address = $row_type['address'];
-                $vehicleMake = $row_type['vehicleMake'];
+            foreach ($results as $result) {
+                $ID = $result['driverID'];
+                $Name = $result['name'];
+                $company_name = $result['company_name'];
+                $phone = $result['phone'];
+                $email = $result['email'];
+                $address = $result['address'];
+                $vehicleMake = $result['vehicleMake'];
                 $model = $row_type['model'];
                 $year = $row_type['year'];
                 $engineCapacity = $row_type['engineCapacity'];
@@ -195,8 +195,9 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
         $get_driver = "SELECT * FROM driver WHERE username='$user' ";
 
         $stmt = $DB->prepare( $get_driver);
+        $results = $stmt->fetchAll();
 
-        foreach ($results as $1) {
+        foreach ($results as $row_type) {
             $ID = $row_type['driverID'];
             $company_name = $row_type['company_name'];
             $online = $row_type['online'];
@@ -213,8 +214,9 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
             $get = "SELECT * FROM `users` WHERE Name='$company_name'";
 
             $stmt = $DB->prepare( $get);
+            $results = $stmt->fetchAll();
 
-            foreach ($results as $1) {
+            foreach ($results as $row_type) {
                 $ID = $row_type['ID'];
                 $Name = $row_type['Name'];
                 $Email = $row_type['email'];
@@ -428,6 +430,7 @@ if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("", $MM_authorizedUsers
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+    </script>
     <?php include 'footer_scripts.php'; ?>
 
 </body>

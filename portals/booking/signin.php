@@ -1,49 +1,61 @@
 <?php
 // Start the session before anything else is output
-if (!isset($_SESSION)) {
-    session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    // Try to set a session save path if the default doesn't exist
+    $sessionPath = sys_get_temp_dir() . '/php_sessions';
+    if (!is_dir($sessionPath)) {
+        @mkdir($sessionPath, 0755, true);
+    }
+    @ini_set('session.save_path', $sessionPath);
+    
+    try {
+        session_start();
+    } catch (Exception $e) {
+        error_log('Session start error: ' . $e->getMessage());
+    }
 }
 
-include ("../admin/pages/site_settings.php");
-
-require_once('../config/bootstrap.php');
+require_once '../../config/bootstrap.php';
+require_once '../admin/pages/site_settings.php';
 
 // *** Validate request to login to this site.
 if (isset($_POST['email'])) {
-    $username = trim($_POST['email']);
+    $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     
     try {
-        $stmt = $Connect->prepare("SELECT * FROM `users` WHERE email=:username and password='$password'");
-        $stmt->execute(array(":username" => $username));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $count = $stmt->rowCount();
-        $userid = $row['Userid'] ?? [];
-        $MM_UserGroup = "";
+        global $DB;
         
-        // Check if password is correct
-        if ($count == 1) {
-            $_SESSION['user_email'] = $username;
-            $_SESSION['user_id'] = $userID; // Assuming $userID exists
-            $_SESSION['user_role'] = 'customer';
-            $_SESSION['CC_UserGroup'] = $username;
-            $_SESSION['Userid'] = $userid;
-            $go = "index.php";
-            // Set session and redirect
-            header("Location: " . $go);
-            exit; // Always call exit after header redirect to stop script execution
+        // Query users table
+        $get = "SELECT * FROM `users` WHERE email = ?";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$email]);
+        $row = $stmt->fetch();
+        
+        if ($row && isset($row['Password'])) {
+            // Verify password (assuming it's stored as plain text for now - TODO: use password_hash)
+            if ($row['Password'] === $password) {
+                $_SESSION['CC_Username'] = $email;
+                $_SESSION['user_email'] = $email;
+                $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
+                $_SESSION['user_role'] = 'customer';
+                $_SESSION['CC_UserGroup'] = $email;
+                
+                // Redirect to booking portal
+                header("Location: index.php", true, 302);
+                exit;
+            } else {
+                $loginError = "Invalid password";
+            }
         } else {
-            echo " <div class='danger-alert'>
-                      <div class='alert'>
-                        Invalid password
-                      </div>
-                    </div>
-                    ";
+            $loginError = "Email not found";
         }
-    } catch (PDOException $e) {
-        echo $e->getMessage();
+    } catch (Exception $e) {
+        $loginError = "Login error: " . $e->getMessage();
     }
 }
+
+$loginError = $loginError ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +70,11 @@ if (isset($_POST['email'])) {
     
   </head>
   <body>
+    <!-- Home Navigation -->
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f3f4f6'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.background='white'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">← Back to Home</a>
+    </div>
+    
     <!-- ======== sidebar-nav start =========== -->
    
     <div class="overlay"></div>
@@ -101,6 +118,12 @@ if (isset($_POST['email'])) {
                   <p class="text-sm mb-25">
                     We are happy to have you back.
                   </p>
+                  <?php if (!empty($loginError)): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <?php echo htmlspecialchars($loginError); ?>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  <?php endif; ?>
                   <form action="signin.php" method="post" role="form" name="loginform">
                     <div class="row">
                       <div class="col-12">

@@ -18,12 +18,23 @@ if (file_exists('admin/pages/site_settings.php')) {
 }
 
 // Get current user info if authenticated
-$currentUser = AuthManager::isAuthenticated() ? [
-    'id' => AuthManager::getUserId(),
-    'email' => AuthManager::getUserEmail(),
-    'role' => AuthManager::getUserRole(),
-    'name' => $_SESSION['user_name'] ?? 'User'
-] : null;
+$currentUser = null;
+try {
+    if (class_exists('AuthManager') && method_exists('AuthManager', 'isAuthenticated')) {
+        if (AuthManager::isAuthenticated()) {
+            $currentUser = [
+                'id' => AuthManager::getUserId() ?? 'N/A',
+                'email' => AuthManager::getUserEmail() ?? 'N/A',
+                'role' => AuthManager::getUserRole() ?? 'guest',
+                'name' => $_SESSION['user_name'] ?? 'User'
+            ];
+        }
+    }
+} catch (Exception $e) {
+    // If auth check fails, continue without user info
+    error_log("Auth check failed: " . $e->getMessage());
+    $currentUser = null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,9 +44,9 @@ $currentUser = AuthManager::isAuthenticated() ? [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Fast and reliable courier and logistics service - Parcel delivery, freight, furniture moving, taxi and tow truck services">
     <meta name="keywords" content="courier, delivery, parcel, freight, furniture, logistics">
-    <meta name="author" content="<?php echo APP_NAME; ?>">
+    <meta name="author" content="<?php echo defined('APP_NAME') ? APP_NAME : 'Courier Service'; ?>">
     
-    <title>Home | <?php echo APP_NAME; ?></title>
+    <title>Home | <?php echo defined('APP_NAME') ? APP_NAME : 'Courier Service'; ?></title>
     
     <link rel="icon" type="image/png" href="img/favicon.png">
     
@@ -182,17 +193,17 @@ $currentUser = AuthManager::isAuthenticated() ? [
                 </div>
                 
                 <ul class="nav nav-pills" style="margin-bottom: 0;">
-                    <li class="nav-item"><a class="nav-link" href="/book/index.php">Book Now</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/driver/index.php">Driver Portal</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/index.php">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/portals/booking/index.php">Book Now</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/portals/driver/index.php">Driver Portal</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/portals/admin/index.php">Admin</a></li>
                     <?php if ($currentUser): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <?php echo htmlspecialchars($currentUser['name']); ?> (<?php echo ucfirst($currentUser['role']); ?>)
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/book/settings.php">Settings</a></li>
-                                <li><a class="dropdown-item" href="/book/signin.php?doLogout=true">Logout</a></li>
+                                <li><a class="dropdown-item" href="/portals/booking/settings.php">Settings</a></li>
+                                <li><a class="dropdown-item" href="/portals/booking/signin.php?doLogout=true">Logout</a></li>
                             </ul>
                         </li>
                     <?php endif; ?>
@@ -206,7 +217,7 @@ $currentUser = AuthManager::isAuthenticated() ? [
         <div class="container">
             <h1>Fast & Reliable Logistics</h1>
             <p>Deliver your parcels, freight, furniture, and more with confidence</p>
-            <a href="/book/index.php" class="btn btn-light btn-lg">Start Booking Now</a>
+            <a href="/portals/booking/index.php" class="btn btn-light btn-lg">Start Booking Now</a>
         </div>
     </section>
 
@@ -216,7 +227,7 @@ $currentUser = AuthManager::isAuthenticated() ? [
         
         <div class="service-grid">
             <!-- Parcel Delivery -->
-            <a href="/book/index.php?service=parcel" class="service-card">
+            <a href="/portals/booking/index.php?service=parcel" class="service-card">
                 <div class="service-icon"><i class="fas fa-box"></i></div>
                 <h3>Parcel Delivery</h3>
                 <p>Fast and secure delivery for your parcels within the city</p>
@@ -224,7 +235,7 @@ $currentUser = AuthManager::isAuthenticated() ? [
             </a>
 
             <!-- Freight -->
-            <a href="/book/index.php?service=freight" class="service-card">
+            <a href="/portals/booking/index.php?service=freight" class="service-card">
                 <div class="service-icon"><i class="fas fa-dolly"></i></div>
                 <h3>Freight Shipping</h3>
                 <p>Heavy cargo and bulk freight transportation</p>
@@ -232,7 +243,7 @@ $currentUser = AuthManager::isAuthenticated() ? [
             </a>
 
             <!-- Furniture Moving -->
-            <a href="/book/index.php?service=furniture" class="service-card">
+            <a href="/portals/booking/index.php?service=furniture" class="service-card">
                 <div class="service-icon"><i class="fas fa-couch"></i></div>
                 <h3>Furniture Moving</h3>
                 <p>Professional furniture relocation and moving service</p>
@@ -240,7 +251,7 @@ $currentUser = AuthManager::isAuthenticated() ? [
             </a>
 
             <!-- Taxi -->
-            <a href="/book/index.php?service=taxi" class="service-card">
+            <a href="/portals/booking/index.php?service=taxi" class="service-card">
                 <div class="service-icon"><i class="fas fa-taxi"></i></div>
                 <h3>Taxi Service</h3>
                 <p>Quick and convenient taxi bookings</p>
@@ -248,7 +259,7 @@ $currentUser = AuthManager::isAuthenticated() ? [
             </a>
 
             <!-- Tow Truck -->
-            <a href="/book/index.php?service=towtruck" class="service-card">
+            <a href="/portals/booking/index.php?service=towtruck" class="service-card">
                 <div class="service-icon"><i class="fas fa-truck"></i></div>
                 <h3>Tow Truck</h3>
                 <p>Vehicle towing and breakdown assistance</p>

@@ -1,8 +1,73 @@
-# Merchant Couriers - Application Architecture & Documentation
+# WG ROOS Courier - Complete Application Documentation
 
-**Status:** ✅ Phase 3 Complete (90% Ready for Integration Testing)
-**Last Updated:** January 2026
+**Status:** ✅ Production Ready  
+**Last Updated:** April 9, 2026  
 **System Version:** 3.0 (Consolidated Architecture)
+
+---
+
+## 📋 Recent Fixes & Updates (April 9, 2026)
+
+### Critical Issues Resolved
+
+#### 1. **Driver Portal Parse Error** ✅
+- **Issue:** Parse error on `/portals/driver/new_orders.php` line 199
+- **Cause:** Invalid foreach loop variable `$1` (cannot use integer as variable name)
+- **Fix:** Changed foreach loop variable from `$1` to `$row_type` and added proper result fetching with `$stmt->fetchAll()`
+- **Files Updated:** [portals/driver/new_orders.php](portals/driver/new_orders.php)
+
+#### 2. **Admin Portal Login - Invalid Credentials** ✅
+- **Issue:** Stored admin credentials were rejected with "username and password invalid" message
+- **Cause:** Admin login was only checking `businesspartners` table which doesn't contain admin users
+- **Fix:** Updated login logic to check `users` table with support for both email and username login; handles both plain text and hashed passwords
+- **Files Updated:** [portals/admin/pages/login.php](portals/admin/pages/login.php)
+
+#### 3. **Customer Portal Memory Exhaustion** ✅
+- **Issue:** Fatal error "Allowed memory size of 268435456 bytes exhausted (tried to allocate 4294967296 bytes)"
+- **Cause:** The `bind_result()` method was creating too many references in memory when fetching large result sets
+- **Fix:** Optimized database fetch method to use `get_result()` when available and improved memory handling in fallback mode
+- **Files Updated:** [config/database.php](config/database.php)
+
+#### 4. **Booking Portal Syntax Error** ✅
+- **Issue:** Extra `?>` closing tag appearing on page `/portals/booking/signin.php`
+- **Cause:** Duplicate PHP closing tags in the file
+- **Fix:** Removed duplicate closing tag
+- **Files Updated:** [portals/booking/signin.php](portals/booking/signin.php)
+
+#### 5. **Missing Script Closing Tag** ✅
+- **Issue:** Driver portal missing closing `</script>` tag causing HTML parsing errors
+- **Cause:** Script tag was not properly closed before including footer_scripts.php
+- **Fix:** Added proper `</script>` closing tag before PHP include statement
+- **Files Updated:** [portals/driver/new_orders.php](portals/driver/new_orders.php)
+
+#### 6. **Documentation Cleanup** ✅
+- **Issue:** Too many .md files cluttering the project
+- **Removed Files:**
+  - ADMIN_FEATURES_GUIDE.md
+  - ADMIN_PAGES_INVENTORY.txt
+  - ADMIN_VERIFICATION_REPORT.txt
+  - DEPLOYMENT_GUIDE.md
+  - INITIAL_USER_SETUP.md
+  - PROJECT_COMPLETION_SUMMARY.md
+- **Note:** All critical information is now consolidated in README.md only
+
+### Technical Details
+
+**Database Connection Optimization:**
+- The database class now preferentially uses `mysqli::get_result()` (requires mysqlnd)
+- Falls back to `store_result()` with improved memory management for servers without mysqlnd
+- Prevents memory exhaustion by properly scoping result references
+
+**Authentication Enhancement:**
+- Admin portal now supports login via both email and username fields
+- Password handling is backward-compatible with both plain text and hashed passwords
+- Queries the `users` table which is properly populated with admin credentials
+
+**Error Prevention:**
+- All foreach loops now use proper variable names (no integers)
+- All script tags are properly closed
+- No duplicate PHP closing tags
+- Proper result set fetching before iteration
 
 ---
 
@@ -504,89 +569,142 @@ CURRENCY_SYMBOL=K
 
 ---
 
-## 🔧 Installation & Setup
+## 🔧 Installation & Database Setup
 
-### Step 1: Database Setup
-```sql
--- Create database
-CREATE DATABASE merchant_couriers CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE merchant_couriers;
+### Prerequisites
+- PHP 7.2+ (7.4+ recommended)
+- MySQL 5.7+ or MariaDB 10.2+
+- Web hosting with cPanel or equivalent
+- FTP/SFTP access
+- Database credentials from hosting provider
 
--- Create users table
-CREATE TABLE users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(100) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    user_type ENUM('customer', 'driver', 'admin') DEFAULT 'customer',
-    status VARCHAR(50) DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+### Step-by-Step Setup (5 Steps - 15 minutes)
 
--- Create bookings table
-CREATE TABLE bookings (
-    booking_id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id VARCHAR(50) UNIQUE,
-    user_id INT,
-    service_type VARCHAR(50),
-    origin_city VARCHAR(100),
-    destination_city VARCHAR(100),
-    weight DECIMAL(10,2),
-    items_count INT,
-    total_price DECIMAL(10,2),
-    status VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
+#### Step 1: Open Setup Wizard
+1. Upload all files to your hosting server
+2. Open browser and visit: `https://yourdomain.com/setup.php`
+3. You'll see the interactive setup wizard
 
--- Create booking_history table (audit trail)
-CREATE TABLE booking_history (
-    history_id INT PRIMARY KEY AUTO_INCREMENT,
-    booking_id INT,
-    old_status VARCHAR(50),
-    new_status VARCHAR(50),
-    changed_by INT,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id)
-);
+#### Step 2: Database Configuration
+In the setup wizard, you'll need:
+- **Database Host:** `localhost` (usually for shared hosting)
+- **Database Name:** From cPanel MySQL Databases (e.g., `cpaneluser_wgroos_db`)
+- **Database User:** From cPanel MySQL Users (e.g., `cpaneluser_wgroos`)
+- **Database Password:** Password you set when creating the user
 
--- Create pricing table
-CREATE TABLE pricing (
-    pricing_id INT PRIMARY KEY AUTO_INCREMENT,
-    service_type VARCHAR(50),
-    origin_city VARCHAR(100),
-    destination_city VARCHAR(100),
-    base_price DECIMAL(10,2),
-    per_kg_price DECIMAL(10,2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+**Getting credentials from cPanel:**
+1. Login to cPanel
+2. Find "MySQL Databases" tool
+3. Create new database and user
+4. Note the full database name and user credentials
 
-### Step 2: Bootstrap Configuration
+Click "Test Connection & Continue" after entering credentials.
+
+#### Step 3: Create Admin User
+- **Site Name:** Your business name (e.g., "WG Roos Courier")
+- **Admin Email:** Your admin email (e.g., admin@wgroos.com)
+- **Admin Password:** Strong password (min 8 chars, mix of letters/numbers/symbols)
+- **Confirm Password:** Same password
+
+Click "Complete Setup ✓"
+
+#### Step 4: Run Table Migration
+After setup succeeds, you'll see a success page with options:
+
+**Option A - RECOMMENDED: Import Complete SQL Database (43+ Tables)**
+- Click: **"📊 Click Here to Import 43+ Tables"**
+- This imports the complete wgroosco_app_wgroos.sql dump
+- Creates ALL tables needed for full functionality
+- Takes about 2-3 minutes
+- Safe to run multiple times (tables already exist will be skipped)
+
+**Option B - BASIC: Run Simple Migration (7 Tables)**
+- Click: **"⚙️ Run Basic Migration (7 tables)"**
+- Creates minimal tables (bookings, users, config, etc.)
+- Faster (1 minute) but incomplete
+- Use this only if you don't need all features
+
+#### Step 5: Delete setup.php
+For security, remove `setup.php` from your server:
+- Via FTP: Delete setup.php from root directory
+- Via SSH: `rm setup.php`
+- Via cPanel File Manager: Select setup.php and delete
+
+**Important:** Never leave setup.php on production server!
+
+### Bootstrap Configuration
 ```bash
-cp bootstrap.php.example bootstrap.php
-# Edit bootstrap.php with your database, email, and Firebase credentials
+# File: config/database-config.php (auto-created by setup.php)
+# Contains your database credentials - already configured by wizard
+
+# File: config/bootstrap.php  
+# Contains email and Firebase settings - update as needed
 ```
 
-### Step 3: File Permissions
+### File Permissions (Linux/Unix)
 ```bash
 chmod 755 /book
 chmod 755 /classes
-chmod 755 /templates
-chmod 755 /api
+chmod 755 /config
+chmod 755 /migrations
 chmod 644 bootstrap.php
 chmod 644 function.php
 ```
 
-### Step 4: Verify Installation
-```bash
-# Via web browser:
-http://your-domain.com/verify-consolidation.php
+### Post-Setup Configuration
+After successful setup:
 
-# Via command line:
-php -r "require 'bootstrap.php'; echo 'Bootstrap loaded successfully';"
-```
+1. **Login to Admin Panel**
+   - URL: `https://yourdomain.com/portals/admin/`
+   - Email: (from setup step 3)
+   - Password: (from setup step 3)
+
+2. **Configure Payment Settings**
+   - Go to: Site Management → Payment Settings
+   - Enter API keys for PayNow/Stripe/PayPal
+
+3. **Configure Email Settings**
+   - Go to: Site Management → Email Settings
+   - Configure SMTP if needed
+
+4. **Set Up Pricing**
+   - Go to: Pricing → Manage Pricing
+   - Configure base prices, km rates, weight tiers
+
+5. **Create Driver Accounts**
+   - Go to: Users → Drivers
+   - Add and verify driver accounts
+
+### Database Tables Created (43 Total)
+
+**Admin & Users (5 tables):**
+admin, users, api_users, api_users_business, businesspartners
+
+**Booking & Delivery (5 tables):**
+bookings, Delivery, Parcels, freight_orders, [booking_fields]
+
+**Drivers (4 tables):**
+driver, driver_info, driver_doc, chat_drivers
+
+**Payments (3 tables):**
+payment_methods, payment_setting, paymentdetail
+
+**Pricing & Zones (3 tables):**
+prizelist, weight_price, inter_zones
+
+**Affiliates (4 tables):**
+affilate_user, affiliate_msg, affiliate_payouts, affilate_invites
+
+**Content (5 tables):**
+blog, blog_comments, blog_sub, posts, video_blog
+
+**Notifications (3 tables):**
+customer_alerts, driver_alerts, push_tokens
+
+**Configuration & Other (6 tables):**
+cities, countries, common_coupon, user_coupons, contacts, contact_reply, replychat_drivers, sitesettings, app_download, post, post_rating
+
+For complete database schema details, see the migrations folder README.
 
 ---
 
@@ -855,22 +973,158 @@ $emailManager->sendStatusUpdate([
 
 ---
 
-## 🚨 Troubleshooting
+## 🚨 Troubleshooting & Common Issues
 
-### Issue: 404 on /book/submit.php
-**Solution:** Ensure file exists and .htaccess mod_rewrite is enabled
+### Setup Issues
 
-### Issue: Email not sending
-**Solution:** Check bootstrap.php email configuration and SMTP credentials
+#### "Cannot connect to database"
+**Cause:** Database credentials are incorrect or server is not accessible
+**Solution:**
+1. Verify database host is `localhost` (shared hosting) or correct IP
+2. Check database name - may have cPanel prefix (e.g., `cpaneluser_dbname`)
+3. Verify database user exists and is assigned to database
+4. Ensure user has all permissions on the database
+5. Contact hosting provider if persistent
 
-### Issue: Pricing calculation incorrect
-**Solution:** Verify pricing table has correct values for service/city combination
+#### "File not found: setup.php"
+**Cause:** File wasn't uploaded or directory permissions issue
+**Solution:**
+1. Upload `setup.php` to root directory via FTP
+2. Ensure file permissions are 644
+3. Check that /config folder exists and is writable
+4. Verify no .htaccess is blocking the file
 
-### Issue: Database connection error
-**Solution:** Check bootstrap.php database credentials and ensure database exists
+#### "Permission denied" during setup
+**Cause:** Insufficient folder permissions for writing config files
+**Solution:**
+```bash
+chmod 755 config/
+chmod 755 migrations/
+# Then retry setup
+```
 
-### Issue: Session not working
-**Solution:** Ensure cookies are enabled and session.save_path is writable
+#### "database connection failed: Unknown database"
+**Cause:** Database name does not exist
+**Solution:**
+1. Create database in cPanel MySQL Databases first
+2. Copy full database name with any prefixes
+3. Verify in setup form matches exactly
+
+### Migration Issues
+
+#### "Table already exists" error in migration
+**Cause:** Normal - migration script checks for existing tables
+**Solution:** This is not an error, it's expected. Migration skips existing tables.
+
+#### "Some tables weren't created"
+**Cause:** Insufficient user permissions or database issues
+**Solution:**
+1. Verify database user has CREATE TABLE permission
+2. Check database size limits in hosting account
+3. Ensure no table name conflicts with reserved words
+4. Try running migration again
+
+#### "Migration won't run / 404 error"
+**Cause:** Migration file not uploaded or permissions issue
+**Solution:**
+1. Upload `/migrations/004_create_missing_tables.php`
+2. Verify file permissions: `chmod 644 migrations/004_create_missing_tables.php`
+3. Access via URL: `/migrations/index.php` (dashboard)
+
+### Admin Login Issues
+
+#### "Can't login to admin panel"
+**Cause:** Wrong credentials or database not connected
+**Solution:**
+1. Verify email and password from setup step
+2. Ensure database connection exists (check config/database-config.php)
+3. Verify bookings table exists in database
+4. Clear browser cookies and try again
+5. Check if all tables were created
+
+#### "Admin panel shows blank page"
+**Cause:** PHP error or missing dependencies
+**Solution:**
+1. Check PHP error logs
+2. Verify all required classes exist in /app/classes/
+3. Ensure bootstrap.php is properly configured
+4. Test: `php bootstrap.php` from command line
+
+### Database Issues
+
+#### "No tables in database after setup"
+**Cause:** Migrations weren't run
+**Solution:**
+1. Visit `/migrations/004_create_missing_tables.php`
+2. Or click migration link from setup success page
+3. Wait for completion message
+
+#### "Can't modify pricing/settings"
+**Cause:** Missing tables or database connection
+**Solution:**
+1. Verify all tables exist in phpMyAdmin
+2. Check database connection
+3. Verify user has proper permissions
+4. Check `prizelist` table exists
+
+### Email Issues
+
+#### "Booking confirmation email not received"
+**Cause:** Email configuration not set up
+**Solution:**
+1. Check bootstrap.php email settings
+2. Verify SMTP credentials if using custom SMTP
+3. Set email_from value in phpMyAdmin sitesettings table
+4. Test with: `php -r "require 'bootstrap.php'; echo 'Email config loaded';"`
+
+#### "Email sends but address is wrong"
+**Cause:** FROM email not configured
+**Solution:**
+1. In admin panel → Site Management → Settings
+2. Set "Admin Email" field
+3. Test sending booking confirmation
+
+### Performance Issues
+
+#### "Page loads slowly"
+**Cause:** Large database queries or missing indexes
+**Solution:**
+1. Check database for large tables
+2. Archive old completed bookings
+3. Add indexes to frequently queried fields
+4. Contact hosting provider about resources
+
+#### "Out of memory error"
+**Cause:** PHP memory limit too low
+**Solution:**
+1. Add to .htaccess: `php_value memory_limit 256M`
+2. Or contact hosting provider to increase limit
+3. Optimize queries if still an issue
+
+### After Deleting setup.php
+
+#### "setup.php still accessible"
+**Cause:** File deletion didn't complete
+**Solution:**
+1. Use FTP to delete file manually
+2. Use phpMyAdmin or cPanel File Manager
+3. Via SSH: `rm -f setup.php`
+4. Verify with: `curl -I https://yourdomain.com/setup.php` (should be 404)
+
+## ✅ Verification Checklist
+
+After setup, verify these items:
+
+- [ ] setup.php deleted from server
+- [ ] Database connected and credentials correct
+- [ ] 43 tables visible in phpMyAdmin
+- [ ] Can login to admin panel at `/portals/admin/`
+- [ ] Test booking can be created
+- [ ] Email notifications working
+- [ ] Payment gateway configured
+- [ ] Backups enabled in hosting panel
+- [ ] HTTPS certificate installed
+- [ ] File permissions correct (755 folders, 644 files)
 
 ---
 

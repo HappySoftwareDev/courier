@@ -2,7 +2,7 @@
 <!-- ======== sidebar-nav start =========== -->
     <aside class="sidebar-nav-wrapper" style="background:#fff;">
       <div class="navbar-logo" >
-        <a href="#"><img src="../admin/pages/custom_files/<?php echo $logo ?>" alt="logo" width="150" height="56"></a>
+        <a href="index.php"><img src="../admin/assets/images/<?php echo isset($logo) ? htmlspecialchars($logo) : 'logo.png'; ?>" alt="logo" width="150" height="56"></a>
       </div>
       <nav class="sidebar-nav" style="background:#262d3f; height:100%">
         <ul>
@@ -26,19 +26,19 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="parcel-page.php">
+            <a href="index.php?service=parcel">
               <span class="icon"><i class="lni lni-briefcase"></i></span>
               <span class="text">Parcel Delivery</span>
             </a>
           </li>
           <li class="nav-item">
-            <a href="freight-page.php">
+            <a href="index.php?service=freight">
               <span class="icon"><i class="lni lni-delivery"></i></span>
               <span class="text">Freight Delivery</span>
             </a>
           </li>
           <li class="nav-item">
-            <a href="furniture-page.php">
+            <a href="index.php?service=furniture">
               <span class="icon"><i class="lni lni-archive"></i></span>
               <span class="text">Furniture Delivery</span>
             </a>
@@ -60,7 +60,7 @@
           <span class="divider"><hr /></span>
 
           <li class="nav-item">
-            <a href="<?php echo $logoutAction ?>">
+            <a href="signin-security.php?doLogout=true">
               <span class="icon"><i class="lni lni-arrow-left"></i></span>
               <span class="text">Sign Out</span>
             </a>

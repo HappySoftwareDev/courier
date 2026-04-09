@@ -356,11 +356,11 @@ return [
                 <div class="next-steps">
                     <strong>Next Steps:</strong>
                     <ol>
-                        <li><strong>Delete setup.php</strong> from your server for security</li>
-                        <li><strong>Import database:</strong> Go to cPanel → phpMyAdmin → Import <code>wgroosco_app_wgroos.sql</code></li>
-                        <li><strong>Run migrations:</strong> Execute the 4 SQL migrations in phpMyAdmin</li>
+                        <li><strong>Import complete database:</strong> <a href="migrations/import-sql-dump.php" target="_blank">📊 Click Here to Import 43+ Tables</a></li>
+                        <li><strong>Or run basic migration:</strong> <a href="migrations/setup.php" target="_blank">⚙️ Run Basic Migration (7 tables)</a></li>
                         <li><strong>Access admin:</strong> Visit <code>https://yourdomain.com/portals/admin/</code> and login</li>
                         <li><strong>Configure payment:</strong> Set API keys in Site Management → Payment</li>
+                        <li><strong>Delete setup.php</strong> from your server for security</li>
                     </ol>
                 </div>
             </div>

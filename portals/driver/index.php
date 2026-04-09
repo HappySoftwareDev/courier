@@ -1,216 +1,322 @@
-<?php require_once ('../../includes/bootstrap.php'); ?>
+<?php 
+require_once '../../config/bootstrap.php';
+require_once '../../function.php';
+
+// Get site settings for branding
+$site_name = defined('SITE_NAME') ? SITE_NAME : 'WG ROOS Courier';
+$logo = 'logo.png';
+
+// Handle driver login
+$loginError = '';
+if (!empty($_POST['email'])) {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    
+    try {
+        global $DB;
+        
+        // Query driver table
+        $query = "SELECT * FROM `driver` WHERE email = ? OR username = ?";
+        $stmt = $DB->prepare($query);
+        $stmt->execute([$email, $email]);
+        $driver = $stmt->fetch();
+        
+        if ($driver) {
+            // Verify password (check both Password and password fields for compatibility)
+            $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
+            if ($storedPassword === $password) {
+                session_start();
+                $_SESSION['CC_Username'] = $email;
+                $_SESSION['user_email'] = $email;
+                $_SESSION['driverID'] = $driver['ID'] ?? $driver['id'] ?? '';
+                $_SESSION['driver_id'] = $_SESSION['driverID'];
+                $_SESSION['driver_name'] = $driver['name'] ?? $driver['Name'] ?? 'Driver';
+                $_SESSION['user_role'] = 'driver';
+                $_SESSION['MM_Username'] = $email;
+                $_SESSION['MM_UserGroup'] = $email;
+                
+                // Redirect to dashboard
+                header("Location: new_orders.php", true, 302);
+                exit;
+            } else {
+                $loginError = "Invalid password";
+            }
+        } else {
+            $loginError = "Driver account not found";
+        }
+    } catch (Exception $e) {
+        $loginError = "Login error: " . $e->getMessage();
+    }
+}
+?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-    <title>Driver Portal - Login</title>
-    <link rel="stylesheet" href="../../portals/shared/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../portals/shared/css/style.css">
-    <script src="../../portals/shared/js/jquery.min.js"></script>
-    <script src="../../portals/shared/js/bootstrap.min.js"></script>
+    <!-- Include common meta and links -->
+    <?php include 'head.php'; ?>
+    <title>Driver Login | <?php echo $site_name ?></title>
     <style>
-    body {font-family: Arial, Helvetica, sans-serif;}
-    .form {padding-top: 80px;}
-    
-    input[type=text], input[type=password] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-    
-      button {
-        background-color: #193b50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-        width: 100%;
-    }
-    
-    button:hover {
-        opacity: 0.8;
-    }
-    
-   
-    .imgcontainer {
-        text-align: center;
-        margin: 24px 0 12px 0;
-    }
-    
-    img.avatar {
-        width: 50%;
-    }
-    
-    .container {
-        padding: 10px;
-    }
-    
-    span.psw {
-        float: right;
-        padding-top: 16px;
-    }
-    
-    /* Change styles for span and cancel button on extra small screens */
-    @media screen and (max-width: 300px) {
-        span.psw {
-           display: block;
-           float: none;
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .cancelbtn {
-           width: 100%;
+        
+        .login-wrapper {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
         }
-        .container {
-        padding: 0px;
-    }
-    }
-    
-    .container {
-        background-color: #f1f1f1;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: left;
-        margin: 20px auto;
-        max-width: 100%; /* Optional: To limit the container width */
-    }
-
-    .cancelbtn {
-        width: auto;
-        background-color: #E0D313; /* Blue button */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 3px;
-        margin-bottom: 10px; /* Add spacing below the button */
-        transition: background-color 0.3s ease;
-    }
-    
-    .cancelbtn:hover {
-        opacity: 0.8; /* Darker blue on hover */
-    }
-    
-    .psw {
-        display: block; /* Ensure the link spans a new line */
-        margin-top: 15px; /* Space between the button and the link */
-        font-size: 14px;
-    }
-    
-    .psw a {
-        color: #000000;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    
-    .psw a:hover {
-        text-decoration: underline;
-    }
-    </style>
-    </head>
-    
-    <body>
-        <div class="container">
-    <form class="form">
-      <div class="imgcontainer">
-        <img src="../admin/pages/custom_files/<?php echo $logo ?>" alt="logo" width="200" height="100" />
-      </div>
-      <div id="error"></div>
-      <div class="container">
-        <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
-    
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 500px;
+        }
+        
+        .login-cover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .login-cover h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .login-cover p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .login-form-area {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .login-form-area h6 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .login-form-area > p {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 25px;
+        }
+        
+        .input-style-1,
+        .input-style-2 {
+            margin-bottom: 20px;
+        }
+        
+        .input-style-1 label,
+        .input-style-2 label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #374151;
+        }
+        
+        .input-style-1 input,
+        .input-style-2 input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .input-style-1 input:focus,
+        .input-style-2 input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .input-style-2 {
+            position: relative;
+        }
+        
+        .input-style-2 .icon {
+            position: absolute;
+            right: 15px;
+            top: 35px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+        
+        .forgot-password a {
+            font-size: 12px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-signin {
+            flex: 1;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-signin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .alert {
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
             
-        <button type="submit" id="btn-login">Login</button>
-        <label>
-          <input type="checkbox" checked="checked" name="remember"> Remember me
-        </label>
-      </div>
-    
-      <div class="container" style="background-color:#f1f1f1">
-        <a href="driver_registration.php"><button type="button" class="cancelbtn">SignUp</button></a>
-        <span class="psw">Forgot <a href="#">password?</a></span>
-      </div>
-       <center>
-                <h3 class="form-title ">
-                    <center>Invite Friends</center>
-                </h3>
-                <a href="invite-email.php" class="btn btn-small btn-default"><i class="fa fa-envelope"></i></a>
-                <a href="invite-sms.php" class="btn btn-small btn-default"><i class="fa fa-comments"></i> </a>
-                <a href="http://www.facebook.com/sharer.php?u=https://<?php echo $web_url ?>/driver_registration.php" class="btn btn-default btn-small">
-				<i class="fa fa-facebook"></i></a>
-				
-                <a href="whatsapp://send?abid=&text=Hey there! You are being invited to try our delivery services.
-				If you own a motorbike, car, van, truck. Signup today
-				and start earning extra money in no time. Visit our website <?php echo $web_url ?> and register your vehicle today." class="btn btn-default btn-small">
-				<i class="fa fa-whatsapp"><img src="../images/whatsapp.png" width="15px" alt="" /></i></a>
-            </center>
-    </form>
-        </div>
-    	
-    <script>
-    $('document').ready(function(){
-    $("body").delegate("#btn-login","click",function(event){
-    event.preventDefault();
-     var uname = $("#uname").val();
-     var password = $("#psw").val();
-     var data = "uname="+uname+"&password="+password;
-     if( $.trim(uname).length == 0 || $.trim(password).length==0)
-        {
-    	$("#error").html('<div class="alert alert-danger"> <span class="glyphicon glyphicon-info-sign"></span> &nbsp; All fields must be completed!</div>');
-         $("#error").fadeOut(5000);
-         exit(); 
-    	 }
-        $.ajax({
-        
-        type : 'POST',
-        url  : 'login_act.php',
-        data : data,
-        beforeSend: function()
-        { 
-    	
-         $("#error").fadeOut();
-         $("#btn-login").html('processing ...');
-        },
-        success :  function(data)
-             {      
-             if(data=="ok")
-            {
-             window.location='new_orders.php';
+            .login-cover {
+                display: none;
             }
-    		 else if(data=="Invalid password"){
-             $("#error").fadeIn(1000, function(){
-               $("#error").html('<div class="alert alert-danger"> <span class="glyphicon glyphicon-info-sign"></span> &nbsp;Sorry wrong password please try again</div>');
-               });
-    		 }
-            else{
-             $("#error").fadeIn(1000, function(){
-             $("#error").html('<div class="alert alert-danger"><span class="glyphicon glyphicon-info-sign"></span> &nbsp; '+data+' !</div>');
-             });
+            
+            .login-form-area {
+                padding: 30px 25px;
             }
         }
-        
-    	});
-    })
-    });
-    	</script>
-    	
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+    </style>
+</head>
+<body>
+    <!-- Home Navigation -->
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">← Back to Home</a>
+    </div>
     
-    </html>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-cover">
+                <div>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to your driver account to manage deliveries, track earnings, and more.</p>
+                    <div style="margin-top: 40px;">
+                        <i class="lni lni-driver" style="font-size: 60px;"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="login-form-area">
+                <h6>Driver Sign In</h6>
+                <p>Enter your credentials to continue</p>
+                
+                <?php if (!empty($loginError)): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="lni lni-close-line" style="margin-right: 8px;"></i>
+                        <?php echo htmlspecialchars($loginError); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+                
+                <form action="index.php" method="post" role="form">
+                    <div class="input-style-1">
+                        <label>Email or Username</label>
+                        <input type="text" name="email" placeholder="Enter your email or username" required />
+                    </div>
+                    
+                    <div class="input-style-2">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Enter your password" id="password" required />
+                        <span class="icon">
+                            <a href="javascript:void(0);" onclick="togglePassword()" class="toggle-password">
+                                <i class="lni lni-eye"></i>
+                            </a>
+                        </span>
+                    </div>
+                    
+                    <div class="forgot-password">
+                        <a href="forgot_pass.php">Forgot Password?</a>
+                    </div>
+                    
+                    <div class="button-group d-flex justify-content-center flex-wrap">
+                        <button type="submit" class="btn-signin">Sign In</button>
+                    </div>
+                </form>
+                
+                <div class="signup-link">
+                    Don't have an account? <a href="driver_registration.php">Register here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <?php include 'footer_scripts.php'; ?>
+    
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.toggle-password i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'lni lni-eye-off';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'lni lni-eye';
+            }
+        }
+    </script>
+</body>
+</html>
 
 

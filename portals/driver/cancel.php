@@ -3,8 +3,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
 header('Access-Control-Max-Age: 1000');
 
-require_once '../config/bootstrap.php';
-require_once '../function.php';
+require_once '../../config/bootstrap.php';
+require_once '../../function.php';
 
 if (isset($_POST['status'])) {
 

@@ -27,14 +27,14 @@ class ConfigManager {
         try {
             // Check for new config table
             $result = $this->db->query("SHOW TABLES LIKE 'config'");
-            if ($result && $result->rowCount() > 0) {
+            if ($result && $result->num_rows > 0) {
                 $this->useNewSchema = true;
                 return;
             }
             
             // Fall back to legacy site_settings table
             $result = $this->db->query("SHOW TABLES LIKE 'site_settings'");
-            if ($result && $result->rowCount() > 0) {
+            if ($result && $result->num_rows > 0) {
                 $this->useNewSchema = false;
                 return;
             }
@@ -59,19 +59,20 @@ class ConfigManager {
      */
     private function loadSettingsNewSchema() {
         try {
-            $stmt = $this->db->prepare("SELECT config_key, config_value, config_type FROM config");
-            $stmt->execute();
+            // MySQLi query
+            $result = $this->db->query("SELECT config_key, config_value, config_type FROM config");
             
-            $results = $stmt->fetchAll();
-            foreach ($results as $row) {
-                $key = $row['config_key'];
-                $value = $row['config_value'];
-                $type = $row['config_type'] ?? 'string';
-                
-                // Parse value based on type
-                $value = $this->parseValue($value, $type);
-                
-                $this->settings[$key] = $value;
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $key = $row['config_key'];
+                    $value = $row['config_value'];
+                    $type = $row['config_type'] ?? 'string';
+                    
+                    // Parse value based on type
+                    $value = $this->parseValue($value, $type);
+                    
+                    $this->settings[$key] = $value;
+                }
             }
             
             $this->loaded = true;
@@ -85,24 +86,25 @@ class ConfigManager {
      */
     private function loadSettingsLegacy() {
         try {
-            $stmt = $this->db->prepare("SELECT setting_key, setting_value FROM site_settings");
-            $stmt->execute();
+            // MySQLi query
+            $result = $this->db->query("SELECT setting_key, setting_value FROM site_settings");
             
-            $results = $stmt->fetchAll();
-            foreach ($results as $row) {
-                $key = $row['setting_key'];
-                $value = $row['setting_value'];
-                
-                // Parse JSON values
-                if (strpos($value, '{') === 0 || strpos($value, '[') === 0) {
-                    $value = json_decode($value, true);
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $key = $row['setting_key'];
+                    $value = $row['setting_value'];
+                    
+                    // Parse JSON values
+                    if (strpos($value, '{') === 0 || strpos($value, '[') === 0) {
+                        $value = json_decode($value, true);
+                    }
+                    
+                    // Parse boolean strings
+                    if ($value === 'true') $value = true;
+                    if ($value === 'false') $value = false;
+                    
+                    $this->settings[$key] = $value;
                 }
-                
-                // Parse boolean strings
-                if ($value === 'true') $value = true;
-                if ($value === 'false') $value = false;
-                
-                $this->settings[$key] = $value;
             }
             
             $this->loaded = true;

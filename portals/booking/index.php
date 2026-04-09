@@ -6,7 +6,7 @@
  */
 
 require_once 'signin-security.php';
-require_once '../config/bootstrap.php';
+require_once '../../config/bootstrap.php';
 
 // Load legacy site settings for compatibility
 if (file_exists('../admin/pages/site_settings.php')) {

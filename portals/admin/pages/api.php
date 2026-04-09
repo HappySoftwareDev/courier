@@ -1,25 +1,325 @@
-<?php require ("login-security.php"); ?>
+<?php
+/**
+ * Admin API Configuration Page
+ * Manage payment gateway and third-party API keys
+ */
 
-<?php include ('site_settings.php'); ?>
+require_once('../../../config/bootstrap.php');
+require_once('login-security.php');
 
-<?php require ("get-sql-value.php"); 
+// Set variables for layout
+$page_title = 'API Configuration';
+$site_name = 'WG ROOS Courier Admin';
 
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-    $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+// Load API keys from JSON
+$keysFile = '../../config/keys.json';
+$apiKeys = [];
+
+if (file_exists($keysFile)) {
+    $apiKeys = json_decode(file_get_contents($keysFile), true) ?? [];
 }
-$sResponse = "";
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "invite")) {
-    $myFile = "../keys.json";
-    $myFilea = "../../keys.json";
-    file_put_contents($myFile, json_encode($_POST));
-    file_put_contents($myFilea, json_encode($_POST));
-    $sResponse = '<div class="alert alert-success">Record Updated Successfully</div>';
+
+// Handle form submission
+$successMessage = '';
+$errorMessage = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_keys'])) {
+    // Sanitize and save API keys
+    $keysToSave = [
+        'stripe_enabled' => $_POST['stripe_enabled'] ?? 0,
+        'stripePk' => htmlspecialchars($_POST['stripePk'] ?? ''),
+        'stripeSk' => htmlspecialchars($_POST['stripeSk'] ?? ''),
+        'paynow_enabled' => $_POST['paynow_enabled'] ?? 0,
+        'paynowId' => htmlspecialchars($_POST['paynowId'] ?? ''),
+        'paynowIk' => htmlspecialchars($_POST['paynowIk'] ?? ''),
+        'paypal_enabled' => $_POST['paypal_enabled'] ?? 0,
+        'paypalid' => htmlspecialchars($_POST['paypalid'] ?? ''),
+        'mapApi' => htmlspecialchars($_POST['mapApi'] ?? ''),
+        'twilio_enabled' => $_POST['twilio_enabled'] ?? 0,
+        'twiliosmsID' => htmlspecialchars($_POST['twiliosmsID'] ?? ''),
+        'twiliosmsUsername' => htmlspecialchars($_POST['twiliosmsUsername'] ?? ''),
+        'twilioPhoneNumber' => htmlspecialchars($_POST['twilioPhoneNumber'] ?? ''),
+    ];
+    
+    try {
+        if (file_put_contents($keysFile, json_encode($keysToSave, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false) {
+            $successMessage = 'API keys updated successfully!';
+            $apiKeys = $keysToSave;
+        } else {
+            $errorMessage = 'Failed to save API keys. Check file permissions.';
+        }
+    } catch (Exception $e) {
+        $errorMessage = 'Error: ' . $e->getMessage();
+    }
 }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
+    <?php include '../head.php'; ?>
+</head>
+
+<body class="admin-portal">
+
+    <div class="page-container">
+        
+        <!-- Sidebar Navigation -->
+        <?php include '../sidebar-nav-menu.php'; ?>
+        
+        <!-- Main Content Wrapper -->
+        <div class="main-content">
+            
+            <!-- Header -->
+            <?php include '../header.php'; ?>
+            
+            <!-- Main Content Area -->
+            <main class="main-wrapper">
+                <section class="section">
+                    <div class="container-fluid">
+                        
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <h1><?php echo $page_title; ?></h1>
+                            <p class="text-muted">Configure payment gateways and API integrations</p>
+                        </div>
+
+                        <!-- Success/Error Messages -->
+                        <?php if (!empty($successMessage)): ?>
+                            <div class="alert alert-success alert-dismissible fade show mb-40" role="alert">
+                                <i class="lni lni-check-circle"></i> <?php echo $successMessage; ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($errorMessage)): ?>
+                            <div class="alert alert-danger alert-dismissible fade show mb-40" role="alert">
+                                <i class="lni lni-close-circle"></i> <?php echo $errorMessage; ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- API Configuration Form -->
+                        <form method="POST" action="">
+                            
+                            <!-- Stripe Payment Gateway -->
+                            <div class="card mb-40">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title mb-0">Stripe Payment Gateway</h5>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="stripe_enabled" 
+                                                   value="1" <?php echo ($apiKeys['stripe_enabled'] ?? 0) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label">Enabled</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-3">International and US credit card payments</p>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Stripe Public Key</label>
+                                            <input type="text" class="form-control" name="stripePk" 
+                                                   value="<?php echo htmlspecialchars($apiKeys['stripePk'] ?? ''); ?>"
+                                                   placeholder="pk_live_...">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Stripe Secret Key</label>
+                                            <input type="password" class="form-control" name="stripeSk" 
+                                                   value="<?php echo htmlspecialchars($apiKeys['stripeSk'] ?? ''); ?>"
+                                                   placeholder="sk_live_...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PayNow Payment Gateway -->
+                            <div class="card mb-40">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title mb-0">PayNow Gateway (Zimbabwe)</h5>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="paynow_enabled"
+                                                   value="1" <?php echo ($apiKeys['paynow_enabled'] ?? 0) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label">Enabled</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-3">Local Zimbabwe payment processing</p>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Integration ID</label>
+                                            <input type="text" class="form-control" name="paynowId"
+                                                   value="<?php echo htmlspecialchars($apiKeys['paynowId'] ?? ''); ?>"
+                                                   placeholder="Integration ID">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Integration Key</label>
+                                            <input type="password" class="form-control" name="paynowIk"
+                                                   value="<?php echo htmlspecialchars($apiKeys['paynowIk'] ?? ''); ?>"
+                                                   placeholder="Integration Key">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PayPal Payment Gateway -->
+                            <div class="card mb-40">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title mb-0">PayPal Payment Gateway</h5>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="paypal_enabled"
+                                                   value="1" <?php echo ($apiKeys['paypal_enabled'] ?? 0) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label">Enabled</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-3">International PayPal payments</p>
+                                    <div class="mb-3">
+                                        <label class="form-label">PayPal Business ID</label>
+                                        <input type="text" class="form-control" name="paypalid"
+                                               value="<?php echo htmlspecialchars($apiKeys['paypalid'] ?? ''); ?>"
+                                               placeholder="your-business-id@paypal.com">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Maps API -->
+                            <div class="card mb-40">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Maps & Routing API</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-3">Google Maps API for location services and routing</p>
+                                    <div class="mb-3">
+                                        <label class="form-label">Google Maps API Key</label>
+                                        <input type="password" class="form-control" name="mapApi"
+                                               value="<?php echo htmlspecialchars($apiKeys['mapApi'] ?? ''); ?>"
+                                               placeholder="AIzaSy...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Twilio SMS Service -->
+                            <div class="card mb-40">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title mb-0">Twilio SMS Service</h5>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="twilio_enabled"
+                                                   value="1" <?php echo ($apiKeys['twilio_enabled'] ?? 0) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label">Enabled</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-3">SMS notifications for orders and drivers</p>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Account SID</label>
+                                            <input type="password" class="form-control" name="twiliosmsID"
+                                                   value="<?php echo htmlspecialchars($apiKeys['twiliosmsID'] ?? ''); ?>"
+                                                   placeholder="Account SID">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Auth Token</label>
+                                            <input type="password" class="form-control" name="twiliosmsUsername"
+                                                   value="<?php echo htmlspecialchars($apiKeys['twiliosmsUsername'] ?? ''); ?>"
+                                                   placeholder="Auth Token">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Phone Number</label>
+                                            <input type="text" class="form-control" name="twilioPhoneNumber"
+                                                   value="<?php echo htmlspecialchars($apiKeys['twilioPhoneNumber'] ?? ''); ?>"
+                                                   placeholder="+1234567890">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-2">
+                                <button type="submit" name="save_keys" class="btn btn-success">
+                                    <i class="lni lni-save"></i> Save API Keys
+                                </button>
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="lni lni-reload"></i> Reset Form
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <!-- API Status Information -->
+                        <div class="card mt-40">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">API Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Status</th>
+                                            <th>Last Updated</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Stripe</td>
+                                            <td><?php echo ($apiKeys['stripe_enabled'] ?? 0) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                                            <td><?php echo date('M d, Y H:i'); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PayNow</td>
+                                            <td><?php echo ($apiKeys['paynow_enabled'] ?? 0) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                                            <td><?php echo date('M d, Y H:i'); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PayPal</td>
+                                            <td><?php echo ($apiKeys['paypal_enabled'] ?? 0) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                                            <td><?php echo date('M d, Y H:i'); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Google Maps</td>
+                                            <td><?php echo !empty($apiKeys['mapApi']) ? '<span class="badge bg-success">Configured</span>' : '<span class="badge bg-warning">Not Configured</span>'; ?></td>
+                                            <td><?php echo date('M d, Y H:i'); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Twilio SMS</td>
+                                            <td><?php echo ($apiKeys['twilio_enabled'] ?? 0) ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                                            <td><?php echo date('M d, Y H:i'); ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <?php include '../footer.php'; ?>
+
+    <!-- Footer Scripts -->
+    <?php include '../footerscripts.php'; ?>
+
+</body>
+
+</html>
 
 ?>
 
-<?php require("function.php"); ?>
+<!-- Function library already loaded via bootstrap.php -->
 <!DOCTYPE html>
 <html lang="en">
 

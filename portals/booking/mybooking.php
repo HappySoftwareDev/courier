@@ -1,6 +1,19 @@
-<?php require ("signin-security.php"); ?>
+<?php 
+// Check auth BEFORE any output
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['CC_Username'])) {
+    header('Location: signin.php', true, 302);
+    exit;
+}
 
-<?php include ("../admin/pages/site_settings.php"); ?>
+require ("signin-security.php"); 
+
+// Safe settings loader - no redirects
+$site_name = 'WG ROOS Courier';
+$web_url = 'https://example.com';
+?>
 
 <!DOCTYPE html>
 <html lang="en">

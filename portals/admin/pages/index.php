@@ -1,22 +1,27 @@
-<?php require_once ('../../includes/bootstrap.php'); ?>
+<?php
+/**
+ * Admin Dashboard - Redirects to Modern Dashboard
+ * This page has been replaced with a modern UI at ../index.php
+ */
 
-<?php require ("login-security.php"); ?>
+require_once('../../../config/bootstrap.php');
 
-<?php require ("function.php"); ?>
+// Check session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-<!DOCTYPE html>
-<html lang="en">
+// Verify admin is logged in
+if (!isset($_SESSION['admin_id']) && (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin')) {
+    header('Location: login.php', true, 302);
+    exit;
+}
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area - Dashboard</title>
-    <link rel="stylesheet" href="../../portals/shared/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../portals/shared/css/style.css">
-</head>
+// Redirect to new modern dashboard
+header('Location: ../index.php', true, 301);
+exit;
+?>
 
-<body>
 
         <div id="page-wrapper">
             <div class="row">
@@ -36,7 +41,7 @@
                                         <i class="fa fa-usd fa-5x"></i>
                                     </div>
                                     <div class="col-xs-10 text-right">
-                                        <div class="huge"><?php getCountTotalSales(); ?> </div>
+                                        <div class="huge"><?php echo getCountTotalSales(); ?> </div>
                                         <div>Total USD Sales</div>
                                     </div>
                                 </div>
@@ -81,7 +86,7 @@
                                         <i class="fa fa-user-plus fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php getCountAllSellers(); ?></div>
+                                        <div class="huge"><?php echo getCountAllSellers(); ?></div>
                                         <div>Business Partners</div>
                                     </div>
                                 </div>
@@ -103,7 +108,7 @@
                                         <i class="fa fa-shopping-cart fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php getCountNewOrders();  ?></div>
+                                        <div class="huge"><?php echo getCountNewOrders();  ?></div>
                                         <div>New Orders!</div>
                                     </div>
                                 </div>
@@ -126,7 +131,7 @@
                                         <i class="fa fa-car fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php getCountAllDrivers(); ?></div>
+                                        <div class="huge"><?php echo getCountAllDrivers(); ?></div>
                                         <div>Drivers</div>
                                     </div>
                                 </div>
@@ -142,7 +147,7 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div>Total Orders!</div>
-                                        <div class="huge"><?php getCountAllOrders();  ?></div>
+                                        <div class="huge"><?php echo getCountAllOrders();  ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +163,7 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div>Cancelled Orders!</div>
-                                        <div class="huge"><?php getCountCancelledOrders();  ?></div>
+                                        <div class="huge"><?php echo getCountCancelledOrders();  ?></div>
                                     </div>
                                 </div>
                             </div>

@@ -201,6 +201,32 @@ class AuthManager {
     }
 
     /**
+     * Get current user ID
+     */
+    public static function getUserId() {
+        if (isset($_SESSION['Userid'])) {
+            return $_SESSION['Userid'];
+        } elseif (isset($_SESSION['driver_id'])) {
+            return $_SESSION['driver_id'];
+        } elseif (isset($_SESSION['admin_id'])) {
+            return $_SESSION['admin_id'];
+        }
+        return null;
+    }
+
+    /**
+     * Get current user email
+     */
+    public static function getUserEmail() {
+        if (isset($_SESSION['CC_Username'])) {
+            return $_SESSION['CC_Username'];
+        } elseif (isset($_SESSION['admin_email'])) {
+            return $_SESSION['admin_email'];
+        }
+        return null;
+    }
+
+    /**
      * Change password
      */
     public function changePassword($userId, $oldPassword, $newPassword, $userType = 'customer') {

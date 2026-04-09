@@ -2,7 +2,7 @@
 
 <?php include ('site_settings.php'); ?>
 
-<?php require("function.php"); ?>
+<!-- Function library already loaded via bootstrap.php -->
 
 <!DOCTYPE html>
 <html lang="en">

@@ -1,15 +1,11 @@
 <?php
+require_once '../../config/bootstrap.php';
+require_once '../../function.php';
 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+error_reporting(0);
 
-include ('../admin/pages/site_settings.php'); 
-
-require_once '../config/bootstrap.php';
-require_once '../function.php'; 
-
-include ('../function.php');
+// Get site name
+$site_name = defined('SITE_NAME') ? SITE_NAME : 'WG ROOS Courier';
 
 
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
@@ -177,160 +173,302 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
 ?>
 
 <!DOCTYPE html>
-<html>
-
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
-    <!--<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />-->
-    
-	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-	
-	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="fontawesome.css">
-	<script type="text/javascript" src="validation.min.js"></script>
-	<script type="text/javascript" src="index.js"></script>
-	<link href="style.css" rel="stylesheet" media="screen">
-	<script type="text/javascript" src="jquery-3.1.1.min.js" charset="UTF-8"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo $site_name ?> - Driver Registration</title>
     
+    <!-- Include head.php for Bootstrap 5 CDN -->
+    <?php include 'head.php'; ?>
+    
     <style>
-    body {font-family: Arial, Helvetica, sans-serif;}
-    .form {padding-top: 80px;}
-    
-    input[type=text], input[type=password] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-    
-    button {
-        background-color: #193b50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-        width: 100%;
-    }
-    
-    button:hover {
-        opacity: 0.8;
-    }
-    
-    .imgcontainer {
-        text-align: center;
-        margin: 24px 0 12px 0;
-    }
-    
-    img.avatar {
-        width: 50%;
-    }
-    
-    .container {
-        padding: 10px;
-    }
-    
-    span.psw {
-        float: right;
-        padding-top: 16px;
-    }
-    
-    /* Change styles for span and cancel button on extra small screens */
-    @media screen and (max-width: 300px) {
-        span.psw {
-           display: block;
-           float: none;
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        .cancelbtn {
-           width: 100%;
+        
+        .registration-wrapper {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
         }
-        .container {
-        padding: 0px;
-    }
-    }
-    
-    
-    .form-field {
-        width: 100%;
-        height: 40px; /* Ensures consistent height */
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-
-    select.form-field {
-        height: 40px; /* Ensures select fields match input fields in height */
-    }
-
-    button.form-field {
-        width: 100%;
-        height: 40px;
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
-    
-
-        .container {
-        background-color: #f1f1f1;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: left;
-        margin: 20px auto;
-        max-width: 100%; /* Optional: To limit the container width */
-    }
-
-    .cancelbtn {
-        width: auto;
-        background-color: #E0D313; /* Blue button */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 3px;
-        margin-bottom: 10px; /* Add spacing below the button */
-        transition: background-color 0.3s ease;
-    }
-    
-    .cancelbtn:hover {
-        opacity: 0.8; /* Darker blue on hover */
-    }
-    
-    
-    .psw {
-        display: block; /* Ensure the link spans a new line */
-        margin-top: 15px; /* Space between the button and the link */
-        font-size: 14px;
-    }
-    
-    .psw a {
-        color: #000000;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    
-    .psw a:hover {
-        text-decoration: underline;
-    }
-
-    
-</style>
-
+        
+        .registration-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .registration-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .registration-header p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #374151;
+        }
+        
+        input[type=text],
+        input[type=email],
+        input[type=password],
+        input[type=tel],
+        input[type=date],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        input[type=text]:focus,
+        input[type=email]:focus,
+        input[type=password]:focus,
+        input[type=tel]:focus,
+        input[type=date]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .btn-register {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .signin-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .signin-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
-    
 <body>
- <div class="container">
-    <form class="form" name="driverForm" action="driver_registration.php" method="POST" enctype="multipart/form-data">
+    <!-- Home Navigation -->
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">← Back to Home</a>
+    </div>
+    
+    <div class="registration-wrapper">
+        <div class="registration-header">
+            <h2>Driver Registration</h2>
+            <p>Join our driver network and start earning</p>
+        </div>
+        
+        <?php if (!empty($successMsg)): ?>
+            <div class="alert alert-success">✓ <?php echo htmlspecialchars($successMsg); ?></div>
+        <?php endif; ?>
+        
+        <?php if (!empty($errorMsg)): ?>
+            <div class="alert alert-error">✗ <?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php endif; ?>
+        
+        <form action="driver_registration.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="MM_insert" value="driverForm">
+            
+            <!-- Personal Information -->
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="fullname" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email Address *</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" name="phone" placeholder="Phone number" required>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth *</label>
+                    <input type="date" name="dob" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Address *</label>
+                <input type="text" name="address" placeholder="Street address" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City *</label>
+                    <input type="text" name="city" placeholder="City" required>
+                </div>
+                <div class="form-group">
+                    <label>Occupation *</label>
+                    <input type="text" name="occupation" placeholder="Your occupation" required>
+                </div>
+            </div>
+            
+            <!-- Vehicle Information -->
+            <div class="form-group">
+                <label>Driver Number *</label>
+                <input type="text" name="driver_num" placeholder="Driver ID number" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Vehicle Make *</label>
+                    <input type="text" name="vehicleMake" placeholder="e.g., Toyota" required>
+                </div>
+                <div class="form-group">
+                    <label>Model *</label>
+                    <input type="text" name="model" placeholder="e.g., Hiace" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Year *</label>
+                    <input type="text" name="year" placeholder="2020" required>
+                </div>
+                <div class="form-group">
+                    <label>Registration Number *</label>
+                    <input type="text" name="RegNo" placeholder="Reg. No." required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Engine Capacity *</label>
+                <input type="text" name="engineCapacity" placeholder="Engine capacity in cc" required>
+            </div>
+            
+            <!-- Service Selection -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mode of Transport *</label>
+                    <select name="mode_of_transport" required>
+                        <option value="">Select transport mode</option>
+                        <option value="Motorbike">Motorbike</option>
+                        <option value="Car">Car</option>
+                        <option value="Van">Van</option>
+                        <option value="Truck">Truck</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type of Service *</label>
+                    <select name="type_of_service" required>
+                        <option value="">Select service type</option>
+                        <option value="Parcel Delivery">Parcel Delivery</option>
+                        <option value="Freight Delivery">Freight Delivery</option>
+                        <option value="Taxi">Taxi</option>
+                        <option value="Tow Truck">Tow Truck</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- File Uploads -->
+            <div class="form-group">
+                <label>Profile Picture</label>
+                <input type="file" name="profileImage" accept="image/*">
+            </div>
+            
+            <div class="form-group">
+                <label>Documents</label>
+                <input type="file" name="documents" multiple>
+            </div>
+            
+            <button type="submit" class="btn-register">Register as Driver</button>
+        </form>
+        
+        <div class="signin-link">
+            Already have an account? <a href="index.php">Sign in here</a>
+        </div>
+    </div>
+    
+    <?php include 'footer_scripts.php'; ?>
+</body>
+</html>
         <div class="imgcontainer">
             <img src="../admin/pages/custom_files/<?php echo $logo ?>" alt="logo" width="200" height="100" />
         </div>
@@ -715,9 +853,16 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
 
 
 <?php
-    $aData = json_decode(file_get_contents("../config/keys.json"));
+    $keysFile = "../../config/keys.json";
+    $aData = null;
+    if (file_exists($keysFile)) {
+        $content = @file_get_contents($keysFile);
+        if ($content) $aData = json_decode($content);
+    }
+    if (!$aData) $aData = (object)[];
     $mapApi = !empty($aData->mapApi) ? $aData->mapApi : "";
 ?>
+
 <!-- Include the Google Maps API -->
 <script src="https://maps.google.com/maps/api/js?key=<?php echo $mapApi ?>&sensor=false&libraries=places&callback=initAutocomplete" type="text/javascript"></script>
 

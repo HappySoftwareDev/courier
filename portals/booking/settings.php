@@ -1,6 +1,58 @@
 <?php require ("signin-security.php"); ?>
 
-<?php include ("../admin/pages/site_settings.php"); ?>
+<?php 
+// Initialize variables with defaults to prevent undefined warnings
+$name = '';
+$phone = '';
+$email = '';
+$contact_name = '';
+$address = '';
+$city = '';
+$btype = '';
+$affiliate_no = '';
+
+// Load site settings
+require_once(dirname(dirname(__FILE__)) . '/admin/pages/site_settings.php');
+
+// Get user data from session
+$user = $_SESSION['CC_Username'] ?? null;
+if ($user) {
+    global $DB;
+    try {
+        // Try businesspartners first
+        $get = "SELECT * FROM `businesspartners` WHERE email = ? LIMIT 1";
+        $stmt = $DB->prepare($get);
+        $stmt->execute([$user]);
+        $result = $stmt->fetch();
+        
+        if ($result) {
+            $name = $result['businessName'] ?? '';
+            $phone = $result['phone'] ?? '';
+            $email = $result['email'] ?? '';
+            $contact_name = $result['NameOfContact'] ?? '';
+            $address = $result['address'] ?? '';
+            $city = $result['businessLocation'] ?? '';
+            $btype = $result['businessType'] ?? '';
+            $affiliate_no = $result['affiliate_no'] ?? '';
+        } else {
+            // Try users table as fallback
+            $get = "SELECT * FROM `users` WHERE email = ? LIMIT 1";
+            $stmt = $DB->prepare($get);
+            $stmt->execute([$user]);
+            $result = $stmt->fetch();
+            
+            if ($result) {
+                $name = $result['Name'] ?? '';
+                $email = $result['email'] ?? '';
+                $phone = $result['phone'] ?? '';
+                $contact_name = $result['Name'] ?? '';
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Settings page error: " . $e->getMessage());
+    }
+}
+?>
 
 
 <!DOCTYPE html>

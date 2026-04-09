@@ -1,4 +1,14 @@
-<?php include ('../admin/pages/site_settings.php'); ?>
+<?php 
+// Safe site settings loading - without admin redirects
+// These variables should already be set by pages that include this footer
+// If not, set safe defaults
+if (!isset($site_name)) {
+    $site_name = 'WG ROOS Courier';
+}
+if (!isset($web_url)) {
+    $web_url = 'https://example.com';
+}
+?>
 
 <footer class="footer">
         <div class="container-fluid">

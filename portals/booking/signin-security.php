@@ -14,24 +14,25 @@ if (!defined('APP_ROOT')) {
 
 // Handle logout action
 if (!empty($_GET['doLogout']) && $_GET['doLogout'] === 'true') {
-    AuthManager::logout();
+    // Destroy session
+    $_SESSION = [];
+    session_destroy();
     
     $returnUrl = isset($_GET['return']) ? urldecode($_GET['return']) : 'signin.php';
-    header('Location: ' . $returnUrl);
+    header('Location: ' . $returnUrl, true, 302);
     exit;
 }
 
 // Check if user is authenticated and authorized
 function checkBookingPortalAccess($userRole = 'customer') {
-    // Allow guests to access booking pages
-    if (strpos($_SERVER['PHP_SELF'], 'index.php') !== false || 
-        strpos($_SERVER['PHP_SELF'], 'submit.php') !== false ||
-        strpos($_SERVER['PHP_SELF'], 'signup.php') !== false ||
-        strpos($_SERVER['PHP_SELF'], 'signin.php') !== false) {
-        return true; // Public pages
+    // Allow public access to signup and signin pages only
+    if (strpos($_SERVER['PHP_SELF'], 'signup.php') !== false || 
+        strpos($_SERVER['PHP_SELF'], 'signin.php') !== false ||
+        strpos($_SERVER['PHP_SELF'], 'forgot_pass.php') !== false) {
+        return true; // Completely public pages
     }
     
-    // Require authentication for protected pages
+    // Require authentication for ALL other pages (including index.php, mybooking.php, submit.php)
     if (!AuthManager::isAuthenticated()) {
         $currentUrl = urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']);
         header('Location: signin.php?accesscheck=' . $currentUrl);
@@ -66,9 +67,14 @@ $sessionLastActivity = $_SESSION['last_activity'] ?? time();
 $_SESSION['last_activity'] = time();
 
 if ((time() - $sessionLastActivity) > $sessionTimeout) {
-    AuthManager::logout();
+    // Session expired - destroy it
+    $_SESSION = [];
+    session_destroy();
     header('Location: signin.php?expired=1');
     exit;
 }
+
+// Apply access control to this page
+checkBookingPortalAccess();
 ?>
 

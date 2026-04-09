@@ -5,9 +5,9 @@
 <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon" />
 
 <!-- ========== All CSS files linkup ========= -->
-<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-<link rel="stylesheet" href="assets/css/lineicons.css" />
-<link rel="stylesheet" href="assets/css/materialdesignicons.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/materialdesignicons.min.css" />
 <link rel="stylesheet" href="assets/css/main.css" />
 
 <!-- Firebase for notifications -->

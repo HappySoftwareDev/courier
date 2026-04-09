@@ -5,20 +5,67 @@
  * Unified system for admin, book, and driver portals
  */
 
-// Start session
+// Debug: Log that bootstrap is starting
+if (php_sapi_name() !== 'cli') {
+    error_log("Bootstrap starting at " . date('Y-m-d H:i:s'));
+}
+
+// Configure session handler BEFORE starting session
+// This fixes the "No such file or directory" error when session path doesn't exist
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    // Get the application root directory
+    $appRoot = dirname(dirname(__FILE__));
+    $sessionPath = $appRoot . '/storage/sessions';
+    
+    // Create session directory if it doesn't exist
+    if (!is_dir($sessionPath)) {
+        @mkdir($sessionPath, 0755, true);
+    }
+    
+    // Determine where to save sessions
+    $savePath = null;
+    
+    // Priority 1: Use application storage/sessions
+    if (is_dir($sessionPath) && is_writable($sessionPath)) {
+        $savePath = $sessionPath;
+        ini_set('session.save_path', $sessionPath);
+        session_save_path($sessionPath);
+    }
+    // Priority 2: Use system temp directory
+    elseif (is_writable(sys_get_temp_dir())) {
+        $savePath = sys_get_temp_dir();
+        ini_set('session.save_path', $savePath);
+        session_save_path($savePath);
+    }
+    // Priority 3: Use PHP's temp ini or default (may fail but try anyway)
+    else {
+        ini_set('session.save_path', '/tmp');
+        @session_save_path('/tmp');
+    }
+    
+    // Set additional session configuration
+    ini_set('session.gc_probability', 1);
+    ini_set('session.gc_divisor', 100);
+    ini_set('session.gc_maxlifetime', 3600);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_strict_mode', 1);
+    
+    // Start session - suppress errors if session path fails
+    @session_start();
 }
 
 // Error handling
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
+ini_set('error_log', dirname(dirname(__FILE__)) . '/logs/error.log');
 
 // Define app constants
 // APP_ROOT should be the /app/ directory in /public_html/app/
 // This works whether you access from public_html/ or public_html/app/
-define('APP_ROOT', defined('APP_ROOT') ? APP_ROOT : dirname(dirname(__FILE__)));
+if (!defined('APP_ROOT')) {
+    define('APP_ROOT', dirname(dirname(__FILE__)));
+}
 define('APP_NAME', 'Merchant Couriers');
 define('APP_VERSION', '3.0.0');
 define('TEMPLATE_PATH', APP_ROOT . '/templates');
@@ -37,14 +84,24 @@ if (strpos(__DIR__, '/app/config') !== false || strpos(__DIR__, '\app\config') !
 }
 
 // Require core database - MUST BE FIRST
+if (!file_exists(APP_ROOT . '/config/database.php')) {
+    die('Fatal Error: Database configuration file not found at ' . APP_ROOT . '/config/database.php');
+}
 require_once APP_ROOT . '/config/database.php';
 
 // Create PDO database instance for new system
-$DB = Database::getInstance();
+try {
+    $DB = Database::getInstance();
+} catch (Exception $e) {
+    die('Fatal Error: Could not initialize database: ' . $e->getMessage());
+}
 
 // CRITICAL: Create backward-compatible MySQLi connection for legacy code
 // This allows old code using $Connect to work while we transition to new system
-require_once APP_ROOT . '/Connections/db-connection.php';
+// Skip if the file doesn't exist - it's optional for the new architecture
+if (file_exists(APP_ROOT . '/Connections/db-connection.php')) {
+    require_once APP_ROOT . '/Connections/db-connection.php';
+}
 
 // Require configuration and helper classes
 if (file_exists(CONFIG_PATH . '/ConfigManager.php')) {
@@ -111,29 +168,33 @@ if (class_exists('AuthManager') && AuthManager::isAuthenticated()) {
     }
 }
 
-// Force HTTPS if configured
-if ((isset($CONFIG) && is_object($CONFIG)) && $CONFIG->getSecurity()['force_https'] && empty($_SERVER['HTTPS'])) {
-    header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-    exit;
+// Force HTTPS if configured (skip if running from CLI)
+if (php_sapi_name() !== 'cli' && (isset($CONFIG) && is_object($CONFIG)) && $CONFIG->getSecurity()['force_https'] && empty($_SERVER['HTTPS'])) {
+    if (!empty($_SERVER['HTTP_HOST']) && !empty($_SERVER['REQUEST_URI'])) {
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        exit;
+    }
 }
 
 // Helper function to generate base URLs
 if (!function_exists('baseUrl')) {
     function baseUrl($path = '') {
+        // Handle CLI mode - return placeholder
+        if (php_sapi_name() === 'cli') {
+            return 'http://localhost' . $path;
+        }
         $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-        $host = $_SERVER['HTTP_HOST'];
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $protocol . '://' . $host . $path;
     }
 }
 
-// Determine current portal for theming
+// Determine current portal for theming (skip for CLI)
 $CURRENT_PORTAL = 'book'; // default
-if (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false) {
-    $CURRENT_PORTAL = 'admin';
-} elseif (strpos($_SERVER['REQUEST_URI'], '/driver/') !== false) {
-    $CURRENT_PORTAL = 'driver';
+if (php_sapi_name() !== 'cli' && !empty($_SERVER['REQUEST_URI'])) {
+    if (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false) {
+        $CURRENT_PORTAL = 'admin';
+    } elseif (strpos($_SERVER['REQUEST_URI'], '/driver/') !== false) {
+        $CURRENT_PORTAL = 'driver';
+    }
 }
-
-?>
-
-

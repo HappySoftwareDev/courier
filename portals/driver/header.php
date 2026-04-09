@@ -6,98 +6,41 @@ if (!isset($_SESSION)) {
 
 error_reporting(0);
 
-require_once '../config/bootstrap.php';
-require_once '../function.php';
+require_once '../../config/bootstrap.php';
+require_once '../../function.php';
 
+$driver_name = $_SESSION['driver_name'] ?? $_SESSION['CC_Username'] ?? 'Driver';
 ?>
 
-<!-- header.php - Driver Portal Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">
-            <img src="assets/images/logo.png" alt="WGRoos Driver" height="40">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="accepted_orders.php">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="profile.php">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?action=logout">Logout</a>
-                </li>
-            </ul>
+<!-- header.php - Driver Portal Top Navigation -->
+<header class="page-header d-print-none sticky-top bg-white border-bottom-lg border-bottom border-light">
+    <div class="container-xl">
+        <div class="row align-items-center">
+            <div class="col">
+                <!-- Page brand -->
+                <div class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal" href=".">
+                    <h2 class="mb-0"><?php echo htmlspecialchars($driver_name); ?> - Driver Portal</h2>
+                </div>
+            </div>
+            <!-- Page title actions -->
+            <div class="col-auto d-print-none flex-grow-1 flex-sm-grow-0">
+                <div class="btn-list flex-nowrap">
+                    <div class="dropdown">
+                        <button class="btn btn-icon btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="lni lni-user"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="profile.php"><i class="lni lni-user"></i> My Profile</a></li>
+                            <li><a class="dropdown-item" href="message.php"><i class="lni lni-envelope"></i> Messages</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="index.php?logout=true"><i class="lni lni-exit"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
-
-                if ($type_of_service == "Taxi") {
-                    $srv = "Taxi";
-                }
-                if ($type_of_service == "Parcel Delivery") {
-                    $srv = "Deliveries";
-                }
-                if ($type_of_service == "Freight Delivery") {
-                    $srv = "Freight & Log";
-                }
-                if ($type_of_service == "Tow Truck") {
-                    $srv = "Towing";
-                }
-            }
-            ?>
-
-            <!--logo start-->
-            <a href="new_orders.php" class="logo"><?php echo $site_name; ?></a>
-            <!--logo end-->
-
-            <div class="top-nav notification-row">
-                <!-- notificatoin dropdown start-->
-                <ul class="nav pull-right top-menu">
-
-                    <!-- task notificatoin end -->
-                    <!-- inbox notificatoin start-->
-
-                    <!-- inbox notificatoin end -->
-                    <!-- alert notification start-->
-
-                    <!-- alert notification end-->
-                    <!-- user login dropdown start-->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="profile-ava">
-
-                            </span>
-                            <span class="username"><?php getDriversNameOnApp(); ?></span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu extended logout">
-                            <div class="log-arrow-up"></div>
-                            <li class="eborder-top">
-                                <a href="profile.php"><i class="icon_profile"></i> My Profile</a>
-                            </li>
-                            <li>
-                                <a href="massage.php"><i class="icon_mail_alt"></i> My Inbox</a>
-                            </li>
-
-                            <li>
-                                <a href="index.php"><i class="icon_key_alt"></i> Log Out</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                    <!-- user login dropdown end -->
-                </ul>
-                <!-- notificatoin dropdown end-->
-            </div>
-        </header>
-        <!--header end-->
-        
-        <?php
+</header>
         $user = $_SESSION['MM_Username'];
 
         $get_driver = "SELECT * FROM driver WHERE username='$user' ";
