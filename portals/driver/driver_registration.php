@@ -469,8 +469,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
     <?php include 'footer_scripts.php'; ?>
 </body>
 </html>
-        <div class="imgcontainer">
-            <img src="../admin/pages/custom_files/<?php echo $logo ?>" alt="logo" width="200" height="100" />
         </div>
         
         <div id="error"></div>
