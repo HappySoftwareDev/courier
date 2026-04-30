@@ -1,0 +1,3 @@
+# This file marks directories for deletion
+# These were temporary redirect folders that are no longer needed
+# The .htaccess rewrite at the root level handles the routing instead
