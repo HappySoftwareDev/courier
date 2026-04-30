@@ -239,9 +239,9 @@ class Database {
     private function getDefaultConfig() {
         return [
             'host' => 'localhost',
-            'user' => 'faithinf_courier',
-            'password' => 'courier2026#$',
-            'database' => 'faithinf_courier',
+            'user' => 'admincourier1',
+            'password' => 'admincourier12026#$',
+            'database' => 'courier1',
             'port' => 3306,
             'charset' => 'utf8mb4'
         ];
