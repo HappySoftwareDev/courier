@@ -10,6 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Configure sudo for deployment user
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            # Allow current user to run sudo without password (if not already configured)
+            CURRENT_USER=$(whoami)
+            if ! sudo -n true 2>/dev/null; then
+              echo "$CURRENT_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$CURRENT_USER > /dev/null
+              sudo chmod 0440 /etc/sudoers.d/$CURRENT_USER
+            fi
+
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -19,10 +34,22 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             cd /home/faithinfused-app/htdocs/app.faithinfused.com/webroot
+            
+            # Fix file permissions before git operations
+            sudo chown -R $(whoami):$(whoami) .
+            sudo chmod -R u+w .
+            
+            # Deploy
             git fetch --all
             git reset --hard origin/main
             git clean -fd
             git pull origin main
+            
+            # Ensure proper permissions for web server
+            sudo chown -R www-data:www-data .
+            sudo chmod -R 755 .
+            sudo chmod -R 644 *.php
+            sudo chmod -R 644 *.html
 
       - name: Smoke test (HTTP)
         uses: appleboy/ssh-action@v1.0.3
