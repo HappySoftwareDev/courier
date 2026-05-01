@@ -469,15 +469,3 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
     <?php include 'footer_scripts.php'; ?>
 </body>
 </html>
-            
-            <button type="submit" class="btn-register">Register as Driver</button>
-        </form>
-        
-        <div class="signin-link">
-            Already have an account? <a href="index.php">Sign in here</a>
-        </div>
-    </div>
-    
-    <?php include 'footer_scripts.php'; ?>
-</body>
-</html>
