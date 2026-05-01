@@ -32,9 +32,11 @@ if (isset($_POST['email'])) {
         $stmt->execute([$email]);
         $row = $stmt->fetch();
         
-        if ($row && isset($row['Password'])) {
-            // Verify password (assuming it's stored as plain text for now - TODO: use password_hash)
-            if ($row['Password'] === $password) {
+        if ($row) {
+            // Find password field (try multiple possible field names)
+            $storedPassword = $row['Password'] ?? $row['password'] ?? $row['password_hash'] ?? null;
+            
+            if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
                 $_SESSION['CC_Username'] = $email;
                 $_SESSION['user_email'] = $email;
                 $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
@@ -45,10 +47,10 @@ if (isset($_POST['email'])) {
                 header("Location: index.php", true, 302);
                 exit;
             } else {
-                $loginError = "Invalid password";
+                $loginError = "Invalid email or password";
             }
         } else {
-            $loginError = "Email not found";
+            $loginError = "Invalid email or password";
         }
     } catch (Exception $e) {
         $loginError = "Login error: " . $e->getMessage();

@@ -24,31 +24,34 @@ if ($_POST) {
     $username = trim($_POST['uname']);
     $password = trim($_POST['password']);
     try {
-        // Use prepared statement with password as parameter (NOT hardcoded in SQL)
-        $stmt = $DB->prepare("SELECT * FROM `driver` WHERE username = ? AND password = ?");
-        $stmt->execute([$username, $password]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $count = $stmt->rowCount();
-
-        $MM_UserGroup = "";
-        //check if password is correct
-        if ($count == 1) {
-            $_SESSION['MM_Username'] = $username;
-            $_SESSION['MM_UserGroup'] = $username;
-
-            // $go = "new_orders.php";
-            // //set session
-            // header("Location: " . $go);
-            echo "ok";
+        global $DB;
+        
+        // Check driver table - try both possible field names for password
+        $stmt = $DB->prepare("SELECT * FROM `driver` WHERE username = ?");
+        $stmt->execute([$username]);
+        $row = $stmt->fetch();
+        
+        if ($row) {
+            // Try different password field names
+            $storedPassword = $row['password'] ?? $row['Password'] ?? $row['password_hash'] ?? null;
+            
+            if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
+                $_SESSION['MM_Username'] = $username;
+                $_SESSION['MM_UserGroup'] = $username;
+                $_SESSION['driver_id'] = $row['id'] ?? $row['ID'] ?? '';
+                
+                echo "ok";
+                exit;
+            } else {
+                echo "Invalid password";
+            }
         } else {
-            echo "Invalid password";
+            echo "Username not found";
         }
-    } // end of try block
-
-    catch (PDOException $e) {
-        echo $e->getMessage();
+    } catch (Exception $e) {
+        error_log('Driver login error: ' . $e->getMessage());
+        echo "Login error: " . $e->getMessage();
     }
-  } //end post
   
 ?>
 

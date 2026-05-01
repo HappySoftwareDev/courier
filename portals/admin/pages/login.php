@@ -31,20 +31,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             global $DB;
             
             // Check in users table for admin accounts
-            $query = "SELECT * FROM `users` WHERE (email = ? OR username = ?) AND (Password IS NOT NULL OR password_hash IS NOT NULL) LIMIT 1";
+            $query = "SELECT * FROM `users` WHERE email = ? OR username = ? LIMIT 1";
             $stmt = $DB->prepare($query);
             $stmt->execute([$email, $email]);
             $user = $stmt->fetch();
             
             if ($user) {
-                // Check password - support both plain text and hashed passwords
+                // Check password - support multiple field names and both plain text and hashed passwords
                 $passwordMatch = false;
-                if (isset($user['Password']) && $user['Password'] === $password) {
-                    $passwordMatch = true;
-                } elseif (isset($user['password_hash']) && password_verify($password, $user['password_hash'])) {
-                    $passwordMatch = true;
-                } elseif (isset($user['password']) && password_verify($password, $user['password'])) {
-                    $passwordMatch = true;
+                $storedPassword = null;
+                
+                // Try to find password in different field names
+                if (isset($user['Password'])) {
+                    $storedPassword = $user['Password'];
+                } elseif (isset($user['password'])) {
+                    $storedPassword = $user['password'];
+                } elseif (isset($user['password_hash'])) {
+                    $storedPassword = $user['password_hash'];
+                }
+                
+                if ($storedPassword) {
+                    // Try plain text comparison first
+                    if ($storedPassword === $password) {
+                        $passwordMatch = true;
+                    }
+                    // Try password_verify (for bcrypt hashes)
+                    elseif (password_verify($password, $storedPassword)) {
+                        $passwordMatch = true;
+                    }
+                } else {
+                    error_log('Admin login: No password field found for user: ' . $email);
                 }
                 
                 if ($passwordMatch) {
