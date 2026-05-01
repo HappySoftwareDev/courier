@@ -469,36 +469,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
     <?php include 'footer_scripts.php'; ?>
 </body>
 </html>
-        </div>
-        
-        <div id="error"></div>
-        
-        <!-- First Step (Personal Information and Verification) -->
-        <div id="step1">
-            <h4>Become A Driver</h4>
-            <label>Type of Service</label>
-            <select class="input-block-level form-field" name="type_of_service" id="type_of_service" required>
-                <option></option>
-                <option value="Parcel Delivery">Parcel Delivery (Small Cars, Van, Motorbike, Scooter)</option>
-                <option value="Freight Delivery">Freight Delivery (Van, 3 - 32 Tonne, Curtain-side, Box Container Trucks, Flat Beds, Tri-axles etc)</option>
-            </select>
-            <input type="text" id="fullname" name="fullname" placeholder="Full name" class="input-block-level form-field" required>
-            <input type="email" name="email" placeholder="E-mail" class="input-block-level form-field" required>
-
-            <label>City</label>
-            <input type="text" class="input-block-level form-field" placeholder="e.g., Harare, Zimbabwe" id="businessLocation" name="city" onfocus="geolocate()" required>
-
-            <label>Phone Number</label>
-            <select name="countryCode" id="countryCode" class="col-md-03 form-field">
-                <option data-countryCode="" value="">Select Country Code</option>
-                <optgroup label="Other countries">
-                   <option data-countryCode="DZ" value="213">Algeria (+213)</option>
-                                <option data-countryCode="AD" value="376">Andorra (+376)</option>
-                                <option data-countryCode="AO" value="244">Angola (+244)</option>
-                                <option data-countryCode="AI" value="1264">Anguilla (+1264)</option>
-                                <option data-countryCode="AG" value="1268">Antigua &amp; Barbuda (+1268)</option>
-                                <option data-countryCode="AR" value="54">Argentina (+54)</option>
-                                <option data-countryCode="AM" value="374">Armenia (+374)</option>
                                 <option data-countryCode="AW" value="297">Aruba (+297)</option>
                                 <option data-countryCode="AU" value="61">Australia (+61)</option>
                                 <option data-countryCode="AT" value="43">Austria (+43)</option>
