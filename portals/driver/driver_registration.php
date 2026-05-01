@@ -469,20 +469,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "driverForm")) {
     <?php include 'footer_scripts.php'; ?>
 </body>
 </html>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- File Uploads -->
-            <div class="form-group">
-                <label>Profile Picture</label>
-                <input type="file" name="profileImage" accept="image/*">
-            </div>
-            
-            <div class="form-group">
-                <label>Documents</label>
-                <input type="file" name="documents" multiple>
-            </div>
             
             <button type="submit" class="btn-register">Register as Driver</button>
         </form>
