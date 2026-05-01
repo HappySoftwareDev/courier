@@ -235,6 +235,7 @@ class Database {
 
     /**
      * Default configuration
+     * ⚠️ DO NOT MODIFY - This configuration is locked for production
      */
     private function getDefaultConfig() {
         return [

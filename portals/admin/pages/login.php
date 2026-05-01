@@ -30,37 +30,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             global $DB;
             
-            // Check in users table for admin accounts
-            $query = "SELECT * FROM `users` WHERE email = ? OR username = ? LIMIT 1";
+            // Check in admin table for admin accounts (separate from users table)
+            $query = "SELECT * FROM `admin` WHERE Email = ? LIMIT 1";
             $stmt = $DB->prepare($query);
-            $stmt->execute([$email, $email]);
+            $stmt->execute([$email]);
             $user = $stmt->fetch();
             
             if ($user) {
-                // Check password - support multiple field names and both plain text and hashed passwords
+                // Check password - admin table uses Password field with plain text
                 $passwordMatch = false;
-                $storedPassword = null;
                 
-                // Try to find password in different field names
-                if (isset($user['Password'])) {
-                    $storedPassword = $user['Password'];
-                } elseif (isset($user['password'])) {
-                    $storedPassword = $user['password'];
-                } elseif (isset($user['password_hash'])) {
-                    $storedPassword = $user['password_hash'];
-                }
-                
-                if ($storedPassword) {
-                    // Try plain text comparison first
-                    if ($storedPassword === $password) {
-                        $passwordMatch = true;
-                    }
-                    // Try password_verify (for bcrypt hashes)
-                    elseif (password_verify($password, $storedPassword)) {
-                        $passwordMatch = true;
-                    }
+                if (isset($user['Password']) && $user['Password'] === $password) {
+                    $passwordMatch = true;
                 } else {
-                    error_log('Admin login: No password field found for user: ' . $email);
+                    // Also support hashed passwords for future use
+                    if (isset($user['Password']) && password_verify($password, $user['Password'])) {
+                        $passwordMatch = true;
+                    }
                 }
                 
                 if ($passwordMatch) {
