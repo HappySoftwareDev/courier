@@ -98,154 +98,85 @@ $site_name = 'WG ROOS Courier';
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Admin Login | <?php echo $site_name; ?></title>
+    <title>Admin Sign In | <?php echo $site_name; ?></title>
     <?php include '../head.php'; ?>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .login-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .login-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-        }
-        
-        .login-card h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-            font-weight: 600;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.3s;
-        }
-        
-        .btn-login:hover {
-            opacity: 0.9;
-        }
-        
-        .alert {
-            padding: 12px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .login-footer {
-            text-align: center;
-            color: white;
-            font-size: 12px;
-        }
-    </style>
 </head>
-
 <body>
-
-    <div class="login-wrapper">
-        <div class="login-card">
-            <h2>Admin Login</h2>
-            
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger">
-                    <?php echo htmlspecialchars($error); ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success">
-                    <?php echo htmlspecialchars($success); ?>
-                </div>
-            <?php endif; ?>
-            
-            <form method="POST" action="">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="admin@example.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                </div>
-                
-                <button type="submit" class="btn-login">Sign In</button>
-            </form>
-            
-            <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
-                <a href="../../booking/signin.php" style="color: #667eea; text-decoration: none;">Back to Customer Login</a>
-            </p>
-        </div>
-    </div>
-    
-    <div class="login-footer" style="position: fixed; bottom: 20px; width: 100%;">
-        &copy; 2026 <?php echo $site_name; ?>. All rights reserved.
+    <!-- Home Navigation -->
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f3f4f6'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.background='white'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">← Back to Home</a>
     </div>
 
-</body>
-
-</html>
+    <main>
+        <section class="signin-section">
+            <div class="container-fluid">
+                <div class="row g-0 auth-row">
+                    <div class="col-lg-6">
+                        <div class="auth-cover-wrapper bg-primary-100">
+                            <div class="auth-cover">
+                                <div class="title text-center">
+                                    <h1 class="text-primary mb-10">Admin Panel</h1>
+                                    <p class="text-medium">
+                                        Sign in to access the admin dashboard
+                                    </p>
+                                </div>
+                                <div class="cover-image">
+                                    <img src="../assets/images/auth/signin-image.svg" alt="" onerror="this.style.display='none'"/>
+                                </div>
+                                <div class="shape-image">
+                                    <img src="../assets/images/auth/shape.svg" alt="" onerror="this.style.display='none'"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="signin-wrapper">
+                            <div class="form-wrapper">
+                                <h6 class="mb-15">Admin Sign In</h6>
+                                <p class="text-sm mb-25">
+                                    Enter your credentials to access the admin dashboard.
+                                </p>
+                                <?php if (!empty($error)): ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <?php echo htmlspecialchars($error); ?>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (!empty($success)): ?>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <?php echo htmlspecialchars($success); ?>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                <?php endif; ?>
+                                <form method="POST" action="">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-style-1">
+                                                <label for="email" class="form-label">Email Address</label>
+                                                <input type="email" id="email" name="email" placeholder="admin@example.com" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-style-1">
+                                                <label for="password" class="form-label">Password</label>
+                                                <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 mb-10">Sign In</button>
+                                </form>
+                                <div style="text-align: center; margin-top: 15px;">
+                                    <a href="../../booking/signin.php" style="color: #667eea; font-size: 13px; text-decoration: none;">← Back to Customer Login</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
 

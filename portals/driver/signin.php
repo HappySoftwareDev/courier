@@ -17,7 +17,7 @@ $loginSuccess = false;
 if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
     $_SESSION = [];
     session_destroy();
-    session_start(); // Start new session for login page
+    session_start();
 }
 
 // Handle login form
@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             global $DB;
             
-            // Query driver table
             $stmt = $DB->prepare("SELECT * FROM `driver` WHERE username = ?");
             if (!$stmt) {
                 error_log("Driver login: Failed to prepare statement");
@@ -45,13 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log("Driver login: User found = " . ($driver ? 'YES' : 'NO'));
                 
                 if ($driver) {
-                    // Check password - support multiple field names
                     $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
                     
                     error_log("Driver login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
                     
                     if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
-                        // Set session variables
                         $_SESSION['MM_Username'] = $username;
                         $_SESSION['MM_UserGroup'] = $username;
                         $_SESSION['driver_id'] = $driver['driverID'] ?? $driver['id'] ?? '';
@@ -60,10 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         error_log("Driver login: Password matches, session set, redirecting");
                         
-                        $loginSuccess = true;
-                        // Ensure session is written before redirect
                         session_write_close();
-                        // Redirect to dashboard
                         header('Location: index.php', true, 302);
                         exit;
                     } else {
@@ -97,242 +91,80 @@ $site_name = 'WG ROOS Courier';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Sign In | <?php echo $site_name; ?></title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-        }
-        
-        .signin-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            max-width: 900px;
-            width: 100%;
-            margin: 20px;
-        }
-        
-        .signin-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 500px;
-        }
-        
-        @media (max-width: 768px) {
-            .signin-wrapper {
-                grid-template-columns: 1fr;
-            }
-            .signin-branding {
-                display: none;
-            }
-        }
-        
-        .signin-branding {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .signin-branding h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .signin-branding p {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 20px;
-        }
-        
-        .signin-branding-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-        
-        .signin-form {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .signin-form h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .signin-form > p {
-            color: #999;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-            font-size: 14px;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .signin-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-        }
-        
-        .signin-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-        }
-        
-        .signin-button:active {
-            transform: translateY(0);
-        }
-        
-        .error-message {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        
-        .success-message {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        
-        .signin-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            font-size: 13px;
-        }
-        
-        .signin-links a {
-            color: #667eea;
-            text-decoration: none;
-        }
-        
-        .signin-links a:hover {
-            text-decoration: underline;
-        }
-        
-        .home-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        
-        .home-link:hover {
-            background: rgba(255,255,255,0.3);
-        }
-    </style>
+    <?php include 'head.php'; ?>
 </head>
 <body>
-    <a href="../../" class="home-link">← Back Home</a>
-    
-    <div class="signin-container">
-        <div class="signin-wrapper">
-            <!-- Branding Side -->
-            <div class="signin-branding">
-                <div class="signin-branding-icon">🚗</div>
-                <h1><?php echo $site_name; ?></h1>
-                <p>Professional Driver Portal</p>
-                <p style="font-size: 12px; opacity: 0.8;">Manage your deliveries and track earnings in real-time</p>
-            </div>
-            
-            <!-- Login Form Side -->
-            <div class="signin-form">
-                <h2>Driver Sign In</h2>
-                <p>Enter your credentials to access your dashboard</p>
-                
-                <?php if (!empty($loginError)): ?>
-                    <div class="error-message">
-                        <strong>Error:</strong> <?php echo htmlspecialchars($loginError); ?>
+    <!-- Home Navigation -->
+    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f3f4f6'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.background='white'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">← Back to Home</a>
+    </div>
+
+    <main>
+        <section class="signin-section">
+            <div class="container-fluid">
+                <div class="row g-0 auth-row">
+                    <div class="col-lg-6">
+                        <div class="auth-cover-wrapper bg-primary-100">
+                            <div class="auth-cover">
+                                <div class="title text-center">
+                                    <h1 class="text-primary mb-10">Driver Portal</h1>
+                                    <p class="text-medium">
+                                        Sign in to access your driver dashboard
+                                    </p>
+                                </div>
+                                <div class="cover-image">
+                                    <img src="assets/images/auth/signin-image.svg" alt="" onerror="this.style.display='none'"/>
+                                </div>
+                                <div class="shape-image">
+                                    <img src="assets/images/auth/shape.svg" alt="" onerror="this.style.display='none'"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                <?php endif; ?>
-                
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+                    <div class="col-lg-6">
+                        <div class="signin-wrapper">
+                            <div class="form-wrapper">
+                                <h6 class="mb-15">Driver Sign In</h6>
+                                <p class="text-sm mb-25">
+                                    Enter your credentials to access your dashboard.
+                                </p>
+                                <?php if (!empty($loginError)): ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <?php echo htmlspecialchars($loginError); ?>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                <?php endif; ?>
+                                <form method="POST" action="">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-style-1">
+                                                <label for="username" class="form-label">Username</label>
+                                                <input type="text" id="username" name="username" placeholder="Enter your username" class="form-control" required autofocus>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-style-1">
+                                                <label for="password" class="form-label">Password</label>
+                                                <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 mb-10">Sign In</button>
+                                </form>
+                                <div style="text-align: center; margin-top: 15px;">
+                                    <a href="../booking/signin.php" style="color: #667eea; font-size: 13px; text-decoration: none;">← Customer Login</a> | 
+                                    <a href="../admin/pages/login.php" style="color: #667eea; font-size: 13px; text-decoration: none;">Admin Login</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    </div>
-                    
-                    <button type="submit" class="signin-button">Sign In</button>
-                </form>
-                
-                <div class="signin-links">
-                    <a href="../../portals/booking/signin.php">Customer Login</a>
-                    <a href="../../portals/admin/pages/login.php">Admin Login</a>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

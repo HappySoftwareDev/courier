@@ -80,70 +80,154 @@ if (file_exists('pages/site_settings.php')) {
                 <div class="admin-container">
                     
                     <!-- Page Header -->
-                    <div class="page-header">
-                        <h1>Dashboard</h1>
-                        <p>Welcome to WG ROOS Courier Administration Panel</p>
+                    <div class="page-header mb-40">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h1 class="mb-10">Dashboard</h1>
+                                <p class="text-muted">Welcome to WG ROOS Courier Administration Panel</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Statistics Grid -->
-                    <div class="stat-grid">
+                    <div class="row g-4 mb-40">
                         <!-- Total Bookings -->
-                        <div class="stat-card">
-                            <div class="stat-label">📦 Total Bookings</div>
-                            <div class="stat-number"><?php echo $stats['bookings']; ?></div>
-                            <a href="pages/bookings.php" class="stat-link">View all bookings →</a>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h6 class="card-title mb-0">Total Bookings</h6>
+                                        <span class="badge bg-primary"><i class="lni lni-package"></i></span>
+                                    </div>
+                                    <h2 class="card-text text-primary mb-3"><?php echo $stats['bookings']; ?></h2>
+                                    <a href="pages/bookings.php" class="btn btn-sm btn-primary">View all <i class="lni lni-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Pending Bookings -->
-                        <div class="stat-card pending">
-                            <div class="stat-label">⏳ Pending Assignments</div>
-                            <div class="stat-number"><?php echo $stats['pending']; ?></div>
-                            <a href="pages/bookings.php?filter=pending" class="stat-link">Assign drivers →</a>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h6 class="card-title mb-0">Pending Assignments</h6>
+                                        <span class="badge bg-warning"><i class="lni lni-timer"></i></span>
+                                    </div>
+                                    <h2 class="card-text text-warning mb-3"><?php echo $stats['pending']; ?></h2>
+                                    <a href="pages/bookings.php?filter=pending" class="btn btn-sm btn-warning">Assign drivers <i class="lni lni-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Total Users -->
-                        <div class="stat-card users">
-                            <div class="stat-label">👥 Registered Users</div>
-                            <div class="stat-number"><?php echo $stats['users']; ?></div>
-                            <a href="pages/users.php" class="stat-link">Manage users →</a>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h6 class="card-title mb-0">Registered Users</h6>
+                                        <span class="badge bg-info"><i class="lni lni-users"></i></span>
+                                    </div>
+                                    <h2 class="card-text text-info mb-3"><?php echo $stats['users']; ?></h2>
+                                    <a href="pages/users.php" class="btn btn-sm btn-info">Manage users <i class="lni lni-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Active Drivers -->
-                        <div class="stat-card drivers">
-                            <div class="stat-label">🚗 Total Drivers</div>
-                            <div class="stat-number"><?php echo $stats['drivers']; ?></div>
-                            <a href="pages/drivers.php" class="stat-link">Manage drivers →</a>
+                        <!-- Total Drivers -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h6 class="card-title mb-0">Total Drivers</h6>
+                                        <span class="badge bg-success"><i class="lni lni-car"></i></span>
+                                    </div>
+                                    <h2 class="card-text text-success mb-3"><?php echo $stats['drivers']; ?></h2>
+                                    <a href="pages/drivers.php" class="btn btn-sm btn-success">Manage drivers <i class="lni lni-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Quick Actions -->
-                    <h2 style="font-size: 24px; font-weight: 600; margin: 30px 0 20px 0;">Quick Actions</h2>
-                    <div class="action-grid">
-                        <a href="pages/bookings.php" class="action-card">
-                            <div class="action-icon">📋</div>
-                            <h3>Manage Bookings</h3>
-                        </a>
-                        <a href="pages/users.php" class="action-card">
-                            <div class="action-icon">👥</div>
-                            <h3>Manage Users</h3>
-                        </a>
-                        <a href="pages/drivers.php" class="action-card">
-                            <div class="action-icon">🚗</div>
-                            <h3>Manage Drivers</h3>
-                        </a>
-                        <a href="pages/reports.php" class="action-card">
-                            <div class="action-icon">📊</div>
-                            <h3>View Reports</h3>
-                        </a>
-                        <a href="pages/system_health.php" class="action-card">
-                            <div class="action-icon">⚙️</div>
-                            <h3>System Health</h3>
-                        </a>
-                        <a href="pages/settings_management.php" class="action-card">
-                            <div class="action-icon">⚙️</div>
-                            <h3>Settings</h3>
-                        </a>
+                    <h2 class="mb-30">Quick Actions</h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <a href="pages/bookings.php" class="text-decoration-none">
+                                <div class="card h-100 shadow-sm border-0 hover-card">
+                                    <div class="card-body text-center p-4">
+                                        <div class="mb-3" style="font-size: 36px;">📋</div>
+                                        <h5 class="card-title">Manage Bookings</h5>
+                                        <p class="card-text text-muted small">View and manage all bookings</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <a href="pages/users.php" class="text-decoration-none">
+                                <div class="card h-100 shadow-sm border-0 hover-card">
+                                    <div class="card-body text-center p-4">
+                                        <div class="mb-3" style="font-size: 36px;">👥</div>
+                                        <h5 class="card-title">Manage Users</h5>
+                                        <p class="card-text text-muted small">Manage customer accounts</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <a href="pages/drivers.php" class="text-decoration-none">
+                                <div class="card h-100 shadow-sm border-0 hover-card">
+                                    <div class="card-body text-center p-4">
+                                        <div class="mb-3" style="font-size: 36px;">🚗</div>
+                                        <h5 class="card-title">Manage Drivers</h5>
+                                        <p class="card-text text-muted small">Manage driver accounts</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <a href="pages/reports.php" class="text-decoration-none">
+                                <div class="card h-100 shadow-sm border-0 hover-card">
+                                    <div class="card-body text-center p-4">
+                                        <div class="mb-3" style="font-size: 36px;">📊</div>
+                                        <h5 class="card-title">View Reports</h5>
+                                        <p class="card-text text-muted small">Analytics and statistics</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <a href="pages/system_health.php" class="text-decoration-none">
+                                <div class="card h-100 shadow-sm border-0 hover-card">
+                                    <div class="card-body text-center p-4">
+                                        <div class="mb-3" style="font-size: 36px;">⚙️</div>
+                                        <h5 class="card-title">System Health</h5>
+                                        <p class="card-text text-muted small">Check system status</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <a href="pages/settings_management.php" class="text-decoration-none">
+                                <div class="card h-100 shadow-sm border-0 hover-card">
+                                    <div class="card-body text-center p-4">
+                                        <div class="mb-3" style="font-size: 36px;">⚙️</div>
+                                        <h5 class="card-title">Settings</h5>
+                                        <p class="card-text text-muted small">Configure system settings</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
+                    
+                    <style>
+                        .hover-card {
+                            transition: all 0.3s ease;
+                        }
+                        .hover-card:hover {
+                            transform: translateY(-4px);
+                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+                        }
+                    </style>
 
                 </div>
             </div>

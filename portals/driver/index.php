@@ -19,7 +19,7 @@ if (!$isDriver) {
 
 $page_title = 'Dashboard';
 $site_name = 'WG ROOS Courier';
-$driver_name = $_SESSION['driver_name'] ?? 'Driver';
+$driver_name = $_SESSION['driver_name'] ?? $_SESSION['MM_Username'] ?? 'Driver';
 
 // Get driver statistics
 $stats = [
@@ -39,7 +39,7 @@ try {
     $stats['available_orders'] = $result['total'] ?? 0;
     
     // Get active orders
-    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE assign_driver = ? AND status != 'completed'");
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE assign_driver = ? AND status NOT IN ('completed', 'cancelled')");
     $stmt->execute([$_SESSION['MM_Username'] ?? $_SESSION['driver_id'] ?? '']);
     $result = $stmt->fetch();
     $stats['active_orders'] = $result['total'] ?? 0;
@@ -49,6 +49,9 @@ try {
     $stmt->execute([$_SESSION['MM_Username'] ?? $_SESSION['driver_id'] ?? '']);
     $result = $stmt->fetch();
     $stats['completed_orders'] = $result['total'] ?? 0;
+    
+    // Get total earnings (placeholder - would need booking_payment table structure)
+    $stats['total_earnings'] = 0;
     
 } catch (Exception $e) {
     error_log('Driver dashboard stats error: ' . $e->getMessage());
@@ -66,88 +69,171 @@ try {
 <body class="driver-portal">
     
     <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="navbar-content">
-            <h2>🚗 Driver Portal</h2>
-            <div class="navbar-links">
-                <a href="index.php">Dashboard</a>
-                <a href="profile.php">My Profile</a>
-                <a href="signin.php?logout=true" class="logout">Logout</a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'header.php'; ?>
     
-    <main>
-        <div class="driver-container">
-            
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1>Welcome, <?php echo htmlspecialchars($driver_name); ?></h1>
-                <p>Manage your orders and track earnings from your driver dashboard</p>
+    <main class="main-wrapper">
+        <section class="section">
+            <div class="container-fluid">
+                
+                <!-- Page Header -->
+                <div class="page-header mb-40">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h1 class="mb-10">Welcome, <?php echo htmlspecialchars($driver_name); ?>! 🚗</h1>
+                            <p class="text-muted">Manage your delivery orders and track your earnings from your driver dashboard</p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end">
+                            <a href="profile.php" class="btn btn-outline-primary me-2">
+                                <i class="lni lni-user"></i> My Profile
+                            </a>
+                            <a href="signin.php?logout=true" class="btn btn-outline-danger">
+                                <i class="lni lni-exit"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Grid -->
+                <div class="row g-4 mb-40">
+                    <!-- Available Orders Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="card-title mb-0">Available Orders</h6>
+                                    <span class="badge bg-info">
+                                        <i class="lni lni-inbox"></i>
+                                    </span>
+                                </div>
+                                <h2 class="card-text text-primary mb-3"><?php echo $stats['available_orders']; ?></h2>
+                                <a href="available_orders.php" class="btn btn-sm btn-primary">
+                                    View Orders <i class="lni lni-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Orders Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="card-title mb-0">Active Orders</h6>
+                                    <span class="badge bg-warning">
+                                        <i class="lni lni-delivery"></i>
+                                    </span>
+                                </div>
+                                <h2 class="card-text text-warning mb-3"><?php echo $stats['active_orders']; ?></h2>
+                                <a href="accepted_orders.php" class="btn btn-sm btn-warning">
+                                    Manage Orders <i class="lni lni-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Completed Orders Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="card-title mb-0">Completed Orders</h6>
+                                    <span class="badge bg-success">
+                                        <i class="lni lni-check-mark"></i>
+                                    </span>
+                                </div>
+                                <h2 class="card-text text-success mb-3"><?php echo $stats['completed_orders']; ?></h2>
+                                <a href="completedOrders.php" class="btn btn-sm btn-success">
+                                    View History <i class="lni lni-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Earnings Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="card-title mb-0">Total Earnings</h6>
+                                    <span class="badge bg-success">
+                                        <i class="lni lni-money-wallet"></i>
+                                    </span>
+                                </div>
+                                <h2 class="card-text text-success mb-3">ZWL <?php echo number_format($stats['total_earnings'], 2); ?></h2>
+                                <a href="profile.php" class="btn btn-sm btn-outline-success">
+                                    View Earnings <i class="lni lni-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Section -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-light border-bottom">
+                                <h5 class="mb-0">Quick Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <a href="new_orders.php" class="text-decoration-none">
+                                            <div class="p-3 border rounded text-center hover-effect" style="cursor: pointer; transition: all 0.3s ease;">
+                                                <div class="mb-2">
+                                                    <i class="lni lni-briefcase text-primary" style="font-size: 32px;"></i>
+                                                </div>
+                                                <h6>Available Deliveries</h6>
+                                                <p class="text-muted small">Pick up new orders</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <a href="accepted_orders.php" class="text-decoration-none">
+                                            <div class="p-3 border rounded text-center hover-effect" style="cursor: pointer; transition: all 0.3s ease;">
+                                                <div class="mb-2">
+                                                    <i class="lni lni-map text-warning" style="font-size: 32px;"></i>
+                                                </div>
+                                                <h6>Track Orders</h6>
+                                                <p class="text-muted small">View current deliveries</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <a href="profile.php" class="text-decoration-none">
+                                            <div class="p-3 border rounded text-center hover-effect" style="cursor: pointer; transition: all 0.3s ease;">
+                                                <div class="mb-2">
+                                                    <i class="lni lni-user text-success" style="font-size: 32px;"></i>
+                                                </div>
+                                                <h6>My Profile</h6>
+                                                <p class="text-muted small">Update your details</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            <!-- Statistics Grid -->
-            <div class="stat-grid">
-                <!-- Available Orders -->
-                <div class="stat-card">
-                    <div class="stat-label">📋 Available Orders</div>
-                    <div class="stat-number"><?php echo $stats['available_orders']; ?></div>
-                    <a href="available_orders.php" class="stat-link">View available orders →</a>
-                </div>
-
-                <!-- Active Orders -->
-                <div class="stat-card active">
-                    <div class="stat-label">🚗 Active Orders</div>
-                    <div class="stat-number"><?php echo $stats['active_orders']; ?></div>
-                    <a href="my_orders.php" class="stat-link">View my orders →</a>
-                </div>
-
-                <!-- Completed Orders -->
-                <div class="stat-card completed">
-                    <div class="stat-label">✓ Completed Orders</div>
-                    <div class="stat-number"><?php echo $stats['completed_orders']; ?></div>
-                    <a href="my_orders.php?status=completed" class="stat-link">View history →</a>
-                </div>
-
-                <!-- Earnings -->
-                <div class="stat-card earnings">
-                    <div class="stat-label">💰 Total Earnings</div>
-                    <div class="stat-number">K 0</div>
-                    <a href="earnings.php" class="stat-link">View earnings →</a>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <h2 style="font-size: 24px; font-weight: 600; margin: 30px 0 20px 0;">Quick Actions</h2>
-            <div class="action-grid">
-                <a href="available_orders.php" class="action-card">
-                    <div class="action-icon">📋</div>
-                    <h3>Find Orders</h3>
-                </a>
-                <a href="my_orders.php" class="action-card">
-                    <div class="action-icon">🚗</div>
-                    <h3>My Orders</h3>
-                </a>
-                <a href="earnings.php" class="action-card">
-                    <div class="action-icon">💰</div>
-                    <h3>View Earnings</h3>
-                </a>
-                <a href="profile.php" class="action-card">
-                    <div class="action-icon">👤</div>
-                    <h3>My Profile</h3>
-                </a>
-                <a href="support.php" class="action-card">
-                    <div class="action-icon">💬</div>
-                    <h3>Support</h3>
-                </a>
-                <a href="rating.php" class="action-card">
-                    <div class="action-icon">⭐</div>
-                    <h3>My Ratings</h3>
-                </a>
-            </div>
-
-        </div>
+        </section>
     </main>
+
+    <!-- Footer -->
+    <?php include 'footer.php'; ?>
+
+    <!-- Footer Scripts -->
+    <?php include 'footer_scripts.php'; ?>
+
+    <style>
+        .hover-effect:hover {
+            background-color: #f8f9fa !important;
+            border-color: #667eea !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
 
 </body>
 </html>
