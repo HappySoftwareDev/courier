@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
     
+    error_log("Driver login attempt - Username: $username, Password length: " . strlen($password));
+    
     if (empty($username) || empty($password)) {
         $loginError = 'Please enter both username and password';
     } else {
@@ -33,32 +35,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Query driver table
             $stmt = $DB->prepare("SELECT * FROM `driver` WHERE username = ?");
-            $stmt->execute([$username]);
-            $driver = $stmt->fetch();
-            
-            if ($driver) {
-                // Check password - support multiple field names
-                $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
-                
-                if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
-                    // Set session variables
-                    $_SESSION['MM_Username'] = $username;
-                    $_SESSION['MM_UserGroup'] = $username;
-                    $_SESSION['driver_id'] = $driver['driverID'] ?? $driver['id'] ?? '';
-                    $_SESSION['driver_name'] = $driver['name'] ?? 'Driver';
-                    $_SESSION['user_role'] = 'driver';
-                    
-                    $loginSuccess = true;
-                    // Ensure session is written before redirect
-                    session_write_close();
-                    // Redirect to dashboard
-                    header('Location: index.php', true, 302);
-                    exit;
-                } else {
-                    $loginError = 'Invalid username or password';
-                }
+            if (!$stmt) {
+                error_log("Driver login: Failed to prepare statement");
+                $loginError = 'Database error';
             } else {
-                $loginError = 'Driver account not found';
+                $stmt->execute([$username]);
+                $driver = $stmt->fetch();
+                
+                error_log("Driver login: User found = " . ($driver ? 'YES' : 'NO'));
+                
+                if ($driver) {
+                    // Check password - support multiple field names
+                    $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
+                    
+                    error_log("Driver login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
+                    
+                    if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
+                        // Set session variables
+                        $_SESSION['MM_Username'] = $username;
+                        $_SESSION['MM_UserGroup'] = $username;
+                        $_SESSION['driver_id'] = $driver['driverID'] ?? $driver['id'] ?? '';
+                        $_SESSION['driver_name'] = $driver['name'] ?? 'Driver';
+                        $_SESSION['user_role'] = 'driver';
+                        
+                        error_log("Driver login: Password matches, session set, redirecting");
+                        
+                        $loginSuccess = true;
+                        // Ensure session is written before redirect
+                        session_write_close();
+                        // Redirect to dashboard
+                        header('Location: index.php', true, 302);
+                        exit;
+                    } else {
+                        error_log("Driver login: Password mismatch");
+                        $loginError = 'Invalid username or password';
+                    }
+                } else {
+                    error_log("Driver login: No driver found with username $username");
+                    $loginError = 'Driver account not found';
+                }
             }
         } catch (Exception $e) {
             error_log('Driver login error: ' . $e->getMessage());

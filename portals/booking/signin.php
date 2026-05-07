@@ -23,38 +23,54 @@ if (isset($_POST['email'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     
+    error_log("Booking login attempt - Email: $email, Password length: " . strlen($password));
+    
     try {
         global $DB;
         
         // Query users table
         $get = "SELECT * FROM `users` WHERE email = ?";
         $stmt = $DB->prepare($get);
-        $stmt->execute([$email]);
-        $row = $stmt->fetch();
-        
-        if ($row) {
-            // Find password field (try multiple possible field names)
-            $storedPassword = $row['Password'] ?? $row['password'] ?? $row['password_hash'] ?? null;
+        if (!$stmt) {
+            error_log("Booking login: Failed to prepare statement");
+            $loginError = "Database error";
+        } else {
+            $stmt->execute([$email]);
+            $row = $stmt->fetch();
             
-            if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
-                $_SESSION['CC_Username'] = $email;
-                $_SESSION['user_email'] = $email;
-                $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
-                $_SESSION['user_role'] = 'customer';
-                $_SESSION['CC_UserGroup'] = $email;
+            error_log("Booking login: User found = " . ($row ? 'YES' : 'NO'));
+            
+            if ($row) {
+                // Find password field (try multiple possible field names)
+                $storedPassword = $row['Password'] ?? $row['password'] ?? $row['password_hash'] ?? null;
                 
-                // Ensure session is written before redirect
-                session_write_close();
-                // Redirect to booking portal
-                header("Location: index.php", true, 302);
-                exit;
+                error_log("Booking login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
+                
+                if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
+                    $_SESSION['CC_Username'] = $email;
+                    $_SESSION['user_email'] = $email;
+                    $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
+                    $_SESSION['user_role'] = 'customer';
+                    $_SESSION['CC_UserGroup'] = $email;
+                    
+                    error_log("Booking login: Password matches, session set, redirecting");
+                    
+                    // Ensure session is written before redirect
+                    session_write_close();
+                    // Redirect to booking portal
+                    header("Location: index.php", true, 302);
+                    exit;
+                } else {
+                    error_log("Booking login: Password mismatch");
+                    $loginError = "Invalid email or password";
+                }
             } else {
+                error_log("Booking login: No user found with email $email");
                 $loginError = "Invalid email or password";
             }
-        } else {
-            $loginError = "Invalid email or password";
         }
     } catch (Exception $e) {
+        error_log("Booking login error: " . $e->getMessage());
         $loginError = "Login error: " . $e->getMessage();
     }
 }

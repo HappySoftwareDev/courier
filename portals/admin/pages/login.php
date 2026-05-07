@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
     
+    // DEBUG: Log the attempt
+    error_log("Admin login attempt - Email: $email, Password length: " . strlen($password));
+    
     if (empty($email) || empty($password)) {
         $error = 'Please enter both email and password';
     } else {
@@ -33,38 +36,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Check in admin table for admin accounts (separate from users table)
             $query = "SELECT * FROM `admin` WHERE Email = ? LIMIT 1";
             $stmt = $DB->prepare($query);
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
-            
-            if ($user) {
-                // Check password - admin table uses Password field with plain text
-                $passwordMatch = false;
+            if (!$stmt) {
+                error_log("Admin login: Failed to prepare statement");
+                $error = 'Database error during login';
+            } else {
+                $stmt->execute([$email]);
+                $user = $stmt->fetch();
                 
-                if (isset($user['Password']) && $user['Password'] === $password) {
-                    $passwordMatch = true;
-                } else {
-                    // Also support hashed passwords for future use
-                    if (isset($user['Password']) && password_verify($password, $user['Password'])) {
-                        $passwordMatch = true;
-                    }
-                }
+                error_log("Admin login: User found = " . ($user ? 'YES' : 'NO'));
                 
-                if ($passwordMatch) {
-                    // Valid admin user
-                    $_SESSION['CC_Username'] = $email;
-                    $_SESSION['admin_id'] = $user['ID'] ?? $user['Userid'] ?? 1;
-                    $_SESSION['user_role'] = 'admin';
-                    $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
+                if ($user) {
+                    // Check password - admin table uses Password field with plain text
+                    $passwordMatch = false;
+                    $storedPassword = $user['Password'] ?? null;
                     
-                    // Ensure session is written before redirect
-                    session_write_close();
-                    header('Location: ../index.php', true, 302);
-                    exit;
+                    error_log("Admin login: Stored password = " . substr($storedPassword, 0, 10) . "..., Input = " . $password);
+                    
+                    if (isset($user['Password']) && $user['Password'] === $password) {
+                        $passwordMatch = true;
+                        error_log("Admin login: Plain text match = TRUE");
+                    } else {
+                        // Also support hashed passwords for future use
+                        if (isset($user['Password']) && password_verify($password, $user['Password'])) {
+                            $passwordMatch = true;
+                            error_log("Admin login: Hash verify match = TRUE");
+                        } else {
+                            error_log("Admin login: Password match = FALSE");
+                        }
+                    }
+                    
+                    if ($passwordMatch) {
+                        // Valid admin user
+                        $_SESSION['CC_Username'] = $email;
+                        $_SESSION['admin_id'] = $user['ID'] ?? $user['Userid'] ?? 1;
+                        $_SESSION['user_role'] = 'admin';
+                        $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
+                        
+                        error_log("Admin login: Session set, redirecting to ../index.php");
+                        
+                        // Ensure session is written before redirect
+                        session_write_close();
+                        header('Location: ../index.php', true, 302);
+                        exit;
+                    } else {
+                        $error = 'Invalid email or password';
+                    }
                 } else {
+                    error_log("Admin login: No user found with email $email");
                     $error = 'Invalid email or password';
                 }
-            } else {
-                $error = 'Invalid email or password';
             }
         } catch (Exception $e) {
             error_log('Admin login error: ' . $e->getMessage());
