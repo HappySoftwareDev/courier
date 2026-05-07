@@ -179,4 +179,17 @@ $site_name = 'WG ROOS Courier';
         </section>
     </main>
 
+    <?php include '../footerscripts.php'; ?>
+
+</body>
+</html>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
 

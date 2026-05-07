@@ -154,10 +154,21 @@ $site_name = 'WG ROOS Courier';
                                     <button type="submit" class="btn btn-primary w-100 mb-10">Sign In</button>
                                 </form>
                                 <div style="text-align: center; margin-top: 15px;">
-                                    <a href="../booking/signin.php" style="color: #667eea; font-size: 13px; text-decoration: none;">← Customer Login</a> | 
-                                    <a href="../admin/pages/login.php" style="color: #667eea; font-size: 13px; text-decoration: none;">Admin Login</a>
+                                    <a href="../../booking/signin.php" style="color: #667eea; font-size: 13px; text-decoration: none;">← Customer Login</a> | 
+                                    <a href="../pages/login.php" style="color: #667eea; font-size: 13px; text-decoration: none;">Admin Login</a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <?php include '../footerscripts.php'; ?>
+
+</body>
+</html>
                         </div>
                     </div>
                 </div>

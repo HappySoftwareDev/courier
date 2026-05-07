@@ -260,6 +260,10 @@ $loginError = $loginError ?? '';
                 x.type = "password";
             }
         }
+    </script>
+
+</body>
+</html>
         // Load Firebase configuration from site management
         <?php include '../../web_push/firebase-config.php'; ?>
         // Initialize Firebase
