@@ -1,499 +1,198 @@
 <?php
 /**
- * Admin Reports & Analytics Dashboard
- * Comprehensive reporting and analytics for the courier platform
+ * Admin Reports & Analytics Page
  */
 
 require_once '../../../config/bootstrap.php';
 require_once 'login-security.php';
 
-// Set variables for layout
 $page_title = 'Reports & Analytics';
 $site_name = 'WG ROOS Courier Admin';
 
-// Make sure functions are available
-if (!function_exists('getCountTotalSales')) {
-    require_once '../../../function.php';
-}
-
-// Get selected report type and date range
-$reportType = $_GET['type'] ?? 'overview';
-$dateFrom = $_GET['from'] ?? date('Y-m-01');
-$dateTo = $_GET['to'] ?? date('Y-m-d');
-
-// Initialize data arrays
-$reportData = [];
-$chartData = [];
+// Get statistics
+$totalBookings = $totalUsers = $totalDrivers = $totalRevenue = 0;
+$completedBookings = $pendingBookings = 0;
 
 try {
     global $DB;
     
-    // Build date condition
-    $dateCondition = " AND DATE(created_at) >= ? AND DATE(created_at) <= ?";
-    $dateParams = [$dateFrom, $dateTo];
+    // Total bookings
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings");
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $totalBookings = $result['total'] ?? 0;
     
-    // 1. Sales Overview
-    $salesQuery = "SELECT 
-                    COUNT(*) as total_bookings, 
-                    SUM(Total_price) as total_revenue,
-                    AVG(Total_price) as avg_booking_value,
-                    COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_bookings,
-                    COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled_bookings
-                   FROM bookings
-                   WHERE 1=1" . $dateCondition;
+    // Completed bookings
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE status = 'completed'");
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $completedBookings = $result['total'] ?? 0;
     
-    $stmt = $DB->prepare($salesQuery);
-    $stmt->execute($dateParams);
-    $reportData['sales'] = $stmt->fetch();
+    // Pending bookings
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE assign_driver IS NULL OR assign_driver = ''");
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $pendingBookings = $result['total'] ?? 0;
     
-    // 2. Revenue by Status
-    $revenueByStatusQuery = "SELECT 
-                            status, 
-                            COUNT(*) as count, 
-                            SUM(Total_price) as revenue
-                           FROM bookings
-                           WHERE 1=1" . $dateCondition . "
-                           GROUP BY status";
+    // Total users
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM users");
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $totalUsers = $result['total'] ?? 0;
     
-    $stmt = $DB->prepare($revenueByStatusQuery);
-    $stmt->execute($dateParams);
-    $reportData['revenueByStatus'] = $stmt->fetchAll();
-    
-    // 3. Top Routes (by number of bookings)
-    $topRoutesQuery = "SELECT 
-                      pickup_location, 
-                      delivery_location,
-                      COUNT(*) as bookings,
-                      SUM(Total_price) as revenue
-                     FROM bookings
-                     WHERE 1=1" . $dateCondition . "
-                     GROUP BY pickup_location, delivery_location
-                     ORDER BY bookings DESC
-                     LIMIT 10";
-    
-    $stmt = $DB->prepare($topRoutesQuery);
-    $stmt->execute($dateParams);
-    $reportData['topRoutes'] = $stmt->fetchAll();
-    
-    // 4. Driver Performance
-    $driverPerformanceQuery = "SELECT 
-                             b.assign_driver,
-                             COUNT(*) as completed_deliveries,
-                             SUM(CASE WHEN b.status = 'completed' THEN 1 ELSE 0 END) as successful_deliveries,
-                             AVG(CASE WHEN b.status = 'completed' THEN 1 ELSE 0 END) * 100 as success_rate,
-                             SUM(b.Total_price) as total_revenue
-                            FROM bookings b
-                            WHERE b.assign_driver IS NOT NULL AND b.assign_driver != ''" . $dateCondition . "
-                            GROUP BY b.assign_driver
-                            ORDER BY completed_deliveries DESC
-                            LIMIT 10";
-    
-    $stmt = $DB->prepare($driverPerformanceQuery);
-    $stmt->execute($dateParams);
-    $reportData['driverPerformance'] = $stmt->fetchAll();
-    
-    // 5. Customer Metrics
-    $customerMetricsQuery = "SELECT 
-                           COUNT(DISTINCT username) as total_customers,
-                           COUNT(DISTINCT CASE WHEN status = 'completed' THEN username END) as active_customers,
-                           COUNT(*) as total_bookings
-                          FROM bookings
-                          WHERE 1=1" . $dateCondition;
-    
-    $stmt = $DB->prepare($customerMetricsQuery);
-    $stmt->execute($dateParams);
-    $reportData['customers'] = $stmt->fetch();
-    
-    // 6. Daily Revenue Trend (for chart)
-    $dailyTrendQuery = "SELECT 
-                       DATE(created_at) as date,
-                       COUNT(*) as bookings,
-                       SUM(Total_price) as revenue
-                      FROM bookings
-                      WHERE 1=1" . $dateCondition . "
-                      GROUP BY DATE(created_at)
-                      ORDER BY date ASC";
-    
-    $stmt = $DB->prepare($dailyTrendQuery);
-    $stmt->execute($dateParams);
-    $reportData['dailyTrend'] = $stmt->fetchAll();
-    
-    // 7. Vehicle Type Distribution
-    $vehicleTypeQuery = "SELECT 
-                       vehicle_type,
-                       COUNT(*) as count,
-                       SUM(Total_price) as revenue
-                      FROM bookings
-                      WHERE 1=1" . $dateCondition . "
-                      GROUP BY vehicle_type
-                      ORDER BY count DESC";
-    
-    $stmt = $DB->prepare($vehicleTypeQuery);
-    $stmt->execute($dateParams);
-    $reportData['vehicleTypes'] = $stmt->fetchAll();
+    // Total drivers
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM driver");
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $totalDrivers = $result['total'] ?? 0;
     
 } catch (Exception $e) {
-    error_log('Reports query error: ' . $e->getMessage());
+    error_log('Reports stats error: ' . $e->getMessage());
 }
 
-// Prepare chart data
-if (!empty($reportData['dailyTrend'])) {
-    $dates = [];
-    $revenues = [];
-    foreach ($reportData['dailyTrend'] as $day) {
-        $dates[] = $day['date'];
-        $revenues[] = $day['revenue'];
-    }
-    $chartData['dailyTrend'] = [
-        'dates' => json_encode($dates),
-        'revenues' => json_encode($revenues)
-    ];
-}
+$completionRate = $totalBookings > 0 ? round(($completedBookings / $totalBookings) * 100, 1) : 0;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
-    <?php include '../head.php'; ?>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <?php include 'head.php'; ?>
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .report-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
-
 <body class="admin-portal">
-
     <div class="page-container">
-        
         <!-- Sidebar Navigation -->
         <?php include '../sidebar-nav-menu.php'; ?>
         
         <!-- Main Content Wrapper -->
         <div class="main-content">
-            
             <!-- Header -->
             <?php include '../header.php'; ?>
             
-            <!-- Main Content Area -->
+            <!-- Main Content -->
             <main class="main-wrapper">
                 <section class="section">
-                    <div class="container-fluid">
+                    <div class="container-fluid" style="padding: 30px;">
                         
-                        <!-- Page Header -->
-                        <div class="page-header mb-40">
-                            <h1><?php echo $page_title; ?></h1>
-                            <p class="text-muted">Analytics and performance metrics for your courier platform</p>
+                        <!-- Page Title -->
+                        <div style="margin-bottom: 30px;">
+                            <h1 style="font-size: 32px; font-weight: bold; margin: 0;">Reports & Analytics</h1>
+                            <p style="color: #666; margin: 5px 0 0 0;">Key performance indicators and system statistics</p>
                         </div>
 
-                        <!-- Date Range Filter -->
-                        <div class="card mb-40">
-                            <div class="card-body">
-                                <form method="GET" action="" class="row align-items-end gap-3">
-                                    <div class="col-md-3">
-                                        <label class="form-label">From Date</label>
-                                        <input type="date" name="from" class="form-control" value="<?php echo htmlspecialchars($dateFrom); ?>">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">To Date</label>
-                                        <input type="date" name="to" class="form-control" value="<?php echo htmlspecialchars($dateTo); ?>">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button type="submit" class="btn btn-primary">Filter Report</button>
-                                        <a href="reports.php" class="btn btn-secondary">Reset</a>
-                                    </div>
-                                </form>
+                        <!-- Statistics Grid -->
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">Total Bookings</div>
+                                <div class="stat-number"><?php echo $totalBookings; ?></div>
                             </div>
-                        </div>
-
-                        <!-- KPI Cards -->
-                        <div class="row gap-3 mb-40">
-                            <div class="col-md-3">
-                                <div class="card stat-card border-0">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="stat-icon bg-primary">
-                                                <i class="lni lni-package"></i>
-                                            </div>
-                                            <div class="ms-3">
-                                                <h6 class="text-muted mb-1">Total Bookings</h6>
-                                                <h3 class="mb-0"><?php echo htmlspecialchars($reportData['sales']['total_bookings'] ?? 0); ?></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Completed</div>
+                                <div class="stat-number"><?php echo $completedBookings; ?></div>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="card stat-card border-0">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="stat-icon bg-success">
-                                                <i class="lni lni-money-location"></i>
-                                            </div>
-                                            <div class="ms-3">
-                                                <h6 class="text-muted mb-1">Total Revenue</h6>
-                                                <h3 class="mb-0">$<?php echo number_format($reportData['sales']['total_revenue'] ?? 0, 2); ?></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pending</div>
+                                <div class="stat-number"><?php echo $pendingBookings; ?></div>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="card stat-card border-0">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="stat-icon bg-info">
-                                                <i class="lni lni-checkmark-circle"></i>
-                                            </div>
-                                            <div class="ms-3">
-                                                <h6 class="text-muted mb-1">Completed</h6>
-                                                <h3 class="mb-0"><?php echo htmlspecialchars($reportData['sales']['completed_bookings'] ?? 0); ?></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="card stat-card border-0">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="stat-icon bg-warning">
-                                                <i class="lni lni-users"></i>
-                                            </div>
-                                            <div class="ms-3">
-                                                <h6 class="text-muted mb-1">Active Customers</h6>
-                                                <h3 class="mb-0"><?php echo htmlspecialchars($reportData['customers']['active_customers'] ?? 0); ?></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Completion Rate</div>
+                                <div class="stat-number"><?php echo $completionRate; ?>%</div>
                             </div>
                         </div>
 
-                        <!-- Revenue Trend Chart -->
-                        <?php if (!empty($reportData['dailyTrend'])): ?>
-                        <div class="card mb-40">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Revenue Trend</h5>
+                        <!-- Additional Statistics -->
+                        <div class="stat-grid">
+                            <div class="stat-item" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                <div class="stat-label">Total Users</div>
+                                <div class="stat-number"><?php echo $totalUsers; ?></div>
                             </div>
-                            <div class="card-body">
-                                <canvas id="revenueChart" height="80"></canvas>
+                            <div class="stat-item" style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);">
+                                <div class="stat-label">Total Drivers</div>
+                                <div class="stat-number"><?php echo $totalDrivers; ?></div>
                             </div>
-                        </div>
-                        <?php endif; ?>
-
-                        <div class="row gap-3 mb-40">
-                            <!-- Revenue by Status -->
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">Bookings by Status</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Status</th>
-                                                        <th>Count</th>
-                                                        <th>Revenue</th>
-                                                        <th>%</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php 
-                                                    $totalBookings = $reportData['sales']['total_bookings'] ?? 1;
-                                                    foreach ($reportData['revenueByStatus'] ?? [] as $status): 
-                                                    ?>
-                                                        <tr>
-                                                            <td>
-                                                                <span class="badge 
-                                                                    <?php 
-                                                                    if ($status['status'] === 'completed') echo 'bg-success';
-                                                                    elseif ($status['status'] === 'pending') echo 'bg-warning';
-                                                                    elseif ($status['status'] === 'cancelled') echo 'bg-danger';
-                                                                    else echo 'bg-info';
-                                                                    ?>">
-                                                                    <?php echo htmlspecialchars($status['status']); ?>
-                                                                </span>
-                                                            </td>
-                                                            <td><?php echo htmlspecialchars($status['count']); ?></td>
-                                                            <td>$<?php echo number_format($status['revenue'] ?? 0, 2); ?></td>
-                                                            <td><?php echo round(($status['count'] / $totalBookings) * 100, 1); ?>%</td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stat-item" style="background: linear-gradient(135deg, #17a2b8 0%, #00bcd4 100%);">
+                                <div class="stat-label">Users/Drivers Ratio</div>
+                                <div class="stat-number"><?php echo $totalDrivers > 0 ? round($totalUsers / $totalDrivers, 1) : 0; ?>:1</div>
                             </div>
-
-                            <!-- Vehicle Type Distribution -->
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">Vehicle Type Distribution</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Vehicle Type</th>
-                                                        <th>Bookings</th>
-                                                        <th>Revenue</th>
-                                                        <th>%</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php 
-                                                    foreach ($reportData['vehicleTypes'] ?? [] as $vtype):
-                                                    ?>
-                                                        <tr>
-                                                            <td><?php echo htmlspecialchars($vtype['vehicle_type'] ?? 'Unknown'); ?></td>
-                                                            <td><?php echo htmlspecialchars($vtype['count']); ?></td>
-                                                            <td>$<?php echo number_format($vtype['revenue'] ?? 0, 2); ?></td>
-                                                            <td><?php echo round(($vtype['count'] / $totalBookings) * 100, 1); ?>%</td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stat-item" style="background: linear-gradient(135deg, #e83e8c 0%, #d63384 100%);">
+                                <div class="stat-label">Avg per Driver</div>
+                                <div class="stat-number"><?php echo $totalDrivers > 0 ? round($totalBookings / $totalDrivers, 1) : 0; ?></div>
                             </div>
                         </div>
 
-                        <!-- Top Routes -->
-                        <div class="card mb-40">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Top Routes</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Pickup Location</th>
-                                                <th>Delivery Location</th>
-                                                <th>Bookings</th>
-                                                <th>Revenue</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($reportData['topRoutes'] ?? [] as $route): ?>
-                                                <tr>
-                                                    <td><?php echo htmlspecialchars($route['pickup_location'] ?? 'N/A'); ?></td>
-                                                    <td><?php echo htmlspecialchars($route['delivery_location'] ?? 'N/A'); ?></td>
-                                                    <td><?php echo htmlspecialchars($route['bookings']); ?></td>
-                                                    <td>$<?php echo number_format($route['revenue'] ?? 0, 2); ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Driver Performance -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Top Performing Drivers</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Driver</th>
-                                                <th>Completed Deliveries</th>
-                                                <th>Success Rate</th>
-                                                <th>Total Revenue</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($reportData['driverPerformance'] ?? [] as $driver): ?>
-                                                <tr>
-                                                    <td><strong><?php echo htmlspecialchars($driver['assign_driver'] ?? 'Unknown'); ?></strong></td>
-                                                    <td><?php echo htmlspecialchars($driver['successful_deliveries'] ?? 0); ?></td>
-                                                    <td>
-                                                        <div class="progress" style="height: 20px;">
-                                                            <div class="progress-bar bg-success" role="progressbar" 
-                                                                 style="width: <?php echo number_format($driver['success_rate'] ?? 0, 0); ?>%"
-                                                                 aria-valuenow="<?php echo number_format($driver['success_rate'] ?? 0, 0); ?>" 
-                                                                 aria-valuemin="0" aria-valuemax="100">
-                                                                <?php echo number_format($driver['success_rate'] ?? 0, 1); ?>%
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>$<?php echo number_format($driver['total_revenue'] ?? 0, 2); ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <!-- Summary Report -->
+                        <div class="report-card">
+                            <h2 style="margin-top: 0;">System Summary</h2>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 12px 0;"><strong>Total Bookings</strong></td>
+                                    <td style="padding: 12px 0; text-align: right;"><?php echo $totalBookings; ?></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 12px 0;"><strong>Completed Bookings</strong></td>
+                                    <td style="padding: 12px 0; text-align: right;"><?php echo $completedBookings; ?> (<?php echo $completionRate; ?>%)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 12px 0;"><strong>Pending Bookings</strong></td>
+                                    <td style="padding: 12px 0; text-align: right;"><?php echo $pendingBookings; ?></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e9ecef;">
+                                    <td style="padding: 12px 0;"><strong>Registered Users</strong></td>
+                                    <td style="padding: 12px 0; text-align: right;"><?php echo $totalUsers; ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 0;"><strong>Active Drivers</strong></td>
+                                    <td style="padding: 12px 0; text-align: right;"><?php echo $totalDrivers; ?></td>
+                                </tr>
+                            </table>
                         </div>
 
                     </div>
                 </section>
             </main>
 
+            <!-- Footer -->
+            <?php include '../footer.php'; ?>
         </div>
-
     </div>
 
-    <!-- Footer -->
-    <?php include '../footer.php'; ?>
-
-    <!-- Footer Scripts -->
     <?php include '../footerscripts.php'; ?>
-
-    <script>
-        // Revenue Trend Chart
-        <?php if (!empty($chartData['dailyTrend'])): ?>
-        const ctx = document.getElementById('revenueChart');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: <?php echo $chartData['dailyTrend']['dates']; ?>,
-                    datasets: [{
-                        label: 'Daily Revenue',
-                        data: <?php echo $chartData['dailyTrend']['revenues']; ?>,
-                        borderColor: '#3366cc',
-                        backgroundColor: 'rgba(51, 102, 204, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        <?php endif; ?>
-    </script>
-
 </body>
-
 </html>
