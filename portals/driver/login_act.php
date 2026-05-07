@@ -40,6 +40,8 @@ if ($_POST) {
                 $_SESSION['MM_UserGroup'] = $username;
                 $_SESSION['driver_id'] = $row['id'] ?? $row['ID'] ?? '';
                 
+                // Ensure session is written before responding
+                session_write_close();
                 echo "ok";
                 exit;
             } else {

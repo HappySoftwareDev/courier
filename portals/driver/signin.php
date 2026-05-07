@@ -49,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = 'driver';
                     
                     $loginSuccess = true;
+                    // Ensure session is written before redirect
+                    session_write_close();
                     // Redirect to dashboard
                     header('Location: index.php', true, 302);
                     exit;

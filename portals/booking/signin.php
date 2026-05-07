@@ -43,6 +43,8 @@ if (isset($_POST['email'])) {
                 $_SESSION['user_role'] = 'customer';
                 $_SESSION['CC_UserGroup'] = $email;
                 
+                // Ensure session is written before redirect
+                session_write_close();
                 // Redirect to booking portal
                 header("Location: index.php", true, 302);
                 exit;

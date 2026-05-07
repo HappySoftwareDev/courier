@@ -56,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_role'] = 'admin';
                     $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
                     
+                    // Ensure session is written before redirect
+                    session_write_close();
                     header('Location: ../index.php', true, 302);
                     exit;
                 } else {
