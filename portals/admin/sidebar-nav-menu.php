@@ -34,22 +34,22 @@
                 </a>
                 <ul id="ddmenu_2" class="collapse dropdown-nav">
                     <li>
-                        <a href="bookings.php">
+                        <a href="pages/bookings.php">
                             <i class="lni lni-arrow-right"></i> All Bookings
                         </a>
                     </li>
                     <li>
-                        <a href="bookings.php?filter=pending">
+                        <a href="pages/bookings.php?filter=pending">
                             <i class="lni lni-arrow-right"></i> Pending
                         </a>
                     </li>
                     <li>
-                        <a href="bookings.php?filter=assigned">
+                        <a href="pages/bookings.php?filter=assigned">
                             <i class="lni lni-arrow-right"></i> Assigned
                         </a>
                     </li>
                     <li>
-                        <a href="bookings.php?filter=completed">
+                        <a href="pages/bookings.php?filter=completed">
                             <i class="lni lni-arrow-right"></i> Completed
                         </a>
                     </li>
@@ -64,17 +64,17 @@
                 </a>
                 <ul id="ddmenu_3" class="collapse dropdown-nav">
                     <li>
-                        <a href="users.php">
+                        <a href="pages/users.php">
                             <i class="lni lni-arrow-right"></i> All Users
                         </a>
                     </li>
                     <li>
-                        <a href="users.php?type=customers">
+                        <a href="pages/users.php?type=customers">
                             <i class="lni lni-arrow-right"></i> Customers
                         </a>
                     </li>
                     <li>
-                        <a href="users.php?type=partners">
+                        <a href="pages/users.php?type=partners">
                             <i class="lni lni-arrow-right"></i> Partners
                         </a>
                     </li>
@@ -89,17 +89,17 @@
                 </a>
                 <ul id="ddmenu_4" class="collapse dropdown-nav">
                     <li>
-                        <a href="drivers.php">
+                        <a href="pages/drivers.php">
                             <i class="lni lni-arrow-right"></i> All Drivers
                         </a>
                     </li>
                     <li>
-                        <a href="drivers.php?status=active">
+                        <a href="pages/drivers.php?status=active">
                             <i class="lni lni-arrow-right"></i> Active
                         </a>
                     </li>
                     <li>
-                        <a href="drivers.php?status=inactive">
+                        <a href="pages/drivers.php?status=inactive">
                             <i class="lni lni-arrow-right"></i> Inactive
                         </a>
                     </li>
@@ -114,17 +114,17 @@
                 </a>
                 <ul id="ddmenu_5" class="collapse dropdown-nav">
                     <li>
-                        <a href="settings.php">
+                        <a href="pages/site_settings.php">
                             <i class="lni lni-arrow-right"></i> General Settings
                         </a>
                     </li>
                     <li>
-                        <a href="settings.php?tab=payment">
+                        <a href="pages/site_settings.php?tab=payment">
                             <i class="lni lni-arrow-right"></i> Payment Methods
                         </a>
                     </li>
                     <li>
-                        <a href="settings.php?tab=api">
+                        <a href="pages/site_settings.php?tab=api">
                             <i class="lni lni-arrow-right"></i> API Keys
                         </a>
                     </li>
@@ -133,7 +133,7 @@
 
             <!-- Reports & Analytics -->
             <li class="nav-item">
-                <a href="reports.php">
+                <a href="pages/reports.php">
                     <span class="icon"><i class="lni lni-bar-chart"></i></span>
                     <span class="text">Reports</span>
                 </a>
@@ -141,7 +141,7 @@
 
             <!-- Commissions -->
             <li class="nav-item">
-                <a href="commissions.php">
+                <a href="pages/commissions.php">
                     <span class="icon"><i class="lni lni-dollar"></i></span>
                     <span class="text">Commissions</span>
                 </a>
@@ -155,12 +155,12 @@
                 </a>
                 <ul id="ddmenu_6" class="collapse dropdown-nav">
                     <li>
-                        <a href="system_health.php">
+                        <a href="pages/system_health.php">
                             <i class="lni lni-arrow-right"></i> System Health
                         </a>
                     </li>
                     <li>
-                        <a href="activity_logs.php">
+                        <a href="pages/activity_logs.php">
                             <i class="lni lni-arrow-right"></i> Activity Logs
                         </a>
                     </li>
@@ -172,7 +172,7 @@
 
             <!-- Admin Profile -->
             <li class="nav-item">
-                <a href="profile.php">
+                <a href="pages/profile.php">
                     <span class="icon"><i class="lni lni-user"></i></span>
                     <span class="text">My Profile</span>
                 </a>
@@ -180,7 +180,7 @@
 
             <!-- Logout -->
             <li class="nav-item">
-                <a href="signin-security.php?doLogout=true">
+                <a href="pages/login-security.php?doLogout=true">
                     <span class="icon"><i class="lni lni-arrow-left"></i></span>
                     <span class="text">Logout</span>
                 </a>
