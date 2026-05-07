@@ -1,322 +1,341 @@
-<?php 
+<?php
+/**
+ * Driver Portal Dashboard
+ * Main entry point for driver panel
+ */
+
 require_once '../../config/bootstrap.php';
-require_once '../../function.php';
 
-// Get site settings for branding
-$site_name = defined('SITE_NAME') ? SITE_NAME : 'WG ROOS Courier';
-$logo = 'logo.png';
+// Check driver authentication
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Handle driver login
-$loginError = '';
-if (!empty($_POST['email'])) {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+$isDriver = isset($_SESSION['driver_id']) || (isset($_SESSION['MM_Username']) && !empty($_SESSION['MM_Username']));
+if (!$isDriver) {
+    header('Location: signin.php?login_required=1', true, 302);
+    exit;
+}
+
+$page_title = 'Dashboard';
+$site_name = 'WG ROOS Courier';
+$driver_name = $_SESSION['driver_name'] ?? 'Driver';
+
+// Get driver statistics
+$stats = [
+    'available_orders' => 0,
+    'active_orders' => 0,
+    'completed_orders' => 0,
+    'total_earnings' => 0
+];
+
+try {
+    global $DB;
     
-    try {
-        global $DB;
-        
-        // Query driver table
-        $query = "SELECT * FROM `driver` WHERE email = ? OR username = ?";
-        $stmt = $DB->prepare($query);
-        $stmt->execute([$email, $email]);
-        $driver = $stmt->fetch();
-        
-        if ($driver) {
-            // Verify password (check both Password and password fields for compatibility)
-            $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
-            if ($storedPassword === $password) {
-                session_start();
-                $_SESSION['CC_Username'] = $email;
-                $_SESSION['user_email'] = $email;
-                $_SESSION['driverID'] = $driver['ID'] ?? $driver['id'] ?? '';
-                $_SESSION['driver_id'] = $_SESSION['driverID'];
-                $_SESSION['driver_name'] = $driver['name'] ?? $driver['Name'] ?? 'Driver';
-                $_SESSION['user_role'] = 'driver';
-                $_SESSION['MM_Username'] = $email;
-                $_SESSION['MM_UserGroup'] = $email;
-                
-                // Redirect to dashboard
-                header("Location: new_orders.php", true, 302);
-                exit;
-            } else {
-                $loginError = "Invalid password";
-            }
-        } else {
-            $loginError = "Driver account not found";
-        }
-    } catch (Exception $e) {
-        $loginError = "Login error: " . $e->getMessage();
-    }
+    // Get available orders
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE (assign_driver IS NULL OR assign_driver = '')");
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $stats['available_orders'] = $result['total'] ?? 0;
+    
+    // Get active orders
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE assign_driver = ? AND status != 'completed'");
+    $stmt->execute([$_SESSION['MM_Username'] ?? $_SESSION['driver_id'] ?? '']);
+    $result = $stmt->fetch();
+    $stats['active_orders'] = $result['total'] ?? 0;
+    
+    // Get completed orders
+    $stmt = $DB->prepare("SELECT COUNT(*) as total FROM bookings WHERE assign_driver = ? AND status = 'completed'");
+    $stmt->execute([$_SESSION['MM_Username'] ?? $_SESSION['driver_id'] ?? '']);
+    $result = $stmt->fetch();
+    $stats['completed_orders'] = $result['total'] ?? 0;
+    
+} catch (Exception $e) {
+    error_log('Driver dashboard stats error: ' . $e->getMessage());
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Include common meta and links -->
-    <?php include 'head.php'; ?>
-    <title>Driver Login | <?php echo $site_name ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
     <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .login-wrapper {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            max-width: 900px;
-            width: 100%;
-        }
-        
-        .login-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 500px;
-        }
-        
-        .login-cover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .login-cover h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        .login-cover p {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .login-form-area {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .login-form-area h6 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 15px;
             color: #333;
         }
         
-        .login-form-area > p {
-            font-size: 13px;
-            color: #9ca3af;
-            margin-bottom: 25px;
+        .driver-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
         
-        .input-style-1,
-        .input-style-2 {
-            margin-bottom: 20px;
+        .page-header {
+            margin-bottom: 40px;
         }
         
-        .input-style-1 label,
-        .input-style-2 label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #374151;
+        .page-header h1 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .input-style-1 input,
-        .input-style-2 input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #e5e7eb;
-            border-radius: 5px;
-            font-size: 13px;
-            outline: none;
+        .page-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            border-left: 5px solid var(--primary);
         }
         
-        .input-style-1 input:focus,
-        .input-style-2 input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .stat-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
         }
         
-        .input-style-2 {
-            position: relative;
+        .stat-card.active {
+            border-left-color: var(--success);
         }
         
-        .input-style-2 .icon {
-            position: absolute;
-            right: 15px;
-            top: 35px;
-            cursor: pointer;
-            color: #9ca3af;
+        .stat-card.completed {
+            border-left-color: var(--info);
         }
         
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 25px;
+        .stat-card.earnings {
+            border-left-color: var(--warning);
         }
         
-        .forgot-password a {
-            font-size: 12px;
-            color: #667eea;
+        .stat-label {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+        
+        .stat-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .stat-link:hover {
+            text-decoration: underline;
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .action-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .action-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h2 {
+            font-size: 24px;
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .navbar-links a {
+            color: #333;
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.2s;
         }
         
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
+        .navbar-links a:hover {
+            color: var(--primary);
         }
         
-        .btn-signin {
-            flex: 1;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-        
-        .btn-signin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #6b7280;
-        }
-        
-        .signup-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .alert {
-            margin-bottom: 20px;
-            padding: 12px 15px;
-            border-radius: 5px;
-            font-size: 13px;
-        }
-        
-        @media (max-width: 768px) {
-            .login-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .login-cover {
-                display: none;
-            }
-            
-            .login-form-area {
-                padding: 30px 25px;
-            }
+        .navbar-links a.logout {
+            color: #dc3545;
         }
     </style>
 </head>
-<body>
-    <!-- Home Navigation -->
-    <div style="position: absolute; top: 20px; left: 20px; z-index: 100;">
-        <a href="../../" class="btn" style="background: white; color: #667eea; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 13px; display: inline-block; transition: all 0.3s ease;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">← Back to Home</a>
-    </div>
+<body class="driver-portal">
     
-    <div class="login-wrapper">
-        <div class="login-container">
-            <div class="login-cover">
-                <div>
-                    <h2>Welcome Back</h2>
-                    <p>Sign in to your driver account to manage deliveries, track earnings, and more.</p>
-                    <div style="margin-top: 40px;">
-                        <i class="lni lni-driver" style="font-size: 60px;"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="login-form-area">
-                <h6>Driver Sign In</h6>
-                <p>Enter your credentials to continue</p>
-                
-                <?php if (!empty($loginError)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="lni lni-close-line" style="margin-right: 8px;"></i>
-                        <?php echo htmlspecialchars($loginError); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-                
-                <form action="index.php" method="post" role="form">
-                    <div class="input-style-1">
-                        <label>Email or Username</label>
-                        <input type="text" name="email" placeholder="Enter your email or username" required />
-                    </div>
-                    
-                    <div class="input-style-2">
-                        <label>Password</label>
-                        <input type="password" name="password" placeholder="Enter your password" id="password" required />
-                        <span class="icon">
-                            <a href="javascript:void(0);" onclick="togglePassword()" class="toggle-password">
-                                <i class="lni lni-eye"></i>
-                            </a>
-                        </span>
-                    </div>
-                    
-                    <div class="forgot-password">
-                        <a href="forgot_pass.php">Forgot Password?</a>
-                    </div>
-                    
-                    <div class="button-group d-flex justify-content-center flex-wrap">
-                        <button type="submit" class="btn-signin">Sign In</button>
-                    </div>
-                </form>
-                
-                <div class="signup-link">
-                    Don't have an account? <a href="driver_registration.php">Register here</a>
-                </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <h2>🚗 Driver Portal</h2>
+            <div class="navbar-links">
+                <a href="index.php">Dashboard</a>
+                <a href="profile.php">My Profile</a>
+                <a href="signin.php?logout=true" class="logout">Logout</a>
             </div>
         </div>
-    </div>
+    </nav>
     
-    <?php include 'footer_scripts.php'; ?>
-    
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.querySelector('.toggle-password i');
+    <main>
+        <div class="driver-container">
             
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.className = 'lni lni-eye-off';
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.className = 'lni lni-eye';
-            }
-        }
-    </script>
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Welcome, <?php echo htmlspecialchars($driver_name); ?></h1>
+                <p>Manage your orders and track earnings from your driver dashboard</p>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="stat-grid">
+                <!-- Available Orders -->
+                <div class="stat-card">
+                    <div class="stat-label">📋 Available Orders</div>
+                    <div class="stat-number"><?php echo $stats['available_orders']; ?></div>
+                    <a href="available_orders.php" class="stat-link">View available orders →</a>
+                </div>
+
+                <!-- Active Orders -->
+                <div class="stat-card active">
+                    <div class="stat-label">🚗 Active Orders</div>
+                    <div class="stat-number"><?php echo $stats['active_orders']; ?></div>
+                    <a href="my_orders.php" class="stat-link">View my orders →</a>
+                </div>
+
+                <!-- Completed Orders -->
+                <div class="stat-card completed">
+                    <div class="stat-label">✓ Completed Orders</div>
+                    <div class="stat-number"><?php echo $stats['completed_orders']; ?></div>
+                    <a href="my_orders.php?status=completed" class="stat-link">View history →</a>
+                </div>
+
+                <!-- Earnings -->
+                <div class="stat-card earnings">
+                    <div class="stat-label">💰 Total Earnings</div>
+                    <div class="stat-number">K 0</div>
+                    <a href="earnings.php" class="stat-link">View earnings →</a>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <h2 style="font-size: 24px; font-weight: 600; margin: 30px 0 20px 0;">Quick Actions</h2>
+            <div class="action-grid">
+                <a href="available_orders.php" class="action-card">
+                    <div class="action-icon">📋</div>
+                    <h3>Find Orders</h3>
+                </a>
+                <a href="my_orders.php" class="action-card">
+                    <div class="action-icon">🚗</div>
+                    <h3>My Orders</h3>
+                </a>
+                <a href="earnings.php" class="action-card">
+                    <div class="action-icon">💰</div>
+                    <h3>View Earnings</h3>
+                </a>
+                <a href="profile.php" class="action-card">
+                    <div class="action-icon">👤</div>
+                    <h3>My Profile</h3>
+                </a>
+                <a href="support.php" class="action-card">
+                    <div class="action-icon">💬</div>
+                    <h3>Support</h3>
+                </a>
+                <a href="rating.php" class="action-card">
+                    <div class="action-icon">⭐</div>
+                    <h3>My Ratings</h3>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
 </body>
 </html>
-
-
