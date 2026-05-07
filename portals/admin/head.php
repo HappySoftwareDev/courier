@@ -5,22 +5,13 @@
 <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon" />
 
 <!-- ========== All CSS files linkup ========= -->
-<!-- Bootstrap 5 from CDN -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
-<!-- LineIcons from CDN -->
-<link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-
-<!-- Material Design Icons from CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" />
-
-<!-- Admin Custom Styles -->
+<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+<link rel="stylesheet" href="assets/css/lineicons.css" />
+<link rel="stylesheet" href="assets/css/materialdesignicons.min.css" />
+<link rel="stylesheet" href="assets/css/fullcalendar.css" />
 <link rel="stylesheet" href="assets/css/main.css" />
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
-
-<!-- Firebase for notifications -->
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-messaging.js"></script>
 
