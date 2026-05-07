@@ -41,52 +41,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
     <?php include 'head.php'; ?>
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-        .table-container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #e9ecef;
-        }
-        .table td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .table tbody tr:hover {
-            background: #f8f9fa;
-        }
-        .badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .badge-online {
-            background: #d4edda;
-            color: #155724;
-        }
-        .badge-offline {
-            background: #f8d7da;
-            color: #721c24;
-        }
-    </style>
 </head>
 <body class="admin-portal">
     <div class="page-container">
@@ -101,60 +55,88 @@ try {
             <!-- Main Content -->
             <main class="main-wrapper">
                 <section class="section">
-                    <div class="container-fluid" style="padding: 30px;">
+                    <div class="container-fluid">
                         
-                        <!-- Page Title -->
-                        <div style="margin-bottom: 30px;">
-                            <h1 style="font-size: 32px; font-weight: bold; margin: 0;">Drivers Management</h1>
-                            <p style="color: #666; margin: 5px 0 0 0;">Manage all registered drivers and their details</p>
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h1 class="mb-10">Drivers Management</h1>
+                                    <p class="text-muted">Manage all registered drivers and their details</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="card shadow-sm border-0 mb-30">
+                            <div class="card-body">
+                                <div class="btn-group" role="group">
+                                    <a href="drivers.php" class="btn btn-sm <?php echo ($status === 'all') ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                                        All Drivers
+                                    </a>
+                                    <a href="drivers.php?status=active" class="btn btn-sm <?php echo ($status === 'active') ? 'btn-success' : 'btn-outline-success'; ?>">
+                                        Online
+                                    </a>
+                                    <a href="drivers.php?status=inactive" class="btn btn-sm <?php echo ($status === 'inactive') ? 'btn-danger' : 'btn-outline-danger'; ?>">
+                                        Offline
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Drivers Table -->
-                        <div class="table-container">
-                            <?php if (empty($drivers)): ?>
-                                <div style="padding: 40px; text-align: center; color: #999;">
-                                    <p>No drivers found</p>
-                                </div>
-                            <?php else: ?>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>City</th>
-                                            <th>Status</th>
-                                            <th>Vehicle</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($drivers as $driver): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($driver['driverID'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($driver['name'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($driver['username'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($driver['email'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($driver['phone'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($driver['city'] ?? ''); ?></td>
-                                                <td>
-                                                    <?php 
-                                                        $isOnline = ($driver['online'] ?? '') === 'online';
-                                                        echo '<span class="badge ' . ($isOnline ? 'badge-online' : 'badge-offline') . '">' 
-                                                            . ($isOnline ? 'Online' : 'Offline') . '</span>';
-                                                    ?>
-                                                </td>
-                                                <td><?php echo htmlspecialchars($driver['vehicleMake'] . ' ' . ($driver['model'] ?? '')); ?></td>
-                                                <td>
-                                                    <a href="driverDetail.php?id=<?php echo urlencode($driver['driverID'] ?? ''); ?>" style="color: #667eea; text-decoration: none;">View</a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php endif; ?>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-0">
+                                <?php if (empty($drivers)): ?>
+                                    <div class="p-5 text-center text-muted">
+                                        <i class="lni lni-car" style="font-size: 48px; opacity: 0.3;"></i>
+                                        <p class="mt-3 mb-0">No drivers found</p>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="ps-4">ID</th>
+                                                    <th>Name</th>
+                                                    <th>Username</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                    <th>City</th>
+                                                    <th>Status</th>
+                                                    <th>Vehicle</th>
+                                                    <th class="pe-4">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($drivers as $driver): ?>
+                                                    <tr>
+                                                        <td class="ps-4"><strong><?php echo htmlspecialchars($driver['driverID'] ?? ''); ?></strong></td>
+                                                        <td><?php echo htmlspecialchars($driver['name'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($driver['username'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($driver['email'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($driver['phone'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($driver['city'] ?? ''); ?></td>
+                                                        <td>
+                                                            <?php 
+                                                                $isOnline = ($driver['online'] ?? '') === 'online';
+                                                                echo '<span class="badge ' . ($isOnline ? 'bg-success' : 'bg-danger') . '">' 
+                                                                    . ($isOnline ? 'Online' : 'Offline') . '</span>';
+                                                            ?>
+                                                        </td>
+                                                        <td><?php echo htmlspecialchars($driver['vehicleMake'] . ' ' . ($driver['model'] ?? '')); ?></td>
+                                                        <td class="pe-4">
+                                                            <a href="driverDetail.php?id=<?php echo urlencode($driver['driverID'] ?? ''); ?>" class="btn btn-sm btn-primary">
+                                                                <i class="lni lni-eye"></i> View
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
 
                     </div>

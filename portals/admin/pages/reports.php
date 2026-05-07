@@ -60,41 +60,6 @@ $completionRate = $totalBookings > 0 ? round(($completedBookings / $totalBooking
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
     <?php include 'head.php'; ?>
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-        .report-card {
-            background: white;
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-item {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .stat-label {
-            font-size: 12px;
-            opacity: 0.9;
-            text-transform: uppercase;
-        }
-    </style>
 </head>
 <body class="admin-portal">
     <div class="page-container">
@@ -109,79 +74,147 @@ $completionRate = $totalBookings > 0 ? round(($completedBookings / $totalBooking
             <!-- Main Content -->
             <main class="main-wrapper">
                 <section class="section">
-                    <div class="container-fluid" style="padding: 30px;">
+                    <div class="container-fluid">
                         
-                        <!-- Page Title -->
-                        <div style="margin-bottom: 30px;">
-                            <h1 style="font-size: 32px; font-weight: bold; margin: 0;">Reports & Analytics</h1>
-                            <p style="color: #666; margin: 5px 0 0 0;">Key performance indicators and system statistics</p>
-                        </div>
-
-                        <!-- Statistics Grid -->
-                        <div class="stat-grid">
-                            <div class="stat-item">
-                                <div class="stat-label">Total Bookings</div>
-                                <div class="stat-number"><?php echo $totalBookings; ?></div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Completed</div>
-                                <div class="stat-number"><?php echo $completedBookings; ?></div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Pending</div>
-                                <div class="stat-number"><?php echo $pendingBookings; ?></div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Completion Rate</div>
-                                <div class="stat-number"><?php echo $completionRate; ?>%</div>
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h1 class="mb-10">Reports & Analytics</h1>
+                                    <p class="text-muted">Key performance indicators and system statistics</p>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Additional Statistics -->
-                        <div class="stat-grid">
-                            <div class="stat-item" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
-                                <div class="stat-label">Total Users</div>
-                                <div class="stat-number"><?php echo $totalUsers; ?></div>
+                        <!-- Statistics Grid - Bookings Section -->
+                        <div class="row g-4 mb-40">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Total Bookings</h6>
+                                            <span class="badge bg-primary"><i class="lni lni-package"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-primary"><?php echo $totalBookings; ?></h2>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="stat-item" style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);">
-                                <div class="stat-label">Total Drivers</div>
-                                <div class="stat-number"><?php echo $totalDrivers; ?></div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Completed</h6>
+                                            <span class="badge bg-success"><i class="lni lni-check-mark"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-success"><?php echo $completedBookings; ?></h2>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="stat-item" style="background: linear-gradient(135deg, #17a2b8 0%, #00bcd4 100%);">
-                                <div class="stat-label">Users/Drivers Ratio</div>
-                                <div class="stat-number"><?php echo $totalDrivers > 0 ? round($totalUsers / $totalDrivers, 1) : 0; ?>:1</div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Pending</h6>
+                                            <span class="badge bg-warning"><i class="lni lni-timer"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-warning"><?php echo $pendingBookings; ?></h2>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="stat-item" style="background: linear-gradient(135deg, #e83e8c 0%, #d63384 100%);">
-                                <div class="stat-label">Avg per Driver</div>
-                                <div class="stat-number"><?php echo $totalDrivers > 0 ? round($totalBookings / $totalDrivers, 1) : 0; ?></div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Completion Rate</h6>
+                                            <span class="badge bg-info"><i class="lni lni-chart"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-info"><?php echo $completionRate; ?>%</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Summary Report -->
-                        <div class="report-card">
-                            <h2 style="margin-top: 0;">System Summary</h2>
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <tr style="border-bottom: 1px solid #e9ecef;">
-                                    <td style="padding: 12px 0;"><strong>Total Bookings</strong></td>
-                                    <td style="padding: 12px 0; text-align: right;"><?php echo $totalBookings; ?></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #e9ecef;">
-                                    <td style="padding: 12px 0;"><strong>Completed Bookings</strong></td>
-                                    <td style="padding: 12px 0; text-align: right;"><?php echo $completedBookings; ?> (<?php echo $completionRate; ?>%)</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #e9ecef;">
-                                    <td style="padding: 12px 0;"><strong>Pending Bookings</strong></td>
-                                    <td style="padding: 12px 0; text-align: right;"><?php echo $pendingBookings; ?></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #e9ecef;">
-                                    <td style="padding: 12px 0;"><strong>Registered Users</strong></td>
-                                    <td style="padding: 12px 0; text-align: right;"><?php echo $totalUsers; ?></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px 0;"><strong>Active Drivers</strong></td>
-                                    <td style="padding: 12px 0; text-align: right;"><?php echo $totalDrivers; ?></td>
-                                </tr>
-                            </table>
+                        <!-- Statistics Grid - Users & Drivers Section -->
+                        <div class="row g-4 mb-40">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Total Users</h6>
+                                            <span class="badge bg-success"><i class="lni lni-users"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-success"><?php echo $totalUsers; ?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Total Drivers</h6>
+                                            <span class="badge bg-warning"><i class="lni lni-car"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-warning"><?php echo $totalDrivers; ?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Users/Drivers Ratio</h6>
+                                            <span class="badge bg-info"><i class="lni lni-chart"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-info"><?php echo $totalDrivers > 0 ? round($totalUsers / $totalDrivers, 1) : 0; ?>:1</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="card-title mb-0">Avg Bookings/Driver</h6>
+                                            <span class="badge bg-secondary"><i class="lni lni-chart"></i></span>
+                                        </div>
+                                        <h2 class="card-text text-secondary"><?php echo $totalDrivers > 0 ? round($totalBookings / $totalDrivers, 1) : 0; ?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary Report Table -->
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-light border-bottom">
+                                <h5 class="mb-0">System Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Total Bookings</strong></td>
+                                                <td class="text-end"><h6 class="mb-0"><?php echo $totalBookings; ?></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Completed Bookings</strong></td>
+                                                <td class="text-end"><h6 class="mb-0"><?php echo $completedBookings; ?> (<?php echo $completionRate; ?>%)</h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Pending Bookings</strong></td>
+                                                <td class="text-end"><h6 class="mb-0"><?php echo $pendingBookings; ?></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Registered Users</strong></td>
+                                                <td class="text-end"><h6 class="mb-0"><?php echo $totalUsers; ?></h6></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Active Drivers</strong></td>
+                                                <td class="text-end"><h6 class="mb-0"><?php echo $totalDrivers; ?></h6></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

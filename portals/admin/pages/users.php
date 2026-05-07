@@ -32,37 +32,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
     <?php include 'head.php'; ?>
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-        .table-container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #e9ecef;
-        }
-        .table td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .table tbody tr:hover {
-            background: #f8f9fa;
-        }
-    </style>
 </head>
 <body class="admin-portal">
     <div class="page-container">
@@ -77,48 +46,59 @@ try {
             <!-- Main Content -->
             <main class="main-wrapper">
                 <section class="section">
-                    <div class="container-fluid" style="padding: 30px;">
+                    <div class="container-fluid">
                         
-                        <!-- Page Title -->
-                        <div style="margin-bottom: 30px;">
-                            <h1 style="font-size: 32px; font-weight: bold; margin: 0;">Users Management</h1>
-                            <p style="color: #666; margin: 5px 0 0 0;">Manage all registered users and customers</p>
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h1 class="mb-10">Users Management</h1>
+                                    <p class="text-muted">Manage all registered users and customers</p>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Users Table -->
-                        <div class="table-container">
-                            <?php if (empty($users)): ?>
-                                <div style="padding: 40px; text-align: center; color: #999;">
-                                    <p>No users found</p>
-                                </div>
-                            <?php else: ?>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>Registration Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($users as $user): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($user['Userid'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($user['Name'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($user['email'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($user['phone'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($user['date'] ?? ''); ?></td>
-                                                <td>
-                                                    <a href="userDetail.php?id=<?php echo urlencode($user['Userid'] ?? ''); ?>" style="color: #667eea; text-decoration: none;">View</a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php endif; ?>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-0">
+                                <?php if (empty($users)): ?>
+                                    <div class="p-5 text-center text-muted">
+                                        <i class="lni lni-users" style="font-size: 48px; opacity: 0.3;"></i>
+                                        <p class="mt-3 mb-0">No users found</p>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="ps-4">ID</th>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                    <th>Registration Date</th>
+                                                    <th class="pe-4">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($users as $user): ?>
+                                                    <tr>
+                                                        <td class="ps-4"><strong><?php echo htmlspecialchars($user['Userid'] ?? ''); ?></strong></td>
+                                                        <td><?php echo htmlspecialchars($user['Name'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($user['email'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($user['phone'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($user['date'] ?? ''); ?></td>
+                                                        <td class="pe-4">
+                                                            <a href="userDetail.php?id=<?php echo urlencode($user['Userid'] ?? ''); ?>" class="btn btn-sm btn-primary">
+                                                                <i class="lni lni-eye"></i> View
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
 
                     </div>

@@ -52,81 +52,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?> | <?php echo $site_name; ?></title>
     <?php include 'head.php'; ?>
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-        .table-container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #e9ecef;
-        }
-        .table td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .table tbody tr:hover {
-            background: #f8f9fa;
-        }
-        .badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .badge-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .badge-assigned {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        .badge-completed {
-            background: #d4edda;
-            color: #155724;
-        }
-        .filter-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .filter-bar a {
-            display: inline-block;
-            padding: 8px 16px;
-            margin-right: 10px;
-            border-radius: 4px;
-            text-decoration: none;
-            background: #f8f9fa;
-            color: #333;
-            transition: all 0.2s;
-        }
-        .filter-bar a.active {
-            background: #667eea;
-            color: white;
-        }
-        .filter-bar a:hover {
-            background: #667eea;
-            color: white;
-        }
-    </style>
 </head>
 <body class="admin-portal">
     <div class="page-container">
@@ -141,73 +66,96 @@ try {
             <!-- Main Content -->
             <main class="main-wrapper">
                 <section class="section">
-                    <div class="container-fluid" style="padding: 30px;">
+                    <div class="container-fluid">
                         
-                        <!-- Page Title -->
-                        <div style="margin-bottom: 30px;">
-                            <h1 style="font-size: 32px; font-weight: bold; margin: 0;">Bookings Management</h1>
-                            <p style="color: #666; margin: 5px 0 0 0;">View and manage all customer bookings</p>
+                        <!-- Page Header -->
+                        <div class="page-header mb-40">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h1 class="mb-10">Bookings Management</h1>
+                                    <p class="text-muted">View and manage all customer bookings</p>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Filter Bar -->
-                        <div class="filter-bar">
-                            <a href="bookings.php" class="<?php echo ($filter === 'all') ? 'active' : ''; ?>">All Bookings (<?php echo count($bookings); ?>)</a>
-                            <a href="bookings.php?filter=pending" class="<?php echo ($filter === 'pending') ? 'active' : ''; ?>">Pending</a>
-                            <a href="bookings.php?filter=assigned" class="<?php echo ($filter === 'assigned') ? 'active' : ''; ?>">Assigned</a>
-                            <a href="bookings.php?filter=completed" class="<?php echo ($filter === 'completed') ? 'active' : ''; ?>">Completed</a>
+                        <div class="card shadow-sm border-0 mb-30">
+                            <div class="card-body">
+                                <div class="btn-group" role="group">
+                                    <a href="bookings.php" class="btn btn-sm <?php echo ($filter === 'all') ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                                        All Bookings (<?php echo count($bookings); ?>)
+                                    </a>
+                                    <a href="bookings.php?filter=pending" class="btn btn-sm <?php echo ($filter === 'pending') ? 'btn-warning' : 'btn-outline-warning'; ?>">
+                                        Pending
+                                    </a>
+                                    <a href="bookings.php?filter=assigned" class="btn btn-sm <?php echo ($filter === 'assigned') ? 'btn-info' : 'btn-outline-info'; ?>">
+                                        Assigned
+                                    </a>
+                                    <a href="bookings.php?filter=completed" class="btn btn-sm <?php echo ($filter === 'completed') ? 'btn-success' : 'btn-outline-success'; ?>">
+                                        Completed
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Bookings Table -->
-                        <div class="table-container">
-                            <?php if (empty($bookings)): ?>
-                                <div style="padding: 40px; text-align: center; color: #999;">
-                                    <p>No bookings found</p>
-                                </div>
-                            <?php else: ?>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Customer Name</th>
-                                            <th>Email</th>
-                                            <th>Pickup</th>
-                                            <th>Dropoff</th>
-                                            <th>Driver</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($bookings as $booking): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($booking['id'] ?? $booking['order_id'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($booking['Name'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars($booking['email'] ?? ''); ?></td>
-                                                <td><?php echo htmlspecialchars(substr($booking['pick_up_location'] ?? '', 0, 30)); ?></td>
-                                                <td><?php echo htmlspecialchars(substr($booking['drop_off_location'] ?? '', 0, 30)); ?></td>
-                                                <td><?php echo htmlspecialchars($booking['assign_driver'] ?? 'Unassigned'); ?></td>
-                                                <td>
-                                                    <?php 
-                                                        $status = $booking['status'] ?? 'pending';
-                                                        if ($status === 'completed') {
-                                                            echo '<span class="badge badge-completed">Completed</span>';
-                                                        } elseif (!empty($booking['assign_driver'])) {
-                                                            echo '<span class="badge badge-assigned">Assigned</span>';
-                                                        } else {
-                                                            echo '<span class="badge badge-pending">Pending</span>';
-                                                        }
-                                                    ?>
-                                                </td>
-                                                <td><?php echo htmlspecialchars($booking['date'] ?? $booking['pick_up_date'] ?? ''); ?></td>
-                                                <td>
-                                                    <a href="bookingDetail.php?id=<?php echo urlencode($booking['id'] ?? $booking['order_id'] ?? ''); ?>" style="color: #667eea; text-decoration: none;">View</a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php endif; ?>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-0">
+                                <?php if (empty($bookings)): ?>
+                                    <div class="p-5 text-center text-muted">
+                                        <i class="lni lni-inbox" style="font-size: 48px; opacity: 0.3;"></i>
+                                        <p class="mt-3 mb-0">No bookings found</p>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="ps-4">ID</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Email</th>
+                                                    <th>Pickup</th>
+                                                    <th>Dropoff</th>
+                                                    <th>Driver</th>
+                                                    <th>Status</th>
+                                                    <th>Date</th>
+                                                    <th class="pe-4">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($bookings as $booking): ?>
+                                                    <tr>
+                                                        <td class="ps-4"><strong><?php echo htmlspecialchars($booking['id'] ?? $booking['order_id'] ?? ''); ?></strong></td>
+                                                        <td><?php echo htmlspecialchars($booking['Name'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars($booking['email'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars(substr($booking['pick_up_location'] ?? '', 0, 30)); ?></td>
+                                                        <td><?php echo htmlspecialchars(substr($booking['drop_off_location'] ?? '', 0, 30)); ?></td>
+                                                        <td><?php echo htmlspecialchars($booking['assign_driver'] ?? 'Unassigned'); ?></td>
+                                                        <td>
+                                                            <?php 
+                                                                $status = $booking['status'] ?? 'pending';
+                                                                if ($status === 'completed') {
+                                                                    echo '<span class="badge bg-success">Completed</span>';
+                                                                } elseif (!empty($booking['assign_driver'])) {
+                                                                    echo '<span class="badge bg-info">Assigned</span>';
+                                                                } else {
+                                                                    echo '<span class="badge bg-warning text-dark">Pending</span>';
+                                                                }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php echo htmlspecialchars($booking['date'] ?? $booking['pick_up_date'] ?? ''); ?></td>
+                                                        <td class="pe-4">
+                                                            <a href="bookingDetail.php?id=<?php echo urlencode($booking['id'] ?? $booking['order_id'] ?? ''); ?>" class="btn btn-sm btn-primary">
+                                                                <i class="lni lni-eye"></i> View
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
 
                     </div>
