@@ -4,6 +4,7 @@
  */
 
 require_once '../../config/bootstrap.php';
+require_once '../admin/pages/site_settings.php';
 
 // Start session for driver authentication
 if (session_status() === PHP_SESSION_NONE) {
@@ -33,45 +34,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             global $DB;
             
-            $stmt = $DB->prepare("SELECT * FROM `driver` WHERE username = ?");
-            if (!$stmt) {
-                error_log("Driver login: Failed to prepare statement");
-                $loginError = 'Database error';
+            // Verify database connection
+            if (!isset($DB) || $DB === null) {
+                error_log("Driver login: Database not initialized");
+                $loginError = 'Database connection failed. Please contact support.';
             } else {
-                $stmt->execute([$username]);
-                $driver = $stmt->fetch();
-                
-                error_log("Driver login: User found = " . ($driver ? 'YES' : 'NO'));
-                
-                if ($driver) {
-                    $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
-                    
-                    error_log("Driver login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
-                    
-                    if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
-                        $_SESSION['MM_Username'] = $username;
-                        $_SESSION['MM_UserGroup'] = $username;
-                        $_SESSION['driver_id'] = $driver['driverID'] ?? $driver['id'] ?? '';
-                        $_SESSION['driver_name'] = $driver['name'] ?? 'Driver';
-                        $_SESSION['user_role'] = 'driver';
-                        
-                        error_log("Driver login: Password matches, session set, redirecting");
-                        
-                        session_write_close();
-                        header('Location: index.php', true, 302);
-                        exit;
-                    } else {
-                        error_log("Driver login: Password mismatch");
-                        $loginError = 'Invalid username or password';
-                    }
+                $stmt = $DB->prepare("SELECT * FROM `driver` WHERE username = ?");
+                if (!$stmt) {
+                    error_log("Driver login: Failed to prepare statement");
+                    $loginError = 'Database query failed. Please try again.';
                 } else {
-                    error_log("Driver login: No driver found with username $username");
-                    $loginError = 'Driver account not found';
+                    $stmt->execute([$username]);
+                    $driver = $stmt->fetch();
+                    
+                    error_log("Driver login: User found = " . ($driver ? 'YES' : 'NO'));
+                    
+                    if ($driver) {
+                        $storedPassword = $driver['password'] ?? $driver['Password'] ?? null;
+                        
+                        error_log("Driver login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
+                        
+                        if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
+                            $_SESSION['MM_Username'] = $username;
+                            $_SESSION['MM_UserGroup'] = $username;
+                            $_SESSION['driver_id'] = $driver['driverID'] ?? $driver['id'] ?? '';
+                            $_SESSION['driver_name'] = $driver['name'] ?? 'Driver';
+                            $_SESSION['user_role'] = 'driver';
+                            
+                            error_log("Driver login: Password matches, session set, redirecting");
+                            
+                            session_write_close();
+                            header('Location: index.php', true, 302);
+                            exit;
+                        } else {
+                            error_log("Driver login: Password mismatch");
+                            $loginError = 'Invalid username or password';
+                        }
+                    } else {
+                        error_log("Driver login: No driver found with username $username");
+                        $loginError = 'Driver account not found';
+                    }
                 }
             }
         } catch (Exception $e) {
             error_log('Driver login error: ' . $e->getMessage());
-            $loginError = 'An error occurred during login. Please try again.';
+            $loginError = 'An error occurred during login: ' . $e->getMessage();
         }
     }
 }

@@ -16,7 +16,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../../config/bootstrap.php';
-require_once '../admin/pages/site_settings.php';
 
 // *** Validate request to login to this site.
 if (isset($_POST['email'])) {
@@ -28,45 +27,51 @@ if (isset($_POST['email'])) {
     try {
         global $DB;
         
-        // Query users table
-        $get = "SELECT * FROM `users` WHERE email = ?";
-        $stmt = $DB->prepare($get);
-        if (!$stmt) {
-            error_log("Booking login: Failed to prepare statement");
-            $loginError = "Database error";
+        // Verify database connection
+        if (!isset($DB) || $DB === null) {
+            error_log("Booking login: Database not initialized");
+            $loginError = "Database connection failed. Please contact support.";
         } else {
-            $stmt->execute([$email]);
-            $row = $stmt->fetch();
-            
-            error_log("Booking login: User found = " . ($row ? 'YES' : 'NO'));
-            
-            if ($row) {
-                // Find password field (try multiple possible field names)
-                $storedPassword = $row['Password'] ?? $row['password'] ?? $row['password_hash'] ?? null;
+            // Query users table
+            $get = "SELECT * FROM `users` WHERE email = ?";
+            $stmt = $DB->prepare($get);
+            if (!$stmt) {
+                error_log("Booking login: Failed to prepare statement");
+                $loginError = "Database query failed. Please try again.";
+            } else {
+                $stmt->execute([$email]);
+                $row = $stmt->fetch();
                 
-                error_log("Booking login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
+                error_log("Booking login: User found = " . ($row ? 'YES' : 'NO'));
                 
-                if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
-                    $_SESSION['CC_Username'] = $email;
-                    $_SESSION['user_email'] = $email;
-                    $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
-                    $_SESSION['user_role'] = 'customer';
-                    $_SESSION['CC_UserGroup'] = $email;
+                if ($row) {
+                    // Find password field (try multiple possible field names)
+                    $storedPassword = $row['Password'] ?? $row['password'] ?? $row['password_hash'] ?? null;
                     
-                    error_log("Booking login: Password matches, session set, redirecting");
+                    error_log("Booking login: Stored password = " . (isset($storedPassword) ? substr($storedPassword, 0, 10) . "..." : "NULL") . ", Input = " . $password);
                     
-                    // Ensure session is written before redirect
-                    session_write_close();
-                    // Redirect to booking portal
-                    header("Location: index.php", true, 302);
-                    exit;
+                    if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
+                        $_SESSION['CC_Username'] = $email;
+                        $_SESSION['user_email'] = $email;
+                        $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
+                        $_SESSION['user_role'] = 'customer';
+                        $_SESSION['CC_UserGroup'] = $email;
+                        
+                        error_log("Booking login: Password matches, session set, redirecting");
+                        
+                        // Ensure session is written before redirect
+                        session_write_close();
+                        // Redirect to booking portal
+                        header("Location: index.php", true, 302);
+                        exit;
+                    } else {
+                        error_log("Booking login: Password mismatch");
+                        $loginError = "Invalid email or password";
+                    }
                 } else {
-                    error_log("Booking login: Password mismatch");
+                    error_log("Booking login: No user found with email $email");
                     $loginError = "Invalid email or password";
                 }
-            } else {
-                error_log("Booking login: No user found with email $email");
-                $loginError = "Invalid email or password";
             }
         }
     } catch (Exception $e) {

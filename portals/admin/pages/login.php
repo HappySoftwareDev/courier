@@ -4,6 +4,7 @@
  */
 
 require_once '../../../config/bootstrap.php';
+require_once './site_settings.php';
 
 // Check if already logged in
 if (session_status() === PHP_SESSION_NONE) {
@@ -33,62 +34,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             global $DB;
             
-            // Check in admin table for admin accounts (separate from users table)
-            $query = "SELECT * FROM `admin` WHERE Email = ? LIMIT 1";
-            $stmt = $DB->prepare($query);
-            if (!$stmt) {
-                error_log("Admin login: Failed to prepare statement");
-                $error = 'Database error during login';
+            // Verify database connection
+            if (!isset($DB) || $DB === null) {
+                error_log("Admin login: Database not initialized");
+                $error = 'Database connection failed. Please contact support.';
             } else {
-                $stmt->execute([$email]);
-                $user = $stmt->fetch();
-                
-                error_log("Admin login: User found = " . ($user ? 'YES' : 'NO'));
-                
-                if ($user) {
-                    // Check password - admin table uses Password field with plain text
-                    $passwordMatch = false;
-                    $storedPassword = $user['Password'] ?? null;
+                // Check in admin table for admin accounts (separate from users table)
+                $query = "SELECT * FROM `admin` WHERE Email = ? LIMIT 1";
+                $stmt = $DB->prepare($query);
+                if (!$stmt) {
+                    error_log("Admin login: Failed to prepare statement");
+                    $error = 'Database query failed. Please try again.';
+                } else {
+                    $stmt->execute([$email]);
+                    $user = $stmt->fetch();
                     
-                    error_log("Admin login: Stored password = " . substr($storedPassword, 0, 10) . "..., Input = " . $password);
+                    error_log("Admin login: User found = " . ($user ? 'YES' : 'NO'));
                     
-                    if (isset($user['Password']) && $user['Password'] === $password) {
-                        $passwordMatch = true;
-                        error_log("Admin login: Plain text match = TRUE");
-                    } else {
-                        // Also support hashed passwords for future use
-                        if (isset($user['Password']) && password_verify($password, $user['Password'])) {
+                    if ($user) {
+                        // Check password - admin table uses Password field with plain text
+                        $passwordMatch = false;
+                        $storedPassword = $user['Password'] ?? null;
+                        
+                        error_log("Admin login: Stored password = " . substr($storedPassword, 0, 10) . "..., Input = " . $password);
+                        
+                        if (isset($user['Password']) && $user['Password'] === $password) {
                             $passwordMatch = true;
-                            error_log("Admin login: Hash verify match = TRUE");
+                            error_log("Admin login: Plain text match = TRUE");
                         } else {
-                            error_log("Admin login: Password match = FALSE");
+                            // Also support hashed passwords for future use
+                            if (isset($user['Password']) && password_verify($password, $user['Password'])) {
+                                $passwordMatch = true;
+                                error_log("Admin login: Hash verify match = TRUE");
+                            } else {
+                                error_log("Admin login: Password match = FALSE");
+                            }
                         }
-                    }
-                    
-                    if ($passwordMatch) {
-                        // Valid admin user
-                        $_SESSION['CC_Username'] = $email;
-                        $_SESSION['admin_id'] = $user['ID'] ?? $user['Userid'] ?? 1;
-                        $_SESSION['user_role'] = 'admin';
-                        $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
                         
-                        error_log("Admin login: Session set, redirecting to ../index.php");
-                        
-                        // Ensure session is written before redirect
-                        session_write_close();
-                        header('Location: ../index.php', true, 302);
-                        exit;
+                        if ($passwordMatch) {
+                            // Valid admin user
+                            $_SESSION['CC_Username'] = $email;
+                            $_SESSION['admin_id'] = $user['ID'] ?? $user['Userid'] ?? 1;
+                            $_SESSION['user_role'] = 'admin';
+                            $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
+                            
+                            error_log("Admin login: Session set, redirecting to ../index.php");
+                            
+                            // Ensure session is written before redirect
+                            session_write_close();
+                            header('Location: ../index.php', true, 302);
+                            exit;
+                        } else {
+                            $error = 'Invalid email or password';
+                        }
                     } else {
+                        error_log("Admin login: No user found with email $email");
                         $error = 'Invalid email or password';
                     }
-                } else {
-                    error_log("Admin login: No user found with email $email");
-                    $error = 'Invalid email or password';
                 }
             }
         } catch (Exception $e) {
             error_log('Admin login error: ' . $e->getMessage());
-            $error = 'An error occurred during login. Please try again.';
+            $error = 'An error occurred during login: ' . $e->getMessage();
         }
     }
 }
