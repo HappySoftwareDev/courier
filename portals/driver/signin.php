@@ -60,12 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $_SESSION['driver_id'] = $driver['driverID'] ?? $driver['id'] ?? '';
                             $_SESSION['driver_name'] = $driver['name'] ?? 'Driver';
                             $_SESSION['user_role'] = 'driver';
-                            
-                            error_log("Driver login: Password matches, session set, redirecting");
-                            
-                            session_write_close();
-                            header('Location: index.php', true, 302);
-                            exit;
+                        $_SESSION['login_time'] = time();
                         } else {
                             error_log("Driver login: Password mismatch");
                             $loginError = 'Invalid username or password';

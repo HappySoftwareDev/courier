@@ -77,12 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $_SESSION['admin_id'] = $user['ID'] ?? $user['Userid'] ?? 1;
                             $_SESSION['user_role'] = 'admin';
                             $_SESSION['user_name'] = $user['Name'] ?? 'Admin';
-                            
-                            error_log("Admin login: Session set, redirecting to ../index.php");
-                            
-                            // Ensure session is written before redirect
-                            session_write_close();
-                            header('Location: ../index.php', true, 302);
+                        $_SESSION['login_time'] = time();
                             exit;
                         } else {
                             $error = 'Invalid email or password';

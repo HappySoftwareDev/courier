@@ -53,9 +53,10 @@ if (isset($_POST['email'])) {
                     if ($storedPassword && ($storedPassword === $password || password_verify($password, $storedPassword))) {
                         $_SESSION['CC_Username'] = $email;
                         $_SESSION['user_email'] = $email;
-                        $_SESSION['user_id'] = $row['ID'] ?? $row['Userid'] ?? '';
+                        $_SESSION['Userid'] = $row['ID'] ?? $row['Userid'] ?? '';
                         $_SESSION['user_role'] = 'customer';
                         $_SESSION['CC_UserGroup'] = $email;
+                        $_SESSION['login_time'] = time();
                         
                         error_log("Booking login: Password matches, session set, redirecting");
                         
